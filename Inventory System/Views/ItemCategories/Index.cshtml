@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Inventory_System.Models.ItemCategory>
+
+@{
+    ViewBag.Title = "عرض الأصناف المتاحه";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <br />
+    <h2>عرض الأصناف المتاحه</h2>
+    <br />
+<p>
+    @Html.ActionLink("اضافه جديد", "Create")
+</p>
+<br />
+<table class="table">
+    <tr>
+       
+        <th class="text-center">
+            @Html.DisplayName("اسم الصنف")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+       
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemCategoryName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+
+    <td class="text-center">
+
+        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemCategoryId }) |
+        @*   @Html.ActionLink("Details", "Details", new { id=item.ItemCategoryId }) |*@
+        @Html.ActionLink("حذف", "Delete", new { id = item.ItemCategoryId })
+    </td>
+</tr>
+}
+
+</table>

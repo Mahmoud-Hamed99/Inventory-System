@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Inventory_System.Models.TechnicalDepartment>
+
+@{
+    ViewBag.Title = "قائمه الاقسام";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>قائمه الاقسام</h2>
+<br />
+<p>
+    @Html.ActionLink("اضافه قسم جديد", "Create")
+</p>
+<br />
+<table class="table">
+    <tr>
+        <th class="text-right">
+            @Html.DisplayName("اسم القسم")
+        </th>
+
+        <th class="text-right">
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td class="text-right">
+        @Html.DisplayFor(modelItem => item.TechnicalDepartmentName)
+    </td>
+
+    <td class="text-right">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+    <td class="text-right">
+        @Html.ActionLink("تعديل", "Edit", new { id = item.TechnicalDepartmentId }) |
+        @*@Html.ActionLink("Details", "Details", new { id=item.TechnicalDepartmentId }) |*@
+        @Html.ActionLink("حذف", "Delete", new { id = item.TechnicalDepartmentId })
+    </td>
+</tr>
+}
+
+</table>

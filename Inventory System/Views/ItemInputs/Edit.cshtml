@@ -1,0 +1,100 @@
+﻿@model Inventory_System.Models.ItemInput
+
+@{
+    ViewBag.Title = "تعديل بيانات المنتج";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Inventory_System.Models.ItemInput item = ViewBag.Item as Inventory_System.Models.ItemInput;
+}
+
+    <h2>تعديل بيانات المنتج</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @*<h4>ItemInput</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ItemInputId)
+    @Html.HiddenFor(model => model.VendorId)
+    @Html.HiddenFor(model => model.ItemId)
+
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Item.ItemName, "ItemName", new { htmlAttributes = new { @id = "id", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Item.ItemName, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
+        
+    </div>
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.ItemPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ItemPrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ItemPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+<div class="form-group">
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.ItemQuantity, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.ItemQuantity, "", new { @class = "text-danger" })
+    </div>
+    @Html.Label("الكميه", htmlAttributes: new { @class = "control-label col-md-2" })
+
+</div>
+
+<div class="form-group">
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.Item.ItemUnit, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })
+    </div>
+    @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
+
+</div>
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.ItemTotalCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ItemTotalCost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ItemTotalCost, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+<div class="form-group">
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.Vendor.VendorName, new { htmlAttributes = new { @id = "VendorName", @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Vendor.VendorName, "", new { @class = "text-danger" })
+    </div>
+    @Html.Label("اسم المورد", htmlAttributes: new { @class = "control-label col-md-2" })
+
+</div>
+
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.DateCreated, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })
+        </div>
+    </div>*@
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="حفظ" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

@@ -1,0 +1,178 @@
+﻿@model Inventory_System.Models.ItemInput
+
+@{
+    ViewBag.Title = "أضافه جديد";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>أضافه جديد</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+      @*  <h4>ItemInput</h4>*@
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @*-------------------------------------------------------------------------*@
+
+    <div class="form-group">
+        <div class="col-md-5 text-right">
+            <a href='@Url.Action("Create","ItemCategories")' target="_blank">اضافه صنف جديد</a>
+        </div>
+
+        <div class="col-md-4 text-right">
+            @Html.DropDownListFor(model => model.Item.ItemSubCategory.ItemCategoryId, ViewBag.ItemCategory as SelectList, "اختار الصنف", htmlAttributes: new { @class = "form-control", @id = "ItemCategoryId" })
+            @Html.ValidationMessageFor(model => model.Item.ItemSubCategory.ItemCategory.ItemCategoryName, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("نوع الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+
+    <div class="form-group">
+
+        <div class="col-md-5 text-right">
+            <a href='@Url.Action("Create","ItemSubCategories")' target="_blank">اضافه صنف جزئي جديد</a>
+        </div>
+
+        <div class="col-md-4 text-right">
+            @Html.DropDownListFor(model => model.Item.ItemSubCategoryId, new SelectList(""), htmlAttributes: new { @class = "form-control", @id = "ItemSubCategoryId" })
+            @Html.ValidationMessageFor(model => model.Item.ItemSubCategory.ItemSubCategoryName, "", new { @class = "text-danger" })
+        </div>
+
+
+        @Html.Label("نوع الصنف الفرعي", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+
+    <div class="form-group">
+
+        <div class="col-md-5 text-right">
+            <a href='@Url.Action("Create","Items")' target="_blank">اضافه منتج جديد</a>
+        </div>
+
+        <div class="col-md-4 text-right">
+            @Html.DropDownListFor(model => model.ItemId, new SelectList(""), htmlAttributes: new { @id = "ItemId", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
+        </div>
+
+        @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-md-9 text-right">
+            @Html.EditorFor(model => model.Item.ItemUnit, new { htmlAttributes = new { @id = "ItemUnit", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-md-9 text-right">
+            @Html.EditorFor(model => model.ItemQuantity, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ItemQuantity, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("الكميه", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+    
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-9 text-right">
+            @Html.DropDownList("VendorID", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Vendor.VendorName, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label( "اسم المورد", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="اضافه" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $("#ItemCategoryId").select2({
+        placeholder: "ابحث بنوع الصنف",
+        allowClear: true
+    });
+    $('#ItemCategoryId').on('select2:select', function (e) {
+        $.get("/ItemInputs/GetMembers", { id: $("#ItemCategoryId").val() }, function (data) {
+            $("#ItemSubCategoryId").empty();
+            $("#ItemSubCategoryId").append("<option value='0'>ابحث بنوع الصنف الجزئي</option>")
+
+            $("#ItemId").empty();
+            $("#ItemUnit").val("");
+
+            $.each(data, function (index, row) {
+                $("#ItemSubCategoryId").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+            });
+        });
+    });
+</script>
+
+<script>
+    $("#ItemSubCategoryId").select2({
+        placeholder: "ابحث بنوع الصنف الجزئي",
+        allowClear: true
+    });
+    $('#ItemCategoryId').on('select2:select', function (e) {
+            $.get("/ItemInputs/GetMembers", { id: $("#ItemCategoryId").val() }, function (data) {
+                $("#ItemSubCategoryId").empty();
+                $("#ItemSubCategoryId").append("<option value='0'>ابحث بنوع الصنف الجزئي</option>")
+
+                $("#ItemId").empty();
+                $("#ItemUnit").val("");
+
+                $.each(data, function (index, row) {
+                    $("#ItemSubCategoryId").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+                });
+            });
+    });
+</script>
+
+<script>
+    $("#ItemId").select2({
+        placeholder: "ابحث عن المنتج",
+        allowClear: true
+    });
+    $('#ItemSubCategoryId').on('select2:select', function (e) {
+          $.get("/ItemInputs/GetItems", { itemSubCategoryId: $("#ItemSubCategoryId").val() }, function (data) {
+                $("#ItemId").empty();
+
+                $("#ItemUnit").empty();
+
+                console.log(data);
+                jQuery("#ItemUnit").val(data[0].ItemUnit);
+                $.each(data, function (index, row) {
+                    $("#ItemId").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
+                });
+            });
+    });
+</script>

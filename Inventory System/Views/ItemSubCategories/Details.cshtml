@@ -1,0 +1,35 @@
+﻿@model Inventory_System.Models.ItemSubCategory
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ItemSubCategory</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemCategory.ItemCategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemCategory.ItemCategoryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemSubCategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemSubCategoryName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ItemSubCategoryId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

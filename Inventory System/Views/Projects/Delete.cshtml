@@ -1,0 +1,36 @@
+﻿@model Inventory_System.Models.Project
+
+@{
+    ViewBag.Title = "حذف المشروع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>حذف المشروع</h2>
+<br />
+
+<h3>هل متأكد من حذف هذا المشروع؟</h3>
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("اسم المشروع")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectName)
+        </dd>
+
+        
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه المشاريع", "Index")
+        </div>
+    }
+</div>

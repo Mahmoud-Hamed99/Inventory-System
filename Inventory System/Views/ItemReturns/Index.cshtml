@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Inventory_System.Models.ItemReturn>
+
+@{
+    ViewBag.Title = "قائمه المرتجعات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>قائمه المرتجعات</h2>
+
+<p>
+    @Html.ActionLink("اضافه مرتجع", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("المنتج")
+        </th>
+        <th>
+            @Html.DisplayName("المشروع")
+        </th>
+        <th>
+            @Html.DisplayName("الكميه")
+        </th>
+        <th>
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Item.ItemName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemQuantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td>
+            @Html.ActionLink("تعديل", "Edit", new { id=item.ItemReturnId }) |
+           @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
+            @Html.ActionLink("حذف", "Delete", new { id=item.ItemReturnId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,67 @@
+﻿@model Inventory_System.Models.ItemInput
+
+@{
+    ViewBag.Title = "حذف بيانات التصريح";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>حذف بيانات التصريح</h2>
+
+<h3>هل تريد حذف هذا التصريح؟</h3>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.DisplayNameFor(model => model.Vendor.VendorName)
+    @Html.DisplayNameFor(model => model.Item.ItemName)
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <dl>
+        <dt>
+            @Html.DisplayName("المنتج")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.ItemName)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("الكميه")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemQuantity)
+        </dd>
+
+        @*<dt>
+                @Html.DisplayNameFor(model => model.ItemTotalCost)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ItemTotalCost)
+            </dd>*@
+
+        <dt>
+            @Html.DisplayName("المورد")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vendor.VendorName)
+        </dd>
+
+
+    </dl>
+
+
+
+    <div class="form-actions no-color">
+        <input type="submit" value="حذف" class="btn btn-default" /> |
+        @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
+    </div>
+
+</div>
+}

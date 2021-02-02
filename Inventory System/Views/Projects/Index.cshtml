@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Inventory_System.Models.Project>
+
+@{
+    ViewBag.Title = "قائمه المشاريع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>قائمه المشاريع</h2>
+<br />
+<p>
+    @Html.ActionLink("اضافه مشروع جديد", "Create")
+</p>
+
+@using (Html.BeginForm("ProjectFinishedFun", "Projects"))
+{
+    <table class="table">
+        <tr>
+            <th class="text-right">
+                @Html.DisplayName("كود المشروع")
+            </th>
+            <th class="text-right">
+                @Html.DisplayName("اسم المشروع")
+            </th>
+            <th class="text-right">
+                @Html.DisplayName("تاريخ الاصدار")
+            </th>
+
+            <th class="text-right">
+                @Html.DisplayName("مكتمل")
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-right">
+                    @Html.DisplayFor(modelItem => item.ProjectId)
+                </td>
+
+                <td class="text-right">
+                    @Html.DisplayFor(modelItem => item.ProjectName)
+                </td>
+
+                <td class="text-right">
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+
+                <td class="text-center">
+                    <input type="checkbox" name="ProjectFinishedList" value="@item.ProjectId" />
+                    @*@Html.DisplayFor(modelItem => item.ItemOutputApproved)*@
+                </td>
+
+
+                <td class="text-right">
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.ProjectId }) |
+                    @*@Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |*@
+                    @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <button type="submit">Submit</button>
+
+}

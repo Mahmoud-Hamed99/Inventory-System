@@ -1,0 +1,49 @@
+﻿@model Inventory_System.Models.ItemReturn
+
+@{
+    ViewBag.Title = "حذف بيانات المرتجع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>حذف بيانات المرتجع</h2>
+
+<h3>هل تريد حذف  بيانات هذا المرتجع ؟</h3>
+<div>
+    <hr />
+    <dl >
+        <dt>
+            @Html.DisplayName("المرتجع")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.ItemName)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("اسم المشروع")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Project.ProjectName)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("الكميه")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemQuantity)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه المرتجعات", "Index")
+        </div>
+    }
+</div>

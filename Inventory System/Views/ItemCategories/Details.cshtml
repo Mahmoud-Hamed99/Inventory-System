@@ -1,0 +1,37 @@
+﻿@model Inventory_System.Models.ItemCategory
+
+@{
+    ViewBag.Title = "تفاصيل الصنف";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>تفاصيل الصنف</h2>
+
+<div>
+    @*<h4>ItemCategory</h4>*@
+    <br/>
+    <hr />
+    <dl class="dl-horizontal text-right">
+        <dd class="text-center">
+            @Html.DisplayFor(model => model.ItemCategoryName)
+        </dd>
+        <dt class="text-right">
+            @Html.DisplayName("اسم الصنف")
+        </dt>
+
+
+
+        <dt class="text-right">
+            @Html.DisplayName("تاريخ الأصدار")
+        </dt>
+
+        <dd class="text-center">
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.ItemCategoryId }) |
+    @Html.ActionLink("الرجوع لقائمه الأصناف", "Index")
+</p>

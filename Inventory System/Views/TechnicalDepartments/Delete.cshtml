@@ -1,0 +1,33 @@
+﻿@model Inventory_System.Models.TechnicalDepartment
+
+@{
+    ViewBag.Title = "حذف القسم";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>حذف القسم</h2>
+
+<h3>هل تريد حذف هذا القسم؟</h3>
+<br />
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt class="text-right">
+            @Html.DisplayName("اسم القسم")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TechnicalDepartmentName)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه الاقسام", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,132 @@
+﻿@model IEnumerable<Inventory_System.Models.ItemOutput>
+
+@{
+    ViewBag.Title = "قائمه أذونات الخروج";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>قائمه أذونات الخروج</h2>
+<br />
+
+
+<p>
+
+
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <th class="text-right">
+                    @Html.ActionLink("اضافه جديد", "Create")
+                </th>
+            </tr>
+
+            <tr>
+                <th class="col-md-4 form-control">
+                    @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })
+
+                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control col-md-3", @id = "ProjectId" })
+
+                </th>
+                <th><input type="submit" value="بحث" /></th>
+            </tr>
+        </table>
+    }
+
+
+</p>
+
+
+<br />
+
+<table class="table">
+    <tr>
+        <th class="text-center">
+            @Html.DisplayName("كود المشروع")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("اسم المشروع")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("القسم")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("اسم المنتج")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الكميه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+
+        <th class="text-center">
+            @Html.DisplayName("الموافقه")
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Project.ProjectId)
+            </td>
+
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemOutputApproved)
+            </td>
+
+            <td class="text-center">
+                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.ItemOutputId }) |*@
+                @Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $("#TechnicalDepartmentId").select2({
+        placeholder: "اختر صنف",
+        allowClear: true
+    });
+    $('#TechnicalDepartmentId').on('select2:select', function (e) {
+        $.get("/ItemOutputs/Index", { id: $("#TechnicalDepartmentId").val() }, function (data) {
+            
+        });
+    })
+</script>
+
+<script>
+    $("#ProjectId").select2({
+        placeholder: "اختر مشروع",
+        allowClear: true
+    });
+    $('#ProjectId').on('select2:select', function (e) {
+        $.get("/ItemOutputs/Index", { id: $("#ProjectId").val() }, function (data) {
+        
+        });
+    })
+</script>

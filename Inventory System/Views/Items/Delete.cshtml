@@ -1,0 +1,65 @@
+﻿@model Inventory_System.Models.Item
+
+@{
+    ViewBag.Title = "حذف المنتج";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>حذف المنتج</h2>
+
+<h3>هل أنت متأكد من حذف هذا المنتج ؟</h3>
+<div>
+    <h4>Item</h4>
+    <hr />
+    <dl >
+        <dt class="text-right">
+            @Html.DisplayName("الصنف الجزئي")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemSubCategory.ItemSubCategoryName)
+        </dd>
+
+        <dt class="text-right">
+            @Html.DisplayName("اسم المنتج")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemName)
+        </dd>
+
+        <dt class="text-right">
+            @Html.DisplayName("الوحده")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemUnit)
+        </dd>
+
+        <dt class="text-right">
+            @Html.DisplayName("الكميه")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemQuantity)
+        </dd>
+
+        @*<dt >
+            @Html.DisplayName(model => model.ItemAvgPrice)
+        </dt>*@
+
+        @*<dd>
+            @Html.DisplayFor(model => model.ItemAvgPrice)
+        </dd>*@
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
+        </div>
+    }
+</div>

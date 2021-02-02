@@ -1,0 +1,54 @@
+﻿@model Inventory_System.Models.ItemOutput
+
+@{
+    ViewBag.Title = "حذف بيانات التصريح";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>حذف بيانات التصريح</h2>
+
+<h3>هل  نريد حذف هذا التصريح؟</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.DisplayNameFor(model => model.ItemId)
+
+    <div>
+        <hr />
+        <dl>
+
+            <dt >
+                @Html.DisplayName("اسم المشروع")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Project.ProjectName)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("المنتج")
+            </dt>
+
+            <dd >
+                @Html.DisplayFor(model => model.Item.ItemName)
+            </dd>
+
+            <dt>
+                @Html.DisplayName("الكميه")
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ItemOutputQuantity)
+            </dd>
+
+           
+
+        </dl>
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
+        </div>
+    </div>
+}

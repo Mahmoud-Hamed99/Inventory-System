@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Inventory_System.Models.Vendor>
+
+@{
+    ViewBag.Title = "قائمه الموردين";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>قائمه الموردين</h2>
+<br />
+<p>
+    @Html.ActionLink("اضافه مورد جديد", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th class="text-right">
+            @Html.DisplayName("اسم المورد")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("الهاتف")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="text-right">
+            @Html.DisplayFor(modelItem => item.VendorName)
+        </td>
+        <td class="text-right">
+            @Html.DisplayFor(modelItem => item.VendorPhone)
+        </td>
+        <td class="text-right">
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td class="text-right">
+            @Html.ActionLink("تعديل", "Edit", new { id=item.VendorId }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.VendorId }) |*@
+            @Html.ActionLink("حذف", "Delete", new { id=item.VendorId })
+        </td>
+    </tr>
+}
+
+</table>

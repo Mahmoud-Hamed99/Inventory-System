@@ -1,0 +1,58 @@
+﻿@model Inventory_System.Models.ItemReturn
+
+@{
+    ViewBag.Title = "اضافه مرتجع";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>اضافه مرتجع</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label( "المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.EditorFor(model => model.ItemQuantity, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ItemQuantity, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("الكميه المرتجعه", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.DropDownList("projectId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.projectId, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label( "المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="اضافه" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع لقائمه المرتجعات", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

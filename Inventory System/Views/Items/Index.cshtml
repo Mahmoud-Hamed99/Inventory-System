@@ -1,0 +1,146 @@
+﻿@model IEnumerable<Inventory_System.Models.Item>
+
+@{
+    ViewBag.Title = "قائمه المنتجات بالمخزن";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>قائمه المنتجات بالمخزن</h2>
+
+<p>
+
+
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr>
+                <th class="text-right glyphicon-font">
+                    @Html.ActionLink("اضافه جديد", "Create")
+                </th>
+            </tr>
+
+            <tr>
+                <th class="col-md-4 form-control">
+
+
+                    @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
+
+                    @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
+              
+                    @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
+
+
+                </th>
+                <th><input type="submit" value="بحث" /></th>
+            </tr>
+        </table>
+    }
+
+
+</p>
+
+<table class="table">
+
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.ItemSubCategory.ItemSubCategoryName)
+            </th>*@
+        <th class="text-right">
+            @Html.DisplayName("كود المنتج")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("اسم المنتج")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("الوحده")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("الكميه")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("تاريخ الاصدار")
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemQuantity)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.ItemAvgPrice)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |
+                @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
+                @Html.ActionLink("حذف", "Delete", new { id = item.ItemId })
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $("#category").select2({
+        placeholder: "اختر صنف",
+        allowClear: true
+    });
+    $('#category').on('select2:select', function (e) {
+        $.get("/Items/GetMembers", { id: $("#category").val() }, function (data) {
+            $("#subcategory").empty();
+
+            $("#subcategory").append("<option value='0'>اختر صنف جزئي</option>")
+
+
+            $.each(data, function (index, row) {
+                $("#subcategory").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+            });
+        });
+    })
+</script>
+
+<script>
+    $("#item").select2({
+        placeholder: "اختر منتج",
+        allowClear: true
+    });
+    
+</script>
+
+<script>
+    $("#subcategory").select2({
+        placeholder: "اختر صنف جزئي",
+        allowClear: true
+    });
+    $('#subcategory').on('select2:select', function (e) {
+        $.get("/Items/GetSubCategories", { id: $("#subcategory").val() }, function (data) {
+            $("#item").empty();
+
+            $("#item").append("<option value='0'>اختر منتج</option>")
+
+
+            $.each(data, function (index, row) {
+                $("#item").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
+            });
+        });
+    })
+</script>
+
+

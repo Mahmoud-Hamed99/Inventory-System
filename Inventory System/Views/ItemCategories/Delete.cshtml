@@ -1,0 +1,36 @@
+﻿@model Inventory_System.Models.ItemCategory
+
+@{
+    ViewBag.Title = "حذف الصنف";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <h2>حذف الصنف</h2>
+<br/>
+<h3>هل تريد حذف هذاالصنف ؟</h3>
+<div>
+  @*  <h4>ItemCategory</h4>*@
+    
+    <hr />
+    <dl>
+
+        <dt>
+            @Html.DisplayName("اسم الصنف")
+        </dt>
+
+        <dd class="text-right">
+            @Html.DisplayFor(model => model.ItemCategoryName)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="حذف" class="btn btn-default" /> |
+            @Html.ActionLink("الرجوع لقائمه الأصناف", "Index")
+        </div>
+    }
+</div>
