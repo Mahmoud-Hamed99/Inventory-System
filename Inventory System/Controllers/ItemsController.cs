@@ -16,14 +16,34 @@ namespace Inventory_System.Controllers
         private InventoryDB db = new InventoryDB();
 
         // GET: Items
-        public ActionResult Index()
+        public ActionResult Index(int? year)
         {
-
+            if(year.HasValue == false)
+            {
+                year = DateTime.Now.Year;
+            }
+            DateTime toCompare = new DateTime(year.Value, 1, 1);
             ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
-            //ViewBag.subcategory = new SelectList(db.ItemSubCategories, "ItemSubCategoryId", "ItemSubCategoryName");
-            //   var items = db.Items.Include(i => i.ItemSubCategory);
-            // ViewBag.category = db.ItemCategories;
-            var items = db.Items;
+         
+            var items = db.Items.Include(a=>a.ItemSubCategory).Include(a=>a.ItemSubCategory.ItemCategory).ToList();
+
+            foreach(var v in items)
+            {
+                var inputsSum = db.ItemInputs.Where(a => a.DateCreated < toCompare &&
+                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemQuantity);
+                inputsSum += db.ItemReturns.Where(a => a.DateCreated < toCompare &&
+                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemQuantity);
+
+                var outputsSum = db.ItemOutputs.Where(a => a.DateCreated < toCompare &&
+                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemOutputQuantity);
+                var remainder = inputsSum - outputsSum;
+                if(remainder > 0)
+                {
+                    v.ItemQuantity = remainder;
+                }
+                v.ItemReminder = v.ItemQuantityAdded - v.ItemQuantityWithdraw + v.ItemReturn;
+            }
+            db.SaveChanges();
             return View(items.ToList());
         }
 
@@ -32,21 +52,33 @@ namespace Inventory_System.Controllers
         {
            
             ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
-            //ViewBag.subcategory = new SelectList(db.ItemSubCategories, "ItemSubCategoryId", "ItemSubCategoryName");
-            //ViewBag.item = new SelectList(db.Items, "ItemId", "ItemName");
             
-
             if (subcategory !=0 && category !=0) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             {
                var  items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
                      .Include(i => i.ItemSubCategory)
                      .Where(a => a.ItemSubCategory.ItemCategoryId == category && a.ItemSubCategoryId == subcategory);
+                foreach (var v in items)
+                {
+                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
+                }
+           //     db.Entry(items).State = EntityState.Modified;
+
+                db.SaveChanges();
                 return View(items.ToList());
             }
             else
             {
+
                 var items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
                     .Where(a => a.ItemSubCategory.ItemCategoryId == category);
+                foreach (var v in items)
+                {
+                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
+                }
+         //       db.Entry(items).State = EntityState.Modified;
+
+                db.SaveChanges();
                 return View(items.ToList());
             }
 
@@ -102,6 +134,16 @@ namespace Inventory_System.Controllers
             if (ModelState.IsValid)
             {
                 db.Items.Add(item);
+                db.SaveChanges();
+                var newItemInput = new ItemInput()
+                {
+                    ItemId = item.ItemId,
+                    ItemPrice = 0,
+                    ItemQuantity = item.ItemQuantity,
+                    ItemTotalCost = 0,
+                    Notes = ""
+                };
+                db.ItemInputs.Add(newItemInput);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

@@ -7,88 +7,119 @@
 
     <h2>قائمه المنتجات بالمخزن</h2>
 
-<p>
+    <p>
+
+        @using (Html.BeginForm())
+        {
+            @*@Html.HiddenFor(mod)*@
+            <table>
+                <tr>
+                    <th class="col-md-4 form-control">
+                        @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
+
+                        @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
+
+                        @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
+                    </th>
+
+                    <th><input type="submit" value="بحث" /></th>
+                </tr>
+            </table>
+        }
 
 
-    @using (Html.BeginForm())
-    {
-        <table>
-            <tr>
-                <th class="text-right glyphicon-font">
-                    @Html.ActionLink("اضافه جديد", "Create")
-                </th>
-            </tr>
-
-            <tr>
-                <th class="col-md-4 form-control">
-
-
-                    @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
-
-                    @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
-              
-                    @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
-
-
-                </th>
-                <th><input type="submit" value="بحث" /></th>
-            </tr>
-        </table>
-    }
-
-
-</p>
+    </p>
 
 <table class="table">
 
     <tr>
         @*<th>
-                @Html.DisplayNameFor(model => model.ItemSubCategory.ItemSubCategoryName)
-            </th>*@
+            @Html.DisplayNameFor(model => model.ItemSubCategory.ItemSubCategoryName)
+        </th>*@
         <th class="text-right">
             @Html.DisplayName("كود المنتج")
         </th>
-        <th class="text-right">
-            @Html.DisplayName("اسم المنتج")
+        <th class="text-center">
+            @Html.DisplayName("التصنيف الرئيسي")
         </th>
-        <th class="text-right">
+
+        <th class="text-center">
+            @Html.DisplayName("التصنيف الفرعي")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("اسم الصنف")
+        </th>
+        <th class="text-center">
             @Html.DisplayName("الوحده")
         </th>
-        <th class="text-right">
-            @Html.DisplayName("الكميه")
+        <th class="text-center">
+            @Html.DisplayName("الرصيد الافتتاحي")
         </th>
-        <th class="text-right">
+
+        <th class="text-center">
+            @Html.DisplayName("الاضافه")
+        </th>
+
+
+        <th class="text-center">
+            @Html.DisplayName("الصرف")
+        </th>
+
+        <th class="text-center">
+            @Html.DisplayName("الهالك")
+        </th>
+
+        <th class="text-center">
+            @Html.DisplayName("المتبقي")
+        </th>
+
+        <th class="text-center">
             @Html.DisplayName("تاريخ الاصدار")
         </th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemUnit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemQuantity)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.ItemAvgPrice)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |
-                @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
-                @Html.ActionLink("حذف", "Delete", new { id = item.ItemId })
-            </td>
-        </tr>
+<tr>
+    <td class="text-center" >
+        @Html.DisplayFor(modelItem => item.ItemId)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemCategory.ItemCategoryName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemSubCategoryName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemUnit)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantity)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantityAdded)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantityWithdraw)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemReturn)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem=>item.ItemReminder)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+    <td class="text-center">
+        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |
+        @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
+        @Html.ActionLink("حذف", "Delete", new { id = item.ItemId })
+    </td>
+</tr>
     }
 
 </table>

@@ -14,12 +14,7 @@
     @using (Html.BeginForm())
     {
         <table>
-            <tr>
-                <th class="text-right">
-                    @Html.ActionLink("اضافه جديد", "Create")
-                </th>
-            </tr>
-
+         
             <tr>
                 <th class="col-md-4 form-control">
                     @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })

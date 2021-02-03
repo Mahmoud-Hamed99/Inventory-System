@@ -12,12 +12,12 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-      @*  <h4>ItemInput</h4>*@
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+    @*  <h4>ItemInput</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        @*-------------------------------------------------------------------------*@
+    @*-------------------------------------------------------------------------*@
 
     <div class="form-group">
         <div class="col-md-5 text-right">
@@ -60,9 +60,7 @@
             @Html.DropDownListFor(model => model.ItemId, new SelectList(""), htmlAttributes: new { @id = "ItemId", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
         </div>
-
         @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
-
     </div>
 
     <div class="form-group">
@@ -75,8 +73,6 @@
 
     </div>
 
-
-
     <div class="form-group">
         <div class="col-md-9 text-right">
             @Html.EditorFor(model => model.ItemQuantity, new { htmlAttributes = new { @class = "form-control" } })
@@ -86,24 +82,40 @@
 
     </div>
 
-    
+    <div class="form-group">
+        <div class="col-md-9 text-right">
+            @Html.EditorFor(model => model.ItemReturn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ItemQuantity, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("الهالك", htmlAttributes: new { @class = "control-label col-md-2" })
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         <div class="col-md-9 text-right">
             @Html.DropDownList("VendorID", null, htmlAttributes: new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Vendor.VendorName, "", new { @class = "text-danger" })
         </div>
-        @Html.Label( "اسم المورد", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("اسم المورد", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-9 text-right">
+            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("ملاحظات", htmlAttributes: new { @class = "control-label col-md-2" })
 
     </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="اضافه" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="اضافه" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 <div>

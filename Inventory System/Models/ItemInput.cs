@@ -15,14 +15,18 @@ namespace Inventory_System.Models
         
         public double ItemPrice { set; get; }
         
-        public int ItemQuantity { set; get; }
+        public double ItemQuantity { set; get; }
         
         public double ItemTotalCost { set; get; }
         
         public int VendorId { set; get; }
         
         public Vendor Vendor { get; set; }
-        
+
+        public double ItemReturn { get; set; }
+
+        public string Notes { get; set; }
+
         public DateTime DateCreated { set; get; } = DateTime.Now;
 
     }

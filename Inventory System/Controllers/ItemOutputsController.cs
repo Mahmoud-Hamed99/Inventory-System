@@ -45,15 +45,17 @@ namespace Inventory_System.Controllers
             {
                 foreach (var v in ItemApproved)
                 {
-
                     var res = db.ItemOutputs.Find(v);
-                    var AvailableQnt = db.Items.Find(v).ItemQuantity;
+
+                    var AvailableQnt = db.Items.Find(res.ItemId).ItemReminder;
                     if (res.ItemOutputQuantity <= AvailableQnt)
                     {
                         if (res != null)
                         {
                             res.ItemOutputApproved = true;
+                            db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
                             db.SaveChanges();
+                            
                         }
                     }
                     else
@@ -126,6 +128,7 @@ namespace Inventory_System.Controllers
             {
                 db.ItemOutputs.Add(itemOutput);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 

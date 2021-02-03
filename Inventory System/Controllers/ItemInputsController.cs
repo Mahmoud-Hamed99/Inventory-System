@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Inventory_System.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Inventory_System;
-using Inventory_System.Models;
 
 namespace Inventory_System.Controllers
 {
@@ -18,9 +15,9 @@ namespace Inventory_System.Controllers
         // GET: ItemInputs
         public ActionResult Index()
         {
-            var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a=>a.Vendor).ToList();
+            var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
             //ViewBag.Vendors = db.Vendors.ToList();
-           
+
             return View(itemInputs);
         }
 
@@ -45,10 +42,10 @@ namespace Inventory_System.Controllers
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
             ViewBag.VendorId = new SelectList(db.Vendors, "VendorId", "VendorName");
             ViewBag.ItemCategory = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
-               return View();
+            return View();
         }
 
-       
+
 
         public JsonResult GetMembers(int id)
         {
@@ -57,7 +54,7 @@ namespace Inventory_System.Controllers
             return Json(itemSubCategoriesList, JsonRequestBehavior.AllowGet);
         }
 
-        
+
 
         public JsonResult GetItems(int itemSubCategoryId)
         {
@@ -74,7 +71,7 @@ namespace Inventory_System.Controllers
         }
 
 
-        
+
         // POST: ItemInputs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -82,14 +79,25 @@ namespace Inventory_System.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
         {
+            //  List<Item> itemList = db.Items.ToList();
+
+            // int itemLen = db.Items.Count();
             if (ModelState.IsValid)
             {
                 db.ItemInputs.Add(itemInput);
                 db.SaveChanges();
+
+
+                var x = db.Items.Find(itemInput.ItemId);
+                x.ItemQuantityAdded += itemInput.ItemQuantity;
+                
+                db.SaveChanges();
+
+
                 return RedirectToAction("Index");
             }
 
-            
+
             return View(itemInput);
         }
 
@@ -122,7 +130,7 @@ namespace Inventory_System.Controllers
             {
                 // ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemInput.ItemId);
                 //List<ItemInput> itemInputs = db.ItemInputs.Include(x => x.Item).Include(x => x.Vendor).ToList();
-                
+
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -137,8 +145,8 @@ namespace Inventory_System.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-             ItemInput itemInput = db.ItemInputs.Find(id);
-            
+            ItemInput itemInput = db.ItemInputs.Find(id);
+
             if (itemInput == null)
             {
                 return HttpNotFound();

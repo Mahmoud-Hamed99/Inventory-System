@@ -18,51 +18,74 @@
 <table class="table">
     <tr>
         <th class="text-center">
-            @Html.DisplayName("اسم المنتج")
+            @Html.DisplayName("كود العمليه")
         </th>
-       
+
         <th class="text-center">
-            @Html.DisplayName("الكميه")
+            @Html.DisplayName("اسم الصنف")
         </th>
+
         <th class="text-center">
             @Html.DisplayName("الوحده")
         </th>
+
+        <th class="text-center">
+            @Html.DisplayName("الكميه")
+        </th>
+
+        <th class="text-center">
+            @Html.DisplayName("الهالك")
+        </th>
+
         <th class="text-center">
             @Html.DisplayName("اسم المورد")
         </th>
+
         <th class="text-center">
             @Html.DisplayName("تاريخ الاصدار")
         </th>
-       
+
+        <th class="text-center">
+            @Html.DisplayName("ملاحظات")
+        </th>
+
     </tr>
 
 @foreach (var item in Model) {
 <tr>
     <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
+        @Html.DisplayFor(modelItem => item.ItemInputId)
     </td>
-    @*<td>
-            @Html.DisplayFor(modelItem => item.ItemPrice)
-        </td>*@
+
     <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantity)
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
     </td>
 
     <td class="text-center">
         @Html.DisplayFor(modelItem => item.Item.ItemUnit)
     </td>
 
-         @*<td>
-            @Html.DisplayFor(modelItem => item.ItemTotalCost)
-        </td>*@
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantity)
+    </td>
+
+
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemReturn)
+    </td>
+
     <td class="text-center">
         @Html.DisplayFor(modelItem => item.Vendor.VendorName)
     </td>
     <td class="text-center">
         @Html.DisplayFor(modelItem => item.DateCreated)
     </td>
+
     <td class="text-center">
-        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemInputId }) |
+        @Html.DisplayFor(modelItem => item.Notes)
+    </td>
+    <td class="text-center">
+        @Html.ActionLink("تعديل", "Accountant", new { id = item.ItemInputId }) |
         @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
         @Html.ActionLink("حذف", "Delete", new { id = item.ItemInputId })
     </td>

@@ -40,9 +40,31 @@ namespace Inventory_System.Controllers
         // GET: ItemReturns/Create
         public ActionResult Create()
         {
-            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
             ViewBag.projectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.depId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
+            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
             return View();
+        }
+
+        public JsonResult GetMembers(int id,int projectId)
+        {
+            //ViewBag.ItemId = new SelectList(db.ItemOutputs.Include(a => a.Item.ItemName).Where(a => a.TechnicalDepartmentId == depId).ToList(), "ItemId", "ItemName");
+
+            db.Configuration.ProxyCreationEnabled = false;
+            var itemOutputList = db.ItemOutputs.Include(a=>a.Item).Where(x => x.TechnicalDepartmentId == id
+            && x.ItemOutputApproved == true && x.ProjectId == projectId).ToList();
+            List<Item> itemsList = new List<Item>();
+            
+            foreach (var i in itemOutputList)
+            {
+                itemsList.Add(new Item()
+                {
+                    ItemId = i.ItemId,
+                    ItemName = i.Item.ItemName
+                });
+            }
+            var ret = Json(itemsList, JsonRequestBehavior.AllowGet);
+            return ret;
         }
 
         // POST: ItemReturns/Create
@@ -56,6 +78,12 @@ namespace Inventory_System.Controllers
             {
                 db.ItemReturns.Add(itemReturn);
                 db.SaveChanges();
+
+                var x = db.Items.Find(itemReturn.ItemId);
+                x.ItemReturn += itemReturn.ItemQuantity;
+                
+                db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
 
@@ -92,6 +120,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(itemReturn).State = EntityState.Modified;
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemReturn.ItemId);

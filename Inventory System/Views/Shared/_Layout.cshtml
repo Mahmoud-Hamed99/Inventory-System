@@ -17,20 +17,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>
+        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
 
-                    <li>@Html.ActionLink("Item Inputs", "Index", "ItemInputs")</li>
-                    <li>@Html.ActionLink("Item OutPuts", "Index", "ItemOutputs")</li>
-                    <li>@Html.ActionLink("Projects", "Index", "Projects")</li>
-                    <li>@Html.ActionLink("Vendors", "Index", "Vendors")</li>
+                    <li>@Html.ActionLink("قائمه الأصناف", "Index", "Items")</li>
+                    <li>@Html.ActionLink("أذونات الدخول", "Index", "ItemInputs")</li>
+                    <li>@Html.ActionLink("أذونات الخروج", "Index", "ItemOutputs")</li>
+                    <li>@Html.ActionLink("المشاريع", "Index", "Projects")</li>
+                    <li>@Html.ActionLink("الموردين", "Index", "Vendors")</li>
+                    <li>@Html.ActionLink("الأقسام", "Index", "TechnicalDepartments")</li>
                   
-
                 </ul>
             </div>
         </div>
@@ -38,9 +39,9 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
+        @*<footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        </footer>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")

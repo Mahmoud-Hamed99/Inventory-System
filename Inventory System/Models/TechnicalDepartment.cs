@@ -14,5 +14,7 @@ namespace Inventory_System.Models
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
         public ICollection<ItemOutput> ItemOutputs { set; get; }
+
+      
     }
 }

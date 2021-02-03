@@ -27,6 +27,8 @@ namespace Inventory_System.Models
         //Approved with default false
         public bool ItemOutputApproved { get; set; } = false;
 
+        public string Notes { get; set; }
+
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
     }
