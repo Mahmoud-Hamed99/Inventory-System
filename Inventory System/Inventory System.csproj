@@ -189,6 +189,10 @@
     <Compile Include="Migrations\202102031243359_adde validation for item tble.designer.cs">
       <DependentUpon>202102031243359_adde validation for item tble.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102041020374_updatModel.cs" />
+    <Compile Include="Migrations\202102041020374_updatModel.designer.cs">
+      <DependentUpon>202102041020374_updatModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemCategory.cs" />
@@ -400,6 +404,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102031243359_adde validation for item tble.resx">
       <DependentUpon>202102031243359_adde validation for item tble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102041020374_updatModel.resx">
+      <DependentUpon>202102041020374_updatModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

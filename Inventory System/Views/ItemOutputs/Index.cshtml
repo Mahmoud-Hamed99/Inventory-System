@@ -17,10 +17,6 @@
         <table>
             <tr>
                 <th class="text-right">
-                    @Html.ActionLink("اضافه جديد", "Create")
-                </th>
-
-                <th class="text-right">
                     @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
                 </th>
             </tr>
@@ -30,7 +26,6 @@
                     @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })
 
                     @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control col-md-3", @id = "ProjectId" })
-
                 </th>
                 <th><input type="submit" value="بحث" /></th>
             </tr>

@@ -11,11 +11,13 @@ namespace Inventory_System.Models
     {
         public int ItemId { set; get; }
 
-        [Required(ErrorMessage ="hoba")]
+        [Required(ErrorMessage ="من فضلك ادخل اسم الصنف")]
         public string ItemName { set; get; }
-        [Required(ErrorMessage ="hoba")]
+
+        [Required(ErrorMessage ="من فضلك ادخل وحده الصنف")]
         public string ItemUnit { get; set; }
-        [Required(ErrorMessage ="hoba3")]
+
+        [Required(ErrorMessage ="من فضلك ادخل الكميه")]
         public double ItemQuantity { get; set; }
 
         public double ItemQuantityAdded { get; set; } //new
@@ -27,9 +29,9 @@ namespace Inventory_System.Models
         public double ItemReminder { get; set; }
 
         public double ItemAvgPrice { set; get; }
-        
-        public int ItemSubCategoryId { set; get; }
 
+        public int ItemSubCategoryId { set; get; }
+     
         public ItemSubCategory ItemSubCategory { set; get; }
 
         [DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]

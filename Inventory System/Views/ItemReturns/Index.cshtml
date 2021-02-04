@@ -12,36 +12,36 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayName("المنتج")
+        <th class="text-center">
+            @Html.DisplayName("الصنف")
         </th>
-        <th>
+        <th class="text-center">
             @Html.DisplayName("المشروع")
         </th>
-        <th>
+        <th class="text-center">
             @Html.DisplayName("الكميه")
         </th>
-        <th>
+        <th class="text-center">
             @Html.DisplayName("تاريخ الاصدار")
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td class="text-center">
             @Html.DisplayFor(modelItem => item.Item.ItemName)
         </td>
-        <td>
+        <td class="text-center">
             @Html.DisplayFor(modelItem => item.Project.ProjectName)
         </td>
-        <td>
+        <td class="text-center">
             @Html.DisplayFor(modelItem => item.ItemQuantity)
         </td>
-        <td>
+        <td class="text-center">
             @Html.DisplayFor(modelItem => item.DateCreated)
         </td>
-        <td>
+
+        <td class="text-center">
             @Html.ActionLink("تعديل", "Edit", new { id=item.ItemReturnId }) |
            @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
             @Html.ActionLink("حذف", "Delete", new { id=item.ItemReturnId })

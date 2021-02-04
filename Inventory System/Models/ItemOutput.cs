@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -9,6 +10,7 @@ namespace Inventory_System.Models
     {
         public int ItemOutputId { set; get; }
 
+        [Required(ErrorMessage = "من فضلك ادخل الكميه")]
         public double ItemOutputQuantity { set; get; }
 
         public int ItemId { set; get; }
@@ -29,6 +31,7 @@ namespace Inventory_System.Models
 
         public string Notes { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
     }
