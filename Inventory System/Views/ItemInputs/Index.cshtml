@@ -22,6 +22,10 @@
         </th>
 
         <th class="text-center">
+            @Html.DisplayName("رقم المستند")
+        </th>
+
+        <th class="text-center">
             @Html.DisplayName("اسم الصنف")
         </th>
 
@@ -55,6 +59,10 @@
 <tr>
     <td class="text-center">
         @Html.DisplayFor(modelItem => item.ItemInputId)
+    </td>
+
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DocCode)
     </td>
 
     <td class="text-center">
