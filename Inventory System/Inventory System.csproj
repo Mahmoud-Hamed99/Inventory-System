@@ -193,6 +193,10 @@
     <Compile Include="Migrations\202102041020374_updatModel.designer.cs">
       <DependentUpon>202102041020374_updatModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102081202569_add DocCode to ItemInput Tale.cs" />
+    <Compile Include="Migrations\202102081202569_add DocCode to ItemInput Tale.designer.cs">
+      <DependentUpon>202102081202569_add DocCode to ItemInput Tale.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemCategory.cs" />
@@ -407,6 +411,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102041020374_updatModel.resx">
       <DependentUpon>202102041020374_updatModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102081202569_add DocCode to ItemInput Tale.resx">
+      <DependentUpon>202102081202569_add DocCode to ItemInput Tale.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -16,6 +16,8 @@ namespace Inventory_System.Models
 
         public double ItemPrice { set; get; }
 
+        public int DocCode { set; get; } //رقم المستند
+
         [Required(ErrorMessage = "من فضلك ادخل الكميه")]
         public double ItemQuantity { set; get; }
 
