@@ -2,17 +2,19 @@
 
 @{
     ViewBag.Title = "أذونات الدخول";
-   
+
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
+
 }
 
-    <h2>أذونات الدخول</h2>
+<h2>أذونات الدخول</h2>
 
 <br />
-<p>
-    @Html.ActionLink("اضافه جديد", "Create")
-</p>
+@if (ViewBag.IsAccountant == false)
+{<p>
+        @Html.ActionLink("اضافه جديد", "Create")
+    </p>
+}
 <br />
 
 <table class="table">
@@ -38,8 +40,8 @@
         </th>
 
         @*<th class="text-center">
-            @Html.DisplayName("الهالك")
-        </th>*@
+                @Html.DisplayName("الهالك")
+            </th>*@
 
         <th class="text-center">
             @Html.DisplayName("اسم المورد")
@@ -55,49 +57,55 @@
 
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemInputId)
-    </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemInputId)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DocCode)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DocCode)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemName)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemUnit)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantity)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemQuantity)
+            </td>
 
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemReturn)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Vendor.VendorName)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Vendor.VendorName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Notes)
-    </td>
-    <td class="text-center">
-        @Html.ActionLink("تعديل", "Accountant", new { id = item.ItemInputId }) |
-        @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
-        @Html.ActionLink("حذف", "Delete", new { id = item.ItemInputId })
-    </td>
-</tr>
-}
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td class="text-center">
+                @if (ViewBag.IsAccountant)
+                {
+                    @Html.ActionLink("تعديل", "Accountant", new { id = item.ItemInputId })
+                    @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
+
+                }
+                else
+                {
+                    @Html.ActionLink("حذف", "Delete", new { id = item.ItemInputId })
+                }
+
+            </td>
+        </tr>
+    }
 
 </table>

@@ -87,8 +87,35 @@ namespace Inventory_System.Controllers
             }
 
         }
+        public ActionResult technicalList()
+        {
+            var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a=>a.Project.ProjectFinished == false);
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
 
+            return View(itemOutputs.ToList());
+        }
+        [HttpPost]
+        public ActionResult technicalList(int? TechnicalDepartmentId, int? ProjectId)
+        {
+            ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
 
+            if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
+            {
+                var items = db.ItemOutputs.Include(i => i.Project)
+                      .Include(i => i.TechnicalDepartment)
+                      .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
+                return View(items.ToList());
+            }
+            else
+            {
+                var items = db.ItemOutputs.Include(i => i.TechnicalDepartment)
+                    .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
+                return View(items.ToList());
+            }
+
+        }
         // GET: ItemOutputs/Details/5
         public ActionResult Details(int? id)
         {

@@ -21,6 +21,7 @@ namespace Inventory_System
         public DbSet<Models.ItemSubCategory> ItemSubCategories { set; get; }
         public DbSet<Models.ItemCategory> ItemCategories { set; get; }
         public DbSet<Models.Vendor>Vendors { set; get; }
+        public DbSet<Models.Notification> Notifications { set; get; }
 
         public System.Data.Entity.DbSet<Inventory_System.Models.TechnicalDepartment> TechnicalDepartments { get; set; }
     }

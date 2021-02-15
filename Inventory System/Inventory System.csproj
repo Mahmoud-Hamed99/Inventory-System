@@ -201,6 +201,7 @@
     <Compile Include="Models\ItemOutput.cs" />
     <Compile Include="Models\ItemReturn.cs" />
     <Compile Include="Models\ItemSubCategory.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\TechnicalDepartment.cs" />
     <Compile Include="Models\Vendor.cs" />
@@ -352,6 +353,10 @@
     <Content Include="Views\TechnicalDepartments\Index.cshtml" />
     <Content Include="Views\ItemOutputs\warehouse.cshtml" />
     <Content Include="Views\ItemInputs\Accountant.cshtml" />
+    <Content Include="Views\Shared\_LayoutPlanning.cshtml" />
+    <Content Include="Views\Shared\_LayoutVendors.cshtml" />
+    <Content Include="Views\Shared\_LayoutTechnical.cshtml" />
+    <Content Include="Views\ItemOutputs\technicalList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

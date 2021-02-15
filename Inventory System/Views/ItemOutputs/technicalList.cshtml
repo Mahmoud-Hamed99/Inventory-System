@@ -2,24 +2,22 @@
 
 @{
     ViewBag.Title = "قائمه أذونات الخروج";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
 }
 
 <h2>قائمه أذونات الخروج</h2>
 <br />
 
-
+<p>
+    @Html.ActionLink("طلب جديد", "Create")
+</p>
 <p>
 
 
     @using (Html.BeginForm())
     {
         <table>
-            <tr>
-                <th class="text-right">
-                    @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
-                </th>
-            </tr>
+            
 
             <tr>
                 <th class="col-md-4 form-control">

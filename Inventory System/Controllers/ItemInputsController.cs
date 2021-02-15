@@ -13,8 +13,9 @@ namespace Inventory_System.Controllers
         private InventoryDB db = new InventoryDB();
 
         // GET: ItemInputs
-        public ActionResult Index()
+        public ActionResult Index(bool acc=false)
         {
+            ViewBag.IsAccountant = acc;
             var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
             //ViewBag.Vendors = db.Vendors.ToList();
 
@@ -169,10 +170,10 @@ namespace Inventory_System.Controllers
             {
                 // ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemInput.ItemId);
                 //List<ItemInput> itemInputs = db.ItemInputs.Include(x => x.Item).Include(x => x.Vendor).ToList();
-
+                itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index",new {acc=true });
             }
             return View(itemInput);
         }
