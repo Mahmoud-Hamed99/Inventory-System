@@ -18,7 +18,7 @@ namespace Inventory_System.Controllers
         // GET: ItemReturns
         public ActionResult Index()
         {
-            var itemReturns = db.ItemReturns.Include(i => i.Item).Include(i => i.Project);
+            var itemReturns = db.ItemReturns.Include(i => i.Item).Include(i => i.Project).Include(i=> i.ItemInput.Vendor);
             return View(itemReturns.ToList());
         }
 
@@ -80,7 +80,7 @@ namespace Inventory_System.Controllers
                 db.SaveChanges();
 
                 var x = db.Items.Find(itemReturn.ItemId);
-                x.ItemReturn += itemReturn.ItemQuantity;
+                x.ItemQuantityAdded += itemReturn.ItemQuantity;
                 
                 db.SaveChanges();
 

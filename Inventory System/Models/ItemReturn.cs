@@ -17,13 +17,17 @@ namespace Inventory_System.Models
         [Required(ErrorMessage = "من فضلك ادخل الكميه")]
         public double ItemQuantity { set; get; }
         
-        public int projectId { set; get; }
+        public int? projectId { set; get; }
         
         public Project Project { set; get; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
-       
+        public int? ItemInputId { get; set; }
+
+        public ItemInput ItemInput { get; set; }
+
+
     }
 }

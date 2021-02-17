@@ -51,7 +51,7 @@
             @Html.DisplayName("تاريخ الاصدار")
         </th>
 
-        <th class="text-center">
+        <th >
             @Html.DisplayName("ملاحظات")
         </th>
 
@@ -59,53 +59,69 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemInputId)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemInputId)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DocCode)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DocCode)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Item.ItemName)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Item.ItemUnit)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemQuantity)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantity)
+    </td>
 
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Vendor.VendorName)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Vendor.VendorName)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td class="text-center">
-                @if (ViewBag.IsAccountant)
-                {
-                    @Html.ActionLink("تعديل", "Accountant", new { id = item.ItemInputId })
-                    @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Notes , new { htmlAttributes = new { @class = "col-md-4" } })
+    </td>
+    <td class="text-left">
+        @if (ViewBag.IsAccountant)
+        {
+            @Html.ActionLink("تعديل", "WarhouseManager", new { id = item.ItemInputId })
+            @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
 
-                }
-                else
-                {
-                    @Html.ActionLink("حذف", "Delete", new { id = item.ItemInputId })
-                }
+        }
+        else
+        {
+            @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
+          
+        }
 
-            </td>
-        </tr>
+    </td>
+
+    @*<td>
+             @Html.Label("الكميه المرتجعه", new { htmlAttributes = new {@id="text", @style = "display:none;" } })
+        </td>*@
+
+    @*<td >
+        @Html.Editor("ReturnQnt", new { htmlAttributes = new { @id = "ItemQntReturned", @class = "col-md-4"} })
+    </td>*@
+
+    @*<td >
+        <div class="col-md-2">
+            <input type="submit" value="حفظ" class="btn btn-default" />
+        </div>
+       
+    </td>*@
+</tr>
     }
 
 </table>

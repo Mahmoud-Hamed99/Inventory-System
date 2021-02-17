@@ -19,6 +19,9 @@
             @Html.DisplayName("المشروع")
         </th>
         <th class="text-center">
+            @Html.DisplayName("المورد")
+        </th>
+        <th class="text-center">
             @Html.DisplayName("الكميه")
         </th>
         <th class="text-center">
@@ -27,26 +30,29 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Item.ItemName)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Project.ProjectName)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.ItemQuantity)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.DateCreated)
-        </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemInput.Vendor.VendorName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemQuantity)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
 
-        <td class="text-center">
-            @Html.ActionLink("تعديل", "Edit", new { id=item.ItemReturnId }) |
-           @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
-            @Html.ActionLink("حذف", "Delete", new { id=item.ItemReturnId })
-        </td>
-    </tr>
+    <td class="text-center">
+        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemReturnId }) |
+        @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
+        @Html.ActionLink("حذف", "Delete", new { id = item.ItemReturnId })
+    </td>
+</tr>
 }
 
 </table>

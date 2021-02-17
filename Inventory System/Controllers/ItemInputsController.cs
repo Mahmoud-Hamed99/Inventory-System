@@ -90,11 +90,12 @@ namespace Inventory_System.Controllers
 
 
                 var x = db.Items.Find(itemInput.ItemId);
-                x.ItemQuantityAdded += itemInput.ItemQuantity;
-                
+
+                    x.ItemQuantity = itemInput.ItemQuantity;
+             
+                    x.ItemQuantityAdded += itemInput.ItemQuantity;
+             
                 db.SaveChanges();
-
-
                 return RedirectToAction("Index");
             }
 
@@ -140,7 +141,7 @@ namespace Inventory_System.Controllers
         }
 
 
-        public ActionResult Accountant(int? id)
+        public ActionResult WarhouseManager(int? id)
         {
             if (id == null)
             {
@@ -164,15 +165,25 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Accountant([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
+        public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated")] ItemInput itemInput)
         {
             if (ModelState.IsValid)
             {
-                // ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemInput.ItemId);
-                //List<ItemInput> itemInputs = db.ItemInputs.Include(x => x.Item).Include(x => x.Vendor).ToList();
                 itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
+
+                ItemReturn itemReturn = new ItemReturn();
+                itemReturn.ItemInput = itemInput;
+                itemReturn.ItemId = itemInput.ItemId;
+                itemReturn.ItemQuantity = itemInput.ItemReturn;
+
+                var x = db.Items.Find(itemInput.ItemId);
+                x.ItemQuantityWithdraw += itemInput.ItemReturn;
+
+                db.ItemReturns.Add(itemReturn);
+                db.SaveChanges();
+
                 return RedirectToAction("Index",new {acc=true });
             }
             return View(itemInput);
@@ -204,6 +215,43 @@ namespace Inventory_System.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        //public ActionResult Return(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    ItemInput itemInput = db.ItemInputs.Find(id);
+
+        //    if (itemInput == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemInput.ItemId);
+        //    ViewBag.VendorId = new SelectList(db.Vendors, "VendorId", "VendorName", itemInput.VendorId);
+        //    //List<ItemInput> itemInputs = db.ItemInputs.Include(x => x.Item).Include(x => x.Vendor).ToList();
+        //    //ViewBag.Item = itemInputs.Where(x => x.ItemInputId == id).FirstOrDefault();
+        //    return View(itemInput);
+        //}
+
+
+        //[HttpPost, ActionName("Return")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult ReturnConfirmed(int id)
+        //{
+        //    ItemInput itemInput = db.ItemInputs.Find(id);
+            
+        //    ItemReturn itemReturn = new ItemReturn();
+
+        //    itemReturn.ItemId = itemInput.ItemId;
+        //    itemReturn.ItemInput.VendorId = itemInput.VendorId;
+        //    itemReturn.ItemQuantity = 5; // el qnt will be taken from user .
+
+        //    db.ItemReturns.Add(itemReturn);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //} 
 
         protected override void Dispose(bool disposing)
         {

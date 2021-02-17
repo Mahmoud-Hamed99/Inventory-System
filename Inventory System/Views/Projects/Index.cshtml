@@ -45,21 +45,20 @@
                     @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
 
-                <td class="text-center">
+                <td class="text-right">
                     <input type="checkbox" name="ProjectFinishedList" value="@item.ProjectId" />
-                    @*@Html.DisplayFor(modelItem => item.ItemOutputApproved)*@
                 </td>
 
 
                 <td class="text-right">
                     @Html.ActionLink("تعديل", "Edit", new { id = item.ProjectId }) |
                     @*@Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |*@
-                    @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })
+                   @* @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })*@
                 </td>
             </tr>
         }
 
     </table>
-    <button type="submit">تعديل</button>
+    <button type="submit">حفظ</button>
 
 }

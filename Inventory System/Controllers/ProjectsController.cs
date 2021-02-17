@@ -21,12 +21,7 @@ namespace Inventory_System.Controllers
             return View(db.Projects.ToList());
         }
 
-        //public ActionResult ProjectFinishedx()
-        //{
-        //    return ReturnIndex();
-        //}
-
-
+        
         [HttpPost]
         ActionResult ReturnIndex()
         {
@@ -98,6 +93,9 @@ namespace Inventory_System.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Project project = db.Projects.Find(id);
+           
+            //ViewBag.itemOutputs = db.ItemOutputs.Include(a => a.ProjectId == id).ToList();
+           
             if (project == null)
             {
                 return HttpNotFound();

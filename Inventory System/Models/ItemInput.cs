@@ -31,8 +31,12 @@ namespace Inventory_System.Models
 
         public string Notes { get; set; }
 
+       // public int MyProperty { get; set; }
+
         [DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}" )]
         public DateTime DateCreated { set; get; } = DateTime.Now;
+
+        public ICollection<ItemReturn> ItemReturns{ get; set; }
 
     }
 }

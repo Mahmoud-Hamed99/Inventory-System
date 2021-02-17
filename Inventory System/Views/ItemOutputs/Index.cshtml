@@ -15,12 +15,15 @@
     @using (Html.BeginForm())
     {
         <table>
-            <tr>
+            <tr  class="col-md-10 text-right form-control">
                 <th class="text-right">
+                    @Html.ActionLink("طلب جديد", "Create")
+                </th>
+                <th class="col-md-4 text-right">
                     @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
                 </th>
             </tr>
-
+            
             <tr>
                 <th class="col-md-4 form-control">
                     @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })

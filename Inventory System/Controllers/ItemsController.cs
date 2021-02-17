@@ -25,7 +25,7 @@ namespace Inventory_System.Controllers
             DateTime toCompare = new DateTime(year.Value, 1, 1);
             ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
          
-            var items = db.Items.Include(a=>a.ItemSubCategory).Include(a=>a.ItemSubCategory.ItemCategory).ToList();
+            var items = db.Items.Include(a=>a.ItemSubCategory).Include(a=>a.ItemSubCategory.ItemCategory).Include(a=>a.ItemInputs).ToList();
 
             foreach(var v in items)
             {
@@ -133,19 +133,20 @@ namespace Inventory_System.Controllers
         {
             if (ModelState.IsValid)
             {
+      
                 db.Items.Add(item);
                 db.SaveChanges();
-                var newItemInput = new ItemInput()
-                {
-                    ItemId = item.ItemId,
-                    ItemPrice = 0,
-                    ItemQuantity = item.ItemQuantity,
-                    ItemTotalCost = 0,
-                    Notes = ""
-                };
-                db.ItemInputs.Add(newItemInput);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                //var newItemInput = new ItemInput()
+                //{
+                //    ItemId = item.ItemId,
+                //    ItemPrice = 0,
+                //    ItemQuantity = item.ItemQuantity,
+                //    ItemTotalCost = 0,
+                //    Notes = ""
+                //};
+                //db.ItemInputs.Add(newItemInput);
+                //db.SaveChanges();
+                return RedirectToAction("Create","ItemInputs");
             }
 
             ViewBag.ItemSubCategoryId = new SelectList(db.ItemSubCategories, "ItemSubCategoryId", "ItemSubCategoryName", item.ItemSubCategoryId);

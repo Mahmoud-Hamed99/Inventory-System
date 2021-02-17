@@ -60,13 +60,8 @@
             @Html.DisplayName("الاضافه")
         </th>
 
-
         <th class="text-center">
             @Html.DisplayName("الصرف")
-        </th>
-
-        <th class="text-center">
-            @Html.DisplayName("الهالك")
         </th>
 
         <th class="text-center">
@@ -105,9 +100,9 @@
     <td class="text-center">
         @Html.DisplayFor(modelItem => item.ItemQuantityWithdraw)
     </td>
-    <td class="text-center">
+    @*<td class="text-center">
         @Html.DisplayFor(modelItem => item.ItemReturn)
-    </td>
+    </td>*@
     <td class="text-center">
         @Html.DisplayFor(modelItem=>item.ItemReminder)
     </td>
