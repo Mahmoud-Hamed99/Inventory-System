@@ -165,25 +165,31 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated")] ItemInput itemInput)
+        public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated")] ItemInput itemInput,int minimumAllowed)
         {
             if (ModelState.IsValid)
             {
                 itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
+                db.Items.Single(a => a.ItemId == itemInput.ItemId).ItemMinQuantity = minimumAllowed;
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
+                
+                var xy = itemInput.Item.ItemMinQuantity;
 
-                ItemReturn itemReturn = new ItemReturn();
-                itemReturn.ItemInput = itemInput;
-                itemReturn.ItemId = itemInput.ItemId;
-                itemReturn.ItemQuantity = itemInput.ItemReturn;
-
-                var x = db.Items.Find(itemInput.ItemId);
-                x.ItemQuantityWithdraw += itemInput.ItemReturn;
-
-                db.ItemReturns.Add(itemReturn);
-                db.SaveChanges();
-
+                if(itemInput.ItemReturn != 0)
+                { 
+                    ItemReturn itemReturn = new ItemReturn();
+                    itemReturn.ItemInput = itemInput;
+                    itemReturn.ItemId = itemInput.ItemId;
+                    itemReturn.ItemQuantity = itemInput.ItemReturn;
+                    
+                   
+                    var x = db.Items.Find(itemInput.ItemId);
+                    x.ItemQuantityWithdraw += itemInput.ItemReturn;
+                    
+                    db.ItemReturns.Add(itemReturn);
+                    db.SaveChanges();
+                }
                 return RedirectToAction("Index",new {acc=true });
             }
             return View(itemInput);

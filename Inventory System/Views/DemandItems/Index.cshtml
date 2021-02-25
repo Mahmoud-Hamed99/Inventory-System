@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Inventory_System.Models.DemandItem>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutDemand.cshtml";
+}
+
+<h2>Demand Items</h2>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+@using (Html.BeginForm("Edit", "DemandItems"))
+{
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                @Html.DisplayName("اسم الصنف ")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الكميه المطلوبه")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الأولويه")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الموافقه")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Item.ItemName)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemPriority)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemApproval)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.DemandItemId })
+                    @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |*@
+                    @*@Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    if (ViewBag.msg2 != null)
+    {
+        <script type="text/javascript">
+
+           alert("@ViewBag.msg2");
+
+        </script>
+    }
+}

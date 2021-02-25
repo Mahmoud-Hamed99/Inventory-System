@@ -1,0 +1,56 @@
+﻿@model Inventory_System.Models.DemandItem
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>DemandItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Item.ItemName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.ItemName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemPriority)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemPriority)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemApproval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemApproval)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "تعديل بيانات المشروع";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
 }
 
 <h2>تعديل بيانات المشروع</h2>
@@ -25,22 +25,7 @@
         @Html.Label("اسم المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
     </div>
 
-        @*<table class="table">
-            <tr>
-                <th class="text-center">
-                    @Html.Display("الصنف") 
-                </th>
-            </tr>
-
-            @foreach(var x in ViewBag.itemOutputs)
-            {
-                <tr>
-                    <th>
-                        
-                    </th>
-                </tr>
-            }
-        </table>*@
+        
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

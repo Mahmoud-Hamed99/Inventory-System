@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Web;
 
 namespace Inventory_System
 {
-    public class InventoryDB : DbContext
+    public class InventoryDB : IdentityDbContext
     {
         public InventoryDB():base("name=InventoryDB")
         {
@@ -22,7 +23,7 @@ namespace Inventory_System
         public DbSet<Models.ItemCategory> ItemCategories { set; get; }
         public DbSet<Models.Vendor>Vendors { set; get; }
         public DbSet<Models.Notification> Notifications { set; get; }
-
-        public System.Data.Entity.DbSet<Inventory_System.Models.TechnicalDepartment> TechnicalDepartments { get; set; }
+        public DbSet<Models.DemandItem> DemandItems { set; get; }
+        public DbSet<Models.TechnicalDepartment> TechnicalDepartments { get; set; }
     }
 }

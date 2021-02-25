@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Inventory_System.Models.DemandItem>
+
+@{
+    ViewBag.Title = "PurchasingApproval";
+    Layout = "~/Views/Shared/_LayoutPurchasing.cshtml";
+}
+
+<h2>قائمه المشتريات</h2>
+
+<br />
+<table class="table">
+    <tr>
+        <th class="text-center">
+            @Html.DisplayName("اسم الصنف")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الكميه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الأولويه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("موافقه ال demand")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("موافقه ال purchasing")
+        </th>
+        <th class="text-center"></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Item.ItemName)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DemandItemPriority)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DemandItemApproval)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.PurchasingApproval)
+        </td>
+        <td class="text-center">
+            @Html.ActionLink("تعديل", "PurchasingEdit", new { id=item.DemandItemId }) 
+            @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
+        </td>
+    </tr>
+}
+
+</table>

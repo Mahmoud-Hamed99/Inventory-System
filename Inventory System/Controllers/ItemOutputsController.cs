@@ -38,6 +38,7 @@ namespace Inventory_System.Controllers
 
             return View("warehouse",itemOutputs.ToList());
         }
+
         [HttpPost]
         public ActionResult Approve(int[] ItemApproved)
         {
@@ -61,11 +62,13 @@ namespace Inventory_System.Controllers
                     else
                     {
                         ViewBag.msg = " هذه الكميه غير متاحه";
+
                     }
                 }
             }
             return ReturnWarehouse();
         }
+
         [HttpPost]
         public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId)
         {
@@ -79,14 +82,21 @@ namespace Inventory_System.Controllers
                       .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId);
                 return View(items.ToList());
             }
-            else
+            else if(ProjectId ==null && TechnicalDepartmentId !=null)
             {
                 var items = db.ItemOutputs.Include(i => i.TechnicalDepartment)
                     .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
                 return View(items.ToList());
             }
+            else
+            {
+                var items = db.ItemOutputs.Include(i => i.Project)
+                   .Where(a => a.ProjectId == ProjectId);
+                return View(items.ToList());
+            }
 
         }
+
         public ActionResult technicalList()
         {
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a=>a.Project.ProjectFinished == false);
@@ -95,6 +105,7 @@ namespace Inventory_System.Controllers
 
             return View(itemOutputs.ToList());
         }
+
         [HttpPost]
         public ActionResult technicalList(int? TechnicalDepartmentId, int? ProjectId)
         {
@@ -108,14 +119,21 @@ namespace Inventory_System.Controllers
                       .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
                 return View(items.ToList());
             }
+            else if(ProjectId ==null && TechnicalDepartmentId !=null)
+            {
+                var items = db.ItemOutputs.Include(i => i.TechnicalDepartment).Include(i=>i.Project)
+                    .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.Project.ProjectFinished==false);
+                return View(items.ToList());
+            }
             else
             {
-                var items = db.ItemOutputs.Include(i => i.TechnicalDepartment)
-                    .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
+                var items = db.ItemOutputs.Include(i => i.Project)
+                   .Where(a => a.ProjectId ==ProjectId && a.Project.ProjectFinished==false);
                 return View(items.ToList());
             }
 
         }
+
         // GET: ItemOutputs/Details/5
         public ActionResult Details(int? id)
         {
@@ -147,15 +165,44 @@ namespace Inventory_System.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,TechnicalDepartmentId,ItemOutputApproved,DateCreated")] ItemOutput itemOutput)
         {
-            //ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            //ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", itemOutput.ProjectId);
-            //ViewBag.DepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName", itemOutput.TechnicalDepartmentId);
-
+           
             if (ModelState.IsValid)
             {
                 db.ItemOutputs.Add(itemOutput);
-                db.SaveChanges();
 
+                DemandItem demandItem = new DemandItem();
+
+                var AvailableQntInStore = db.Items.Find(itemOutput.ItemId).ItemReminder;
+
+                var ItemRequiredQntList = db.ItemOutputs.Where(a => a.ItemId == itemOutput.ItemId && a.ItemOutputApproved== false).ToList();
+
+                double RequiredQnt =itemOutput.ItemOutputQuantity;
+
+                for(int i=0; i<ItemRequiredQntList.Count; i++)
+                {
+                    RequiredQnt += ItemRequiredQntList[i].ItemOutputQuantity;
+                }
+
+                if (RequiredQnt > AvailableQntInStore)
+                {
+                    //check if item available in demand table 
+                    var demanItemAvailable = db.DemandItems.Where(a => a.ItemId == itemOutput.ItemId && a.DemandItemApproval==false).ToList();
+
+                    if (demanItemAvailable.Count != 0) // if available , add quantity only
+                    {
+                         // will calculate required qnt in every item output order to prevent mistakes in quantities.
+                         db.DemandItems.FirstOrDefault(a => a.ItemId == itemOutput.ItemId && a.DemandItemApproval == false).DemandItemQuantity = RequiredQnt - AvailableQntInStore  ;
+                    }
+                    else // add qnt and item name .
+                    {
+                        demandItem.ItemId = itemOutput.ItemId;
+
+                        demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
+
+                        db.DemandItems.Add(demandItem);
+                    }
+                }
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 

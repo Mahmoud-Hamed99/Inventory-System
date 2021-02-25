@@ -1,0 +1,50 @@
+﻿@model Inventory_System.Models.DemandItem
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DemandItem</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Item.ItemName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Item.ItemName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemPriority)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemPriority)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DemandItemApproval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DemandItemApproval)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DemandItemId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

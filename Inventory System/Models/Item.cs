@@ -26,6 +26,8 @@ namespace Inventory_System.Models
 
         public double ItemReturn { get; set; } // هالك
 
+        public int ItemMinQuantity { get; set; }
+
         public double ItemReminder { get; set; }
 
         public double ItemAvgPrice { set; get; }
@@ -42,5 +44,7 @@ namespace Inventory_System.Models
         public ICollection<ItemOutput> ItemOutputs { set; get; }
         
         public ICollection<ItemReturn> ItemReturns { set; get; }
+
+        public ICollection<DemandItem> DemandItems { set; get; }
     }
 }
