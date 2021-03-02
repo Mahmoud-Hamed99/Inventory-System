@@ -184,6 +184,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\DemandItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemCategoriesController.cs" />
@@ -287,7 +288,12 @@
     <Compile Include="Migrations\202102251506246_add item min qnt.Designer.cs">
       <DependentUpon>202102251506246_add item min qnt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202102281013435_add bank account.cs" />
+    <Compile Include="Migrations\202102281013435_add bank account.Designer.cs">
+      <DependentUpon>202102281013435_add bank account.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemCategory.cs" />
@@ -464,6 +470,11 @@
     <Content Include="Views\Shared\_LayoutPurchasing.cshtml" />
     <Content Include="Views\Shared\_LayoutWarhouse.cshtml" />
     <Content Include="Views\Shared\_LayoutWarhouseAudit.cshtml" />
+    <Content Include="Views\BankAccounts\Create.cshtml" />
+    <Content Include="Views\BankAccounts\Delete.cshtml" />
+    <Content Include="Views\BankAccounts\Details.cshtml" />
+    <Content Include="Views\BankAccounts\Edit.cshtml" />
+    <Content Include="Views\BankAccounts\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -547,6 +558,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102251506246_add item min qnt.resx">
       <DependentUpon>202102251506246_add item min qnt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102281013435_add bank account.resx">
+      <DependentUpon>202102281013435_add bank account.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

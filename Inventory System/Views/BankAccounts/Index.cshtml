@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Inventory_System.Models.BankAccount>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>كشف حساب البنوك</h2>
+
+<p>
+    
+
+    @using (Html.BeginForm())
+    {
+        <table>
+            <tr class="col-md-10 text-right form-control">
+                <th class="text-right">
+                    @Html.ActionLink("اضافة جديد", "Create")
+                </th>
+               
+            </tr>
+
+            <tr>
+                <th class="col-md-4 form-control">
+                    @Html.DropDownList("BankName", ViewBag.BankName as SelectList, "اختر بنك", htmlAttributes: new { @class = "form-control col-md-3", @id = "BankName" })
+
+                 </th>
+                <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+            </tr>
+        </table>
+    }
+
+</p>
+<table class="table">
+    <tr>
+        <th class="text-center">
+            @Html.DisplayName("البنك")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("التاريخ")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("رقم الشيك/الحركة")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("البيان")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("نوع الحركه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الايداع")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("المسحوبات")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الرصيد")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.BankName)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.TransitionNumber)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Statement)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.TransitionType)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Deposit)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Withdraw)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Balance)
+        </td>
+        <td class="text-center">
+            @Html.ActionLink("تعديل", "Edit", new { id=item.BankAccountId }) |
+            @Html.ActionLink("حذف", "Delete", new { id=item.BankAccountId })
+        </td>
+    </tr>
+}
+
+</table>

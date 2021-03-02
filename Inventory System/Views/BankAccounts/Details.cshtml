@@ -1,0 +1,82 @@
+﻿@model Inventory_System.Models.BankAccount
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>BankAccount</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BankName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransitionNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransitionNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Statement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Statement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TransitionType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TransitionType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Deposit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Deposit)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Withdraw)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Withdraw)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Balance)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Balance)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BankAccountId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

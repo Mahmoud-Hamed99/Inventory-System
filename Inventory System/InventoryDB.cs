@@ -25,5 +25,7 @@ namespace Inventory_System
         public DbSet<Models.Notification> Notifications { set; get; }
         public DbSet<Models.DemandItem> DemandItems { set; get; }
         public DbSet<Models.TechnicalDepartment> TechnicalDepartments { get; set; }
+        public DbSet<Models.BankAccount> BankAccountants { get; set; }
+
     }
 }
