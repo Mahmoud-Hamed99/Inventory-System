@@ -2,6 +2,9 @@
 
 @{
     ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 }
 
 <h2>اضافه عمليه جديدة</h2>
@@ -11,90 +14,127 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("اسم البنك", htmlAttributes: new { @class = "control-label col-md-2" })
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("اسم البنك", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control" } })
-                @*@Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })*@
+    
+
+    <div class="form-group">
+        <div class="col-md-10">
+            @* @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control", data_provide = "datepicker" } })*@
+            @*  @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })*@
+
+
+            <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+                <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                    @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control datetimepicker-input", data_target = "#requestDateTimePicker" } })
+                </div>
             </div>
-            @Html.Label("تاريخ الاصدار", htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("تاريخ الاصدار", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TransitionNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TransitionNumber, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("رقم الشيك/الحركة", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TransitionNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TransitionNumber, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("رقم الشيك/الحركة", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Statement, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Statement, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("البيان", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Statement, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Statement, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("البيان", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
+    <div class="form-group">
+        <div class="col-md-10">
 
-                @Html.DropDownListFor(model => model.TransitionType, new List<SelectListItem>
-            {
-            new SelectListItem{ Text="اختر العملية", Value = "اختر العملية" },
-            new SelectListItem{ Text="ايداع", Value = "ايداع" },
-            new SelectListItem{ Text="سحب", Value = "سحب" },
+            @Html.DropDownListFor(model => model.TransitionType, new List<SelectListItem>
+        {
+        new SelectListItem{ Text="اختر العملية", Value = "اختر العملية" },
+        new SelectListItem{ Text="ايداع", Value = "ايداع" },
+        new SelectListItem{ Text="سحب", Value = "سحب" },
 
-            }, new {  @id = "TransitionTypeId", @class = "form-control", onchange = "MyFunction()" } )
+        }, new { @id = "TransitionTypeId", @class = "form-control", onchange = "MyFunction()" })
 
-                @Html.ValidationMessageFor(model => model.TransitionType, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("نوع الحركه", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.TransitionType, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("نوع الحركه", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Deposit, new { htmlAttributes = new {@id="depositId" ,@class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Deposit, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("الايداع", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Deposit, new { htmlAttributes = new { @id = "depositId", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Deposit, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("الايداع", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Withdraw, new { htmlAttributes = new { @class = "form-control", @id = "withdrawId" } })
-                @Html.ValidationMessageFor(model => model.Withdraw, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("السحب", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Withdraw, new { htmlAttributes = new { @class = "form-control", @id = "withdrawId" } })
+            @Html.ValidationMessageFor(model => model.Withdraw, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("السحب", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-     
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="اضافة" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CheckIsPaied, new { htmlAttributes = new { @id = "CheckIsPaied" } })
+            @Html.ValidationMessageFor(model => model.CheckIsPaied, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("تم صرف الشيك")
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="اضافة" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 <div>
     @Html.ActionLink("العوده لكشوفات البنوك", "Index")
 </div>
+
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<script>
+    $(function () {
+        $('#requestDateTimePicker').datetimepicker({
+               // time: "far fa-clock",
+                format: 'DD-MM-YY',
+                defaultDate: new Date()
+            
+        });
+    });
+</script>
+
 
 <script>
     function MyFunction() {
@@ -109,3 +149,4 @@
         }
     }
 </script>
+

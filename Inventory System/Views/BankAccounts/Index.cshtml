@@ -2,94 +2,190 @@
 
 @{
     ViewBag.Title = "Index";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 }
 
 <h2>كشف حساب البنوك</h2>
 
-<p>
-    
 
-    @using (Html.BeginForm())
-    {
-        <table>
-            <tr class="col-md-10 text-right form-control">
-                <th class="text-right">
-                    @Html.ActionLink("اضافة جديد", "Create")
-                </th>
-               
-            </tr>
 
+@using (Html.BeginForm())
+{
+    <table>
+        <tr class="col-md-10 text-right form-control">
+            <th class="text-right">
+                @Html.ActionLink("اضافة جديد", "Create")
+            </th>
+
+        </tr>
+
+        <tr>
+            <th class="col-md-4 form-control">
+                @Html.DropDownList("BankName", ViewBag.BankName as SelectList, "اختر بنك", htmlAttributes: new { @class = "form-control col-md-3", @id = "BankName" })
+            </th>
+            <th class="col-md-4 form-control">
+
+                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+                        @Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
+                    </div>
+                </div>
+
+                @* @Html.Editor("StartDate", new { htmlAttributes = new { placeholder = "تاريخ بداية الفترة", data_provide = "datepicker", @id = "StartDate" } })*@
+            </th>
+            <th class="col-md-4 form-control">
+                <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
+                    <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+                        @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
+                    </div>
+                </div>
+
+                @*@Html.Editor("EndDate", new { htmlAttributes = new { placeholder = "تاريخ نهاية الفترة", data_provide = "datepicker", @id = "EndDate" } })*@
+            </th>
+            <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+        </tr>
+    </table>
+
+
+
+    <br />
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                @Html.DisplayName("البنك")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("التاريخ")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("رقم الشيك/الحركة")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("البيان")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("نوع الحركه")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الايداع")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("المسحوبات")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الرصيد")
+            </th>
+
+            <th class="text-center">
+                @Html.DisplayName("تم صرف الشيك")
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
             <tr>
-                <th class="col-md-4 form-control">
-                    @Html.DropDownList("BankName", ViewBag.BankName as SelectList, "اختر بنك", htmlAttributes: new { @class = "form-control col-md-3", @id = "BankName" })
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.BankName)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.TransitionNumber)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Statement)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.TransitionType)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Deposit)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Withdraw)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Balance)
+                </td>
 
-                 </th>
-                <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.CheckIsPaied)
+                </td>
+
+                <td class="text-center">
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.BankAccountId }) |
+                    @Html.ActionLink("حذف", "Delete", new { id = item.BankAccountId })
+                </td>
             </tr>
-        </table>
-    }
+        }
 
-</p>
-<table class="table">
-    <tr>
-        <th class="text-center">
-            @Html.DisplayName("البنك")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("التاريخ")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("رقم الشيك/الحركة")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("البيان")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("نوع الحركه")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("الايداع")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("المسحوبات")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("الرصيد")
-        </th>
-        <th></th>
-    </tr>
+    </table>
 
-@foreach (var item in Model) {
-    <tr>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.BankName)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.DateCreated)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.TransitionNumber)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Statement)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.TransitionType)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Deposit)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Withdraw)
-        </td>
-        <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Balance)
-        </td>
-        <td class="text-center">
-            @Html.ActionLink("تعديل", "Edit", new { id=item.BankAccountId }) |
-            @Html.ActionLink("حذف", "Delete", new { id=item.BankAccountId })
-        </td>
-    </tr>
+    <br />
+
+    <div class="form-control col-md-10" disabled="disabled">
+        @Html.Label("رصيد أول المدة")
+        @Html.Editor("FirstBalance", "ViewBag.FirstBalance", new { htmlAttributes = new { @disabled = "disabled" } })
+
+        @Html.Label("مقبوضات")
+        @Html.Editor("AllDeposit", "ViewBag.AllDeposit", new { htmlAttributes = new { @disabled = "disabled" } })
+
+        @Html.Label("مدفوعات")
+        @Html.Editor("AllWithdraw", "ViewBag.AllWithdraw", new { htmlAttributes = new { @disabled = "disabled" } })
+
+        @Html.Label("الرصيد في نهاية الفترة")
+        @Html.Editor("FinalBalance", "ViewBag.FinalBalance", new { htmlAttributes = new { @disabled = "disabled" } })
+
+    </div>
+
+    <div class=" col-md-10 form-control" disabled="disabled">
+
+        @Html.Label("شيكات صرفت لدي البنك ولم تصرف لدينا")
+        @Html.Editor("DepositChecks", "ViewBag.DepositChecks", new { htmlAttributes = new { @disabled = "disabled" } })
+
+        @Html.Label("شيكات صرفت لدينا ولم تصرف لدي البنك")
+        @Html.Editor("WithdrawChecks", "ViewBag.WithdrawChecks", new { htmlAttributes = new { @disabled = "disabled" } })
+
+        @Html.Label("الرصيد الفعلي")
+        @Html.Editor("ActualBalance", "ViewBag.ActualBalance", new { htmlAttributes = new { @disabled = "disabled" } })
+    </div>
 }
 
-</table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<script>
+    $(function () {
+        $('#requestDateTimePicker').datetimepicker({
+            // time: "far fa-clock",
+            format: 'DD-MM-YY',
+            defaultDate: new Date()
+
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $('#requestDateTimePicker2').datetimepicker({
+            // time: "far fa-clock",
+            format: 'DD-MM-YY',
+            defaultDate: new Date()
+
+        });
+    });
+</script>
+

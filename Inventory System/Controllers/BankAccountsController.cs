@@ -16,10 +16,99 @@ namespace Inventory_System.Controllers
         private InventoryDB db = new InventoryDB();
 
         // GET: BankAccounts
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    var BankNameList = db.BankAccountants.GroupBy(a=>a.BankName).ToList();
+        //    List<string> banks = new List<string>();
+
+        //    foreach(var x in BankNameList)
+        //    {
+        //        banks.Add(x.First().BankName);
+        //    }
+        //    ViewBag.BankName = new SelectList(banks);
+
+        //    return View(db.BankAccountants.ToList());
+        //}
+
+        public ActionResult Index(string BankName , DateTime? StartDate , DateTime? EndDate)
         {
-            ViewBag.BankName = new SelectList(db.BankAccountants.GroupBy(a=>a.BankName)).Distinct().ToList();
-            return View(db.BankAccountants.ToList());
+            var BankNameList = db.BankAccountants.GroupBy(a => a.BankName).ToList();
+            List<string> banks = new List<string>();
+
+            foreach (var x in BankNameList)
+            {
+                banks.Add(x.First().BankName);
+            }
+            ViewBag.BankName = new SelectList(banks);
+
+            // with every search .. show detailed bank account in detected period.
+
+            if(BankName !=null && StartDate !=null && EndDate!=null)
+            {
+                var items = db.BankAccountants.Where(a => a.BankName.Contains(BankName) && a.DateCreated >= StartDate && a.DateCreated <= EndDate);
+     
+                
+                List<BankAccount> BankAccountsList = db.BankAccountants.Where(
+                    a => a.CheckIsPaied == false && a.BankName.Contains(BankName) && 
+                    a.DateCreated >= StartDate   && a.DateCreated <= EndDate).ToList();
+
+                double deposits = 0.0;
+                double withdraw = 0.0;
+                double FirstBalance = 0.0;
+                double FinalBalance = 0.0;
+                double DepositChecks = 0.0;
+                double WithdrawChecks = 0.0;
+           
+                if (items.Count() >0)
+                { 
+                   if(items.FirstOrDefault().TransitionType.Contains("ايداع")) // check transaction to cal balance before this transaction.
+                        FirstBalance = items.FirstOrDefault().Balance - items.FirstOrDefault().Deposit;
+                   else
+                        FirstBalance = items.FirstOrDefault().Balance + items.FirstOrDefault().Withdraw;
+
+                     foreach(var i in items)
+                    { 
+                        if(i.CheckIsPaied== true) // get مقبوضات ومدفوعات  thats mean i received money in my hand.
+                        { 
+                            deposits += i.Deposit;
+                            withdraw += i.Withdraw;
+                        }
+                    }
+                    ViewBag.AllDeposit = deposits;
+                    ViewBag.AllWithdraw = withdraw;
+                    ViewBag.FirstBalance = FirstBalance;
+                    FinalBalance = FirstBalance + deposits - withdraw;
+                    ViewBag.FinalBalance = FinalBalance;
+                }
+
+                foreach(var x in BankAccountsList)
+                {
+                    if (x.TransitionType.Contains("ايداع")) // شيكات صرفت لدي البنك ولم تصرف لدينا
+                        DepositChecks += x.Deposit;
+                    else if(x.TransitionType.Contains("سحب")) // شيكات صرفت لدينا ولم تصرف لدي البنك
+                        WithdrawChecks += x.Withdraw;
+                }
+                ViewBag.DepositChecks = DepositChecks;
+                ViewBag.WithdrawChecks = WithdrawChecks;
+                ViewBag.ActualBalance = FinalBalance + DepositChecks - WithdrawChecks;
+                return View(items.OrderBy(a => a.DateCreated).ToList());
+            }
+
+            else if(BankName == null && StartDate !=null && EndDate !=null)
+            {
+                var items = db.BankAccountants.Where(a =>a.DateCreated >= StartDate && a.DateCreated <= EndDate);
+                return View(items.OrderBy(a => a.DateCreated).ToList());
+            }
+
+            else if(BankName != null && StartDate == null && EndDate == null)
+            {
+                var items = db.BankAccountants.Where(a => a.BankName.Contains(BankName));
+                return View(items.OrderBy(a => a.DateCreated).ToList());
+            }
+
+            else
+                return View(db.BankAccountants.OrderBy(a => a.DateCreated).ToList());
+
         }
 
         // GET: BankAccounts/Details/5
@@ -48,21 +137,40 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance")] BankAccount bankAccount)
+        public ActionResult Create([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance,CheckIsPaied")] BankAccount bankAccount)
         {
             if (ModelState.IsValid)
             {
+                double allDeposit, allWithdraw = 0.0;
                 // update balance in everey transaction operation.
                 if (db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)).ToList().Count != 0)
                 {
-                    double allDeposit = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)).Sum(a => a.Deposit);
-                    double allWithdraw = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)).Sum(a => a.Withdraw);
-                   if(bankAccount.Withdraw==0.0)
-                    bankAccount.Balance = allDeposit - allWithdraw + bankAccount.Deposit ;
-                   else
+                     allDeposit = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)  
+                    && a.DateCreated <bankAccount.DateCreated).ToList().Sum(a => a.Deposit);
+           
+                     allWithdraw = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName) 
+                     && a.DateCreated <bankAccount.DateCreated).ToList().Sum(a => a.Withdraw);
+               
+                    if(bankAccount.Withdraw==0.0) // makind deposit
+                        bankAccount.Balance = allDeposit - allWithdraw + bankAccount.Deposit ;
+                   else // making withdraw
                         bankAccount.Balance = allDeposit - allWithdraw - bankAccount.Withdraw;
 
+                    // if check is created by old date , we should re-calc banck acc transactions after this old date.  
+                    List<BankAccount> updatedList = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName) 
+                    && a.DateCreated> bankAccount.DateCreated).ToList(); 
+                     
+                       
+                    foreach(var y in updatedList)
+                    {
+                        if (bankAccount.Deposit == 0) //making withdraw in this check with old date.
+                            y.Balance -= bankAccount.Withdraw;
+                        else 
+                            y.Balance += bankAccount.Deposit;
+                    }
+
                 }
+
                 else // in first time (no bank account exist)
                     bankAccount.Balance = bankAccount.Deposit;
 
@@ -101,29 +209,32 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance")] BankAccount bankAccount,double oldDeposit, double oldWithdraw)
+        public ActionResult Edit([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance,CheckIsPaied")] BankAccount bankAccount,double oldDeposit, double oldWithdraw)
         {
             if (ModelState.IsValid)
             {
-
-   //             var old = oldDeposit;
                 db.Entry(bankAccount).State = EntityState.Modified;
                 db.SaveChanges();
 
-                if (bankAccount.Withdraw == 0.0) // make deposit
+
+                var bankAccList = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)
+                && a.DateCreated > bankAccount.DateCreated);
+
+                if (bankAccount.Withdraw == 0.0) // make deposit in this edit operation
                 {                    
-                    var bankAccList = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName) && a.BankAccountId >bankAccount.BankAccountId);
-                    if(oldDeposit==0.0)
+                    
+                    if(oldDeposit==0.0) // if old transaction was withdraw .
                     { 
                         bankAccount.Balance += oldWithdraw;
                         bankAccount.Balance += bankAccount.Deposit;
                     }
-                    else
+                    else // if old transaction was deposit
                     {
                         bankAccount.Balance -= oldDeposit;
                         bankAccount.Balance += bankAccount.Deposit;
                     }
-                    foreach (var x in bankAccList)
+
+                    foreach (var x in bankAccList) // update balance in all transaction which created after this check edit.
                     {
                         if (oldDeposit == 0.0)
                         {
@@ -137,28 +248,26 @@ namespace Inventory_System.Controllers
                         }
                     }
                 }
-                else // make withdraw
+                else // make withdraw in this edit operation
                 {
                     
-                    var bankAccList = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)&& a.BankAccountId >bankAccount.BankAccountId);
- 
-                    if(oldDeposit!=0.0)
+                    if(oldDeposit !=0.0)   // if old transaction was deposit.
                     {
                         bankAccount.Balance -= oldDeposit;
                         bankAccount.Balance -= bankAccount.Withdraw;
                     }
-                    else
+                    else   // if old transaction was withdraw .
                     {
                         bankAccount.Balance += oldWithdraw;
                         bankAccount.Balance -= bankAccount.Withdraw;
                     }
 
 
-                    foreach (var x in bankAccList)
+                    foreach (var x in bankAccList) // update balance in all transaction which created after this check edit.
                     {
                         if (oldDeposit != 0.0)
                         {
-                            x.Balance -= oldDeposit; // back balance before old withdraw .
+                            x.Balance -= oldDeposit; // back balance before old deposit .
                             x.Balance -= bankAccount.Withdraw;
                         }
                         else
@@ -166,12 +275,9 @@ namespace Inventory_System.Controllers
                             x.Balance += oldWithdraw; // back balance before old withdraw .
                             x.Balance -= bankAccount.Withdraw;
                         }
-
                        
                     }
                 }
-
-
 
                 //db.Entry(bankAccount).State = EntityState.Modified;
                 db.SaveChanges();
@@ -180,6 +286,8 @@ namespace Inventory_System.Controllers
             return View(bankAccount);
         }
 
+        double deletedDeposit = 0.0;
+        double deletedWithdraw = 0.0;
         // GET: BankAccounts/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -188,6 +296,11 @@ namespace Inventory_System.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             BankAccount bankAccount = db.BankAccountants.Find(id);
+            deletedDeposit = bankAccount.Deposit;
+            deletedWithdraw = bankAccount.Withdraw;
+            ViewBag.deletedDeposit = deletedDeposit;
+            ViewBag.deletedWithdraw = deletedWithdraw;
+
             if (bankAccount == null)
             {
                 return HttpNotFound();
@@ -201,8 +314,28 @@ namespace Inventory_System.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             BankAccount bankAccount = db.BankAccountants.Find(id);
+        
+            var bankAccList = db.BankAccountants.Where(a => a.BankName.Contains(bankAccount.BankName)
+               && a.DateCreated > bankAccount.DateCreated);
+
+            if (bankAccount.Withdraw == 0.0) // this operation was deposit
+            {
+                foreach (var x in bankAccList) // update balance in all transaction which created after this check remove.
+                {
+                        x.Balance -= bankAccount.Deposit;
+                }
+            }
+
+            else //  this operation was withdraw
+            {
+                foreach (var x in bankAccList) // update balance in all transaction which created after this check remove.
+                {
+                     x.Balance += bankAccount.Withdraw; // back balance before old withdraw .
+                }
+            }
             db.BankAccountants.Remove(bankAccount);
             db.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

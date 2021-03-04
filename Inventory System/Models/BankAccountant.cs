@@ -25,5 +25,7 @@ namespace Inventory_System.Models
         public double Withdraw { get; set; }
 
         public double Balance { get; set; }
+
+        public bool CheckIsPaied { get; set; } = false; 
     }
 }
