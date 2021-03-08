@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
@@ -15,9 +16,12 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
+        int pageSize = 2;
         // GET: Items
-        public ActionResult Index(int? year)
+        public ActionResult Index(int? year ,int? Page , int? category, int? subcategory)
         {
+            int pageNumber = (Page ?? 1);
+
             if(year.HasValue == false)
             {
                 year = DateTime.Now.Year;
@@ -44,46 +48,82 @@ namespace Inventory_System.Controllers
                 v.ItemReminder = v.ItemQuantityAdded - v.ItemQuantityWithdraw + v.ItemReturn;
             }
             db.SaveChanges();
-            return View(items.ToList());
-        }
 
-        [HttpPost]
-        public ActionResult Index(int? category , int? subcategory)
-        {
-           
-            ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
+            //--------------------------------------------------
+
             
-            if (subcategory !=0 && category !=0) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
+            if (subcategory != null && subcategory!=0 && category != null) 
             {
-               var  items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
-                     .Include(i => i.ItemSubCategory)
-                     .Where(a => a.ItemSubCategory.ItemCategoryId == category && a.ItemSubCategoryId == subcategory);
-                foreach (var v in items)
+                var items2 = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
+                      .Include(i => i.ItemSubCategory)
+                      .Where(a => a.ItemSubCategory.ItemCategoryId == category && a.ItemSubCategoryId == subcategory);
+                foreach (var v in items2)
                 {
                     v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
                 }
-           //     db.Entry(items).State = EntityState.Modified;
-
                 db.SaveChanges();
-                return View(items.ToList());
+                ViewBag.subcategoryv = subcategory;
+                ViewBag.categoryv = category;
+                return View(items2.OrderBy(a=>a.ItemId).ToPagedList(pageNumber,pageSize));
+            }
+            else if (category != null && (subcategory==null || subcategory==0))
+            {
+
+                var items3 = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
+                    .Where(a => a.ItemSubCategory.ItemCategoryId == category);
+                foreach (var v in items3)
+                {
+                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
+                }
+                db.SaveChanges();
+
+                ViewBag.subcategoryv = subcategory;
+                ViewBag.categoryv = category;
+                return View(items3.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
             }
             else
-            {
+                return View(db.Items.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
 
-                var items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
-                    .Where(a => a.ItemSubCategory.ItemCategoryId == category);
-                foreach (var v in items)
-                {
-                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
-                }
-         //       db.Entry(items).State = EntityState.Modified;
 
-                db.SaveChanges();
-                return View(items.ToList());
-            }
-
-            
         }
+
+        //[HttpPost]
+        //public ActionResult Index(int? category , int? subcategory)
+        //{
+
+        //    ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
+
+        //    if (subcategory !=0 && category !=0) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
+        //    {
+        //       var  items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
+        //             .Include(i => i.ItemSubCategory)
+        //             .Where(a => a.ItemSubCategory.ItemCategoryId == category && a.ItemSubCategoryId == subcategory);
+        //        foreach (var v in items)
+        //        {
+        //            v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
+        //        }
+        //   //     db.Entry(items).State = EntityState.Modified;
+
+        //        db.SaveChanges();
+        //        return View(items.ToList());
+        //    }
+        //    else
+        //    {
+
+        //        var items = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
+        //            .Where(a => a.ItemSubCategory.ItemCategoryId == category);
+        //        foreach (var v in items)
+        //        {
+        //            v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
+        //        }
+        // //       db.Entry(items).State = EntityState.Modified;
+
+        //        db.SaveChanges();
+        //        return View(items.ToList());
+        //    }
+
+
+        //}
 
         public JsonResult GetMembers(int id)
         {

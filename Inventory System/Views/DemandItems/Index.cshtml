@@ -1,11 +1,16 @@
-﻿@model IEnumerable<Inventory_System.Models.DemandItem>
+﻿
+@using PagedList.Mvc
+@model  PagedList.IPagedList<Inventory_System.Models.DemandItem>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutDemand.cshtml";
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
 }
 
-<h2>Demand Items</h2>
+<h2>قائمة الأصناف المطلوبة</h2>
 
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
@@ -52,6 +57,9 @@
         }
 
     </table>
+    <br />
+    @Html.PagedListPager(Model, page => Url.Action("Index",new { page }))
+
 
     if (ViewBag.msg2 != null)
     {

@@ -1,41 +1,43 @@
-﻿@model IEnumerable<Inventory_System.Models.Item>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.Item>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "قائمه المنتجات بالمخزن";
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
 }
 
-    <h2>قائمه المنتجات بالمخزن</h2>
+<h2>قائمه المنتجات بالمخزن</h2>
 
-    <p>
+<p>
 
-        @using (Html.BeginForm())
-        {
-            @*@Html.HiddenFor(mod)*@
-            <table>
-                <tr>
-                    <th class="col-md-4 form-control">
-                        @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
+    @using (Html.BeginForm())
+    {
+        @*@Html.HiddenFor(mod)*@
+        <table>
+            <tr>
+                <th class="col-md-4 form-control">
+                    @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
 
-                        @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
+                    @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
 
-                        @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
-                    </th>
+                    @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
+                </th>
 
-                    <th><input type="submit" value="بحث" /></th>
-                </tr>
-            </table>
-        }
+                <th><input type="submit" value="بحث" /></th>
+            </tr>
+        </table>
+    }
 
 
-    </p>
+</p>
 
 <table class="table">
 
     <tr>
         @*<th>
-            @Html.DisplayNameFor(model => model.ItemSubCategory.ItemSubCategoryName)
-        </th>*@
+                @Html.DisplayNameFor(model => model.ItemSubCategory.ItemSubCategoryName)
+            </th>*@
         <th class="text-right">
             @Html.DisplayName("كود المنتج")
         </th>
@@ -75,49 +77,54 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td class="text-center" >
-        @Html.DisplayFor(modelItem => item.ItemId)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemCategory.ItemCategoryName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemSubCategoryName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemUnit)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantity)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantityAdded)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantityWithdraw)
-    </td>
-    @*<td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemReturn)
-    </td>*@
-    <td class="text-center">
-        @Html.DisplayFor(modelItem=>item.ItemReminder)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
-    <td class="text-center">
-        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |
-        @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
-        @Html.ActionLink("حذف", "Delete", new { id = item.ItemId })
-    </td>
-</tr>
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemId)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemCategory.ItemCategoryName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemSubCategoryName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemUnit)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemQuantity)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemQuantityAdded)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemQuantityWithdraw)
+            </td>
+            @*<td class="text-center">
+                    @Html.DisplayFor(modelItem => item.ItemReturn)
+                </td>*@
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemReminder)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td class="text-center">
+                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |
+                @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
+                @Html.ActionLink("حذف", "Delete", new { id = item.ItemId })
+            </td>
+        </tr>
     }
 
 </table>
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, subcategory=ViewBag.subcategoryv , category=ViewBag.categoryv }))
+
 
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
@@ -147,7 +154,7 @@
         placeholder: "اختر منتج",
         allowClear: true
     });
-    
+
 </script>
 
 <script>

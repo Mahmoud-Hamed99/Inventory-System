@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
@@ -15,9 +16,11 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
+        //int pageSize = 2;
         // GET: Projects
         public ActionResult Index()
         {
+           // int pageNumber = (Page ?? 1);
             return View(db.Projects.ToList());
         }
 
@@ -25,12 +28,14 @@ namespace Inventory_System.Controllers
         [HttpPost]
         ActionResult ReturnIndex()
         {
+
+           // int pageNumber = (Page ?? 1);
             var projects = db.Projects.Where(a => a.ProjectFinished == false);
            
             return View("Index", projects.ToList());
         }
         [HttpPost]
-        public ActionResult ProjectFinishedFun(int[] ProjectFinishedList)
+        public ActionResult ProjectFinishedFun(int[] ProjectFinishedList )
         {
             if (ProjectFinishedList != null)
             {

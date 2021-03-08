@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Inventory_System.Models.ItemReturn>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.ItemReturn>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "قائمه المرتجعات";
@@ -29,30 +31,33 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Project.ProjectName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemInput.Vendor.VendorName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantity)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemInput.Vendor.VendorName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemQuantity)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
 
-    <td class="text-center">
-        @Html.ActionLink("تعديل", "Edit", new { id = item.ItemReturnId }) |
-        @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
-        @Html.ActionLink("حذف", "Delete", new { id = item.ItemReturnId })
-    </td>
-</tr>
-}
+            <td class="text-center">
+                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemReturnId }) |
+                @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
+                @Html.ActionLink("حذف", "Delete", new { id = item.ItemReturnId })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+@Html.PagedListPager(Model,Page=>Url.Action("Index",new { Page}))

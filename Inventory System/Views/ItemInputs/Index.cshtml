@@ -1,5 +1,6 @@
-﻿@model IEnumerable<Inventory_System.Models.ItemInput>
-
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.ItemInput>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     ViewBag.Title = "أذونات الدخول";
 
@@ -125,3 +126,5 @@
     }
 
 </table>
+<br />
+@Html.PagedListPager(Model,Page=>Url.Action("Index",new { Page}))

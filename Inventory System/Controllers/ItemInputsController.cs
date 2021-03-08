@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
@@ -12,14 +13,14 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
+        int pageSize = 2;
         // GET: ItemInputs
-        public ActionResult Index(bool acc=false)
+        public ActionResult Index( int? page , bool acc = false)
         {
             ViewBag.IsAccountant = acc;
             var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
-            //ViewBag.Vendors = db.Vendors.ToList();
-
-            return View(itemInputs);
+            int pageNumber = (page ?? 1);
+            return View(itemInputs.OrderBy(a=>a.ItemInputId).ToPagedList(pageNumber,pageSize));
         }
 
         // GET: ItemInputs/Details/5

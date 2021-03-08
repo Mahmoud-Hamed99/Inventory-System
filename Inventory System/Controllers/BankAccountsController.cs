@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
@@ -15,22 +16,9 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        // GET: BankAccounts
-        //public ActionResult Index()
-        //{
-        //    var BankNameList = db.BankAccountants.GroupBy(a=>a.BankName).ToList();
-        //    List<string> banks = new List<string>();
+        int pageSize = 2;
 
-        //    foreach(var x in BankNameList)
-        //    {
-        //        banks.Add(x.First().BankName);
-        //    }
-        //    ViewBag.BankName = new SelectList(banks);
-
-        //    return View(db.BankAccountants.ToList());
-        //}
-
-        public ActionResult Index(string BankName , DateTime? StartDate , DateTime? EndDate)
+        public ActionResult Index(string BankName , DateTime? StartDate , DateTime? EndDate ,string CurrentFilter , int? page)
         {
             var BankNameList = db.BankAccountants.GroupBy(a => a.BankName).ToList();
             List<string> banks = new List<string>();
@@ -39,18 +27,52 @@ namespace Inventory_System.Controllers
             {
                 banks.Add(x.First().BankName);
             }
-            ViewBag.BankName = new SelectList(banks);
+                ViewBag.BankName = new SelectList(banks);
+
+
+            ViewBag.CurrentFilter = BankName;
+            int pageNumber = (page ?? 1);
 
             // with every search .. show detailed bank account in detected period.
 
-            if(BankName !=null && StartDate !=null && EndDate!=null)
+            if (BankName != null && StartDate != null && EndDate != null)
             {
-                var items = db.BankAccountants.Where(a => a.BankName.Contains(BankName) && a.DateCreated >= StartDate && a.DateCreated <= EndDate);
-     
-                
+                List<BankAccount> items = db.BankAccountants.Where(a => a.BankName.Contains(BankName) && a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
+                ViewBag.CurrentFilter = BankName;
+                ViewBag.startDate = StartDate;
+                ViewBag.endDate = EndDate;
+                return Calc(items, BankName, StartDate, EndDate, CurrentFilter, page, pageNumber);
+            }
+
+            else if (BankName == null && StartDate != null && EndDate != null)
+            {
+                List<BankAccount> items = db.BankAccountants.Where(a => a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
+                ViewBag.BankName = new SelectList(banks);
+                return View(items.ToPagedList(pageNumber,pageSize));
+            }
+
+            else if (BankName != null && StartDate == null && EndDate == null)
+            {
+                List<BankAccount> items = db.BankAccountants.Where(a => a.BankName.Contains(BankName)).ToList();
+                ViewBag.BankName = new SelectList(banks);
+                return View(items.ToPagedList(pageNumber,pageSize));
+            }
+
+            else
+            {
+                   return View(db.BankAccountants.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            }
+           
+
+        }
+
+        public ActionResult Calc(List<BankAccount> items,string BankName, DateTime? StartDate, DateTime? EndDate ,string CurrentFilter , int? page ,int pageNumber)
+        {
+            if(StartDate != null && EndDate != null)
+            { 
                 List<BankAccount> BankAccountsList = db.BankAccountants.Where(
-                    a => a.CheckIsPaied == false && a.BankName.Contains(BankName) && 
-                    a.DateCreated >= StartDate   && a.DateCreated <= EndDate).ToList();
+                a => a.CheckIsPaied == false && a.BankName.Contains(BankName) &&
+                a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
 
                 double deposits = 0.0;
                 double withdraw = 0.0;
@@ -58,18 +80,18 @@ namespace Inventory_System.Controllers
                 double FinalBalance = 0.0;
                 double DepositChecks = 0.0;
                 double WithdrawChecks = 0.0;
-           
-                if (items.Count() >0)
-                { 
-                   if(items.FirstOrDefault().TransitionType.Contains("ايداع")) // check transaction to cal balance before this transaction.
+
+                if (items.Count() > 0)
+                {
+                    if (items.FirstOrDefault().TransitionType.Contains("ايداع")) // check transaction to cal balance before this transaction.
                         FirstBalance = items.FirstOrDefault().Balance - items.FirstOrDefault().Deposit;
-                   else
+                    else
                         FirstBalance = items.FirstOrDefault().Balance + items.FirstOrDefault().Withdraw;
 
-                     foreach(var i in items)
-                    { 
-                        if(i.CheckIsPaied== true) // get مقبوضات ومدفوعات  thats mean i received money in my hand.
-                        { 
+                    foreach (var i in items)
+                    {
+                        if (i.CheckIsPaied == true) // get مقبوضات ومدفوعات  thats mean i received money in my hand.
+                        {
                             deposits += i.Deposit;
                             withdraw += i.Withdraw;
                         }
@@ -81,34 +103,19 @@ namespace Inventory_System.Controllers
                     ViewBag.FinalBalance = FinalBalance;
                 }
 
-                foreach(var x in BankAccountsList)
+                foreach (var x in BankAccountsList)
                 {
                     if (x.TransitionType.Contains("ايداع")) // شيكات صرفت لدي البنك ولم تصرف لدينا
                         DepositChecks += x.Deposit;
-                    else if(x.TransitionType.Contains("سحب")) // شيكات صرفت لدينا ولم تصرف لدي البنك
+                    else if (x.TransitionType.Contains("سحب")) // شيكات صرفت لدينا ولم تصرف لدي البنك
                         WithdrawChecks += x.Withdraw;
                 }
-                ViewBag.DepositChecks = DepositChecks;
-                ViewBag.WithdrawChecks = WithdrawChecks;
-                ViewBag.ActualBalance = FinalBalance + DepositChecks - WithdrawChecks;
-                return View(items.OrderBy(a => a.DateCreated).ToList());
-            }
-
-            else if(BankName == null && StartDate !=null && EndDate !=null)
-            {
-                var items = db.BankAccountants.Where(a =>a.DateCreated >= StartDate && a.DateCreated <= EndDate);
-                return View(items.OrderBy(a => a.DateCreated).ToList());
-            }
-
-            else if(BankName != null && StartDate == null && EndDate == null)
-            {
-                var items = db.BankAccountants.Where(a => a.BankName.Contains(BankName));
-                return View(items.OrderBy(a => a.DateCreated).ToList());
-            }
-
-            else
-                return View(db.BankAccountants.OrderBy(a => a.DateCreated).ToList());
-
+                    ViewBag.DepositChecks = DepositChecks;
+                    ViewBag.WithdrawChecks = WithdrawChecks;
+                    ViewBag.ActualBalance = FinalBalance + DepositChecks - WithdrawChecks;
+                
+           }
+              return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
         }
 
         // GET: BankAccounts/Details/5

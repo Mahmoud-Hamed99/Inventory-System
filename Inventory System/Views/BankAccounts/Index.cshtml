@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Inventory_System.Models.BankAccount>
+﻿
+@using PagedList.Mvc
+@model  PagedList.IPagedList<Inventory_System.Models.BankAccount>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "Index";
@@ -6,6 +9,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
 }
 
 <h2>كشف حساب البنوك</h2>
@@ -129,7 +134,12 @@
     </table>
 
     <br />
+    @*Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@ 
 
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, currentFilter = ViewBag.CurrentFilter , startDate=ViewBag.startDate , endDate=ViewBag.endDate,BankName=ViewBag.CurrentFilter })) 
+
+    <br />
     <div class="form-control col-md-10" disabled="disabled">
         @Html.Label("رصيد أول المدة")
         @Html.Editor("FirstBalance", "ViewBag.FirstBalance", new { htmlAttributes = new { @disabled = "disabled" } })

@@ -1,12 +1,13 @@
-﻿@model IEnumerable<Inventory_System.Models.ItemCategory>
-
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.ItemCategory>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     ViewBag.Title = "عرض الأصناف المتاحه";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
     <br />
-    <h2>عرض الأصناف المتاحه</h2>
+    <h2>عرض الأصناف الرئيسية</h2>
     <br />
 <p>
     @Html.ActionLink("اضافه جديد", "Create")
@@ -44,3 +45,5 @@
 }
 
 </table>
+<br />
+@Html.PagedListPager(Model,page=>Url.Action("Index",new { page}))

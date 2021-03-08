@@ -1,5 +1,6 @@
-﻿@model IEnumerable<Inventory_System.Models.DemandItem>
-
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.DemandItem>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     ViewBag.Title = "PurchasingHistory";
     Layout = "~/Views/Shared/_LayoutPurchasing.cshtml";
@@ -56,3 +57,5 @@
     }
 
 </table>
+<br />
+@Html.PagedListPager(Model,page=>Url.Action("PurchasingHistory",new { page}))

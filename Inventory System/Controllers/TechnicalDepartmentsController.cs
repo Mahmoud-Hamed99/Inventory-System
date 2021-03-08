@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
@@ -15,10 +16,12 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
+        int PageSize = 2; 
         // GET: TechnicalDepartments
-        public ActionResult Index()
+        public ActionResult Index(int? Page)
         {
-            return View(db.TechnicalDepartments.ToList());
+            int pageNumber = (Page ?? 1);
+            return View(db.TechnicalDepartments.OrderBy(a=>a.TechnicalDepartmentId).ToPagedList(pageNumber,PageSize));
         }
 
         // GET: TechnicalDepartments/Details/5

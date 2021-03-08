@@ -8,18 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
 
 namespace Inventory_System.Controllers
 {
     public class ItemReturnsController : Controller
     {
         private InventoryDB db = new InventoryDB();
+        int pageSize = 2;
 
         // GET: ItemReturns
-        public ActionResult Index()
+        public ActionResult Index(int? Page)
         {
             var itemReturns = db.ItemReturns.Include(i => i.Item).Include(i => i.Project).Include(i=> i.ItemInput.Vendor);
-            return View(itemReturns.ToList());
+            int pageNumber = (Page ?? 1);
+            return View(itemReturns.OrderBy(a=>a.DateCreated).ToPagedList(pageNumber,pageSize));
         }
 
         // GET: ItemReturns/Details/5

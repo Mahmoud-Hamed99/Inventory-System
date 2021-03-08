@@ -8,38 +8,44 @@ using System.Web;
 using System.Web.Mvc;
 using Inventory_System;
 using Inventory_System.Models;
+using PagedList;
+
 
 namespace Inventory_System.Controllers
 {
     public class DemandItemsController : Controller
     {
+        int pageSize = 2;
         private InventoryDB db = new InventoryDB();
 
         // GET: DemandItems
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-           
             var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == false);
-            return View(demandItems.ToList());
+            int pageNumber = (page ?? 1);
+            return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(pageNumber,pageSize));
         }
 
-        public ActionResult DemandHistory()
+        public ActionResult DemandHistory(int? page)
         {
             var demandItems = db.DemandItems.Include(d => d.Item);
-            return View(demandItems.ToList());
+            int pageNumber = (page ?? 1);
+            return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult PurchasingApproval()
+        public ActionResult PurchasingApproval(int? page)
         {
             var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == true && a.PurchasingApproval==false);
-            return View(demandItems.ToList());
+            int pageNumber = (page ?? 1);
+            return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(pageNumber,pageSize));
         }
 
         
-        public ActionResult PurchasingHistory()
+        public ActionResult PurchasingHistory(int? page)
         {
             var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == true);
-            return View(demandItems.ToList());
+            int pageNumber = (page ?? 1);
+            return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(pageNumber, pageSize));
         }
 
         // GET: DemandItems/Details/5
@@ -85,7 +91,7 @@ namespace Inventory_System.Controllers
         // GET: DemandItems/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (DateTime.Now.Hour >15 && DateTime.Now.Hour < 20)
+            if (DateTime.Now.Hour >0 && DateTime.Now.Hour < 24)
             {
                 if (id == null)
                 {

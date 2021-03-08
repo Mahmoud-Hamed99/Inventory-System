@@ -1,50 +1,56 @@
-﻿@model IEnumerable<Inventory_System.Models.DemandItem>
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<Inventory_System.Models.DemandItem>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "DemandHistory";
     Layout = "~/Views/Shared/_LayoutDemand.cshtml";
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+
 }
 
-<h2>Demand History</h2>
+<h2>سجل الأصناف المطلوبة من قبل</h2>
 
-<br/>
+<br />
 
 
-    <table class="table">
+<table class="table">
+    <tr>
+        <th class="text-center">
+            @Html.DisplayName("اسم الصنف ")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الكميه المطلوبه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الأولويه")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الموافقه")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
         <tr>
-            <th class="text-center">
-                @Html.DisplayName("اسم الصنف ")
-            </th>
-            <th class="text-center">
-                @Html.DisplayName("الكميه المطلوبه")
-            </th>
-            <th class="text-center">
-                @Html.DisplayName("الأولويه")
-            </th>
-            <th class="text-center">
-                @Html.DisplayName("الموافقه")
-            </th>
-            <th></th>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemName)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DemandItemPriority)
+            </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DemandItemApproval)
+            </td>
+
         </tr>
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.Item.ItemName)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemQuantity)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemPriority)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemApproval)
-                </td>
-             
-            </tr>
-        }
+</table>
 
-    </table>
-
+<br />
+@Html.PagedListPager(Model,Page=>Url.Action("DemandHistory",new {Page}))

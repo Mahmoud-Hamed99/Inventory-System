@@ -1,5 +1,6 @@
-﻿@model IEnumerable<Inventory_System.Models.ItemOutput>
-
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.ItemOutput>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     ViewBag.Title = "قائمه أذونات الخروج";
     Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
@@ -17,7 +18,7 @@
     @using (Html.BeginForm())
     {
         <table>
-            
+
 
             <tr>
                 <th class="col-md-4 form-control">
@@ -100,6 +101,10 @@
     }
 
 </table>
+<br />
+
+@Html.PagedListPager(Model, Page => Url.Action("Index",
+    new { Page, TechnicalDepartmentId = ViewBag.TechnicalDepartmentIdv, ProjectId = ViewBag.ProjectIdv }))
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -112,7 +117,7 @@
     });
     $('#TechnicalDepartmentId').on('select2:select', function (e) {
         $.get("/ItemOutputs/Index", { id: $("#TechnicalDepartmentId").val() }, function (data) {
-            
+
         });
     })
 </script>
@@ -125,7 +130,7 @@
     });
     $('#ProjectId').on('select2:select', function (e) {
         $.get("/ItemOutputs/Index", { id: $("#ProjectId").val() }, function (data) {
-        
+
         });
     })
 </script>

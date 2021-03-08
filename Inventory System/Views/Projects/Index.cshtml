@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Inventory_System.Models.Project>
+﻿@*@using PagedList.Mvc*@
+@model IEnumerable<Inventory_System.Models.Project>
+
+@*<link href="~/Content/PagedList.css" rel="stylesheet" />*@
 
 @{
     ViewBag.Title = "قائمه المشاريع";
@@ -51,14 +54,15 @@
 
 
                 <td class="text-right">
-                    @Html.ActionLink("تعديل", "Edit", new { id = item.ProjectId }) 
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.ProjectId })
                     @*@Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |*@
-                   @* @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })*@
+                    @* @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })*@
                 </td>
             </tr>
         }
 
     </table>
     <button type="submit">حفظ</button>
-
+<br />
+@*@Html.PagedListPager(Model,Page=>Url.Action("Index",new { Page}))*@
 }

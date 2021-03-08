@@ -1,11 +1,14 @@
-﻿@model IEnumerable<Inventory_System.Models.ItemSubCategory>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.ItemSubCategory>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
     ViewBag.Title = "عرض الأصناف الفرعيه";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h2>عرض الأصناف الجزئيه</h2>
+<h2>عرض الأصناف الجزئيه</h2>
 <br />
 <p>
     @Html.ActionLink("اضافه جديد", "Create")
@@ -21,20 +24,23 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td class="text-right">
-            @Html.DisplayFor(modelItem => item.ItemCategory.ItemCategoryName)
-        </td>
-        <td class="text-right">
-            @Html.DisplayFor(modelItem => item.ItemSubCategoryName)
-        </td>
-        <td class="text-right">
-            @Html.ActionLink("تعديل", "Edit", new { id=item.ItemSubCategoryId }) |
-            @*@Html.ActionLink("Details", "Details", new { id=item.ItemSubCategoryId }) |*@
-            @Html.ActionLink("حذف", "Delete", new { id=item.ItemSubCategoryId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.ItemCategory.ItemCategoryName)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.ItemSubCategoryName)
+            </td>
+            <td class="text-right">
+                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemSubCategoryId }) |
+                @*@Html.ActionLink("Details", "Details", new { id=item.ItemSubCategoryId }) |*@
+                @Html.ActionLink("حذف", "Delete", new { id = item.ItemSubCategoryId })
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+@Html.PagedListPager(Model,Page=>Url.Action("Index",new { Page}))
