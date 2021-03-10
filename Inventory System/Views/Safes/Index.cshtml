@@ -1,0 +1,142 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<Inventory_System.Models.Safe>
+
+@{
+    ViewBag.Title = "Index";
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+}
+
+<h2>سجل الخزنة</h2>
+<p>
+    @Html.ActionLink("اضافة جديد", "Create")
+</p>
+<br />
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <th class="col-md-5">
+
+                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+                        @Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
+                    </div>
+                </div>
+            </th>
+
+            <th class="col-md-5">
+                <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
+                    <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+                        @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
+                    </div>
+                </div>
+            </th>
+
+            <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+        </tr>
+    </table>
+
+    <br />
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                @Html.DisplayName("رقم الأذن")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("تاريخ الاصدار")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("نوع العملية")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("مبلغ مستلم")
+            </th>
+
+            <th class="text-center">
+                @Html.DisplayName("مبلغ مصروف")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("جهة الصرف/ الاستلام")
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.PermessionNumber)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.TransactionType)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Deposit)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Withdraw)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+
+                <td class="text-center">
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.SafeId }) |
+                    @*  @Html.ActionLink("Details", "Details", new { id = item.SafeId }) |*@
+                    @Html.ActionLink("حذف", "Delete", new { id = item.SafeId })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+<div class="form-group">
+    <div class="col-md-10">
+        @Html.Editor("Balance", "ViewBag.Balance", new { htmlAttributes = new { @class = "form-control", @id = "Balance", @disabled = "disabled" } })
+    </div>
+    @Html.Label("باقي الرصيد", htmlAttributes: new { @class = "control-label col-md-2" })
+</div>
+<div class="datepicker-inline"></div>
+
+@section scripts{
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    <script src="~/Scripts/dt.js"></script>
+
+    <script>
+        $('#requestDateTimePicker').click(function () {
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY hh:mm a',
+                    defaultDate: new Date()
+
+                });
+            });
+    </script>
+    <script> 
+        $('#requestDateTimePicker2').click(function () {
+            $(function () {
+            $('#requestDateTimePicker').datetimepicker({
+            format: 'DD-MM-YYYY hh:mm a',
+                defaultDate: new Date()
+            });
+                });   
+
+    </script>
+
+    @Html.PagedListPager(Model,Page=>Url.Action("Index",new {Page}))
+
+}
+
+
+

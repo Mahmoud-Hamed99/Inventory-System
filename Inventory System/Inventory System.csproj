@@ -194,6 +194,7 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\ItemSubCategoriesController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\SafesController.cs" />
     <Compile Include="Controllers\TechnicalDepartmentsController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -296,6 +297,10 @@
     <Compile Include="Migrations\202103021501096_add chaeckIsPaied Atrr.Designer.cs">
       <DependentUpon>202103021501096_add chaeckIsPaied Atrr.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103091105242_Safe Model.cs" />
+    <Compile Include="Migrations\202103091105242_Safe Model.Designer.cs">
+      <DependentUpon>202103091105242_Safe Model.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -307,6 +312,7 @@
     <Compile Include="Models\ItemSubCategory.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Project.cs" />
+    <Compile Include="Models\Safe.cs" />
     <Compile Include="Models\TechnicalDepartment.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -316,6 +322,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\cs.css" />
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.min.css" />
     <Content Include="Content\PagedList.css" />
@@ -367,6 +374,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\dt.js" />
     <Content Include="Scripts\i18n\af.js" />
     <Content Include="Scripts\i18n\ar.js" />
     <Content Include="Scripts\i18n\az.js" />
@@ -529,6 +537,11 @@
     <Content Include="Views\BankAccounts\Index.cshtml" />
     <Content Include="Scripts\moment.min.js.map" />
     <Content Include="Scripts\moment-with-locales.min.js.map" />
+    <Content Include="Views\Safes\Create.cshtml" />
+    <Content Include="Views\Safes\Delete.cshtml" />
+    <Content Include="Views\Safes\Details.cshtml" />
+    <Content Include="Views\Safes\Edit.cshtml" />
+    <Content Include="Views\Safes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -618,6 +631,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103021501096_add chaeckIsPaied Atrr.resx">
       <DependentUpon>202103021501096_add chaeckIsPaied Atrr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103091105242_Safe Model.resx">
+      <DependentUpon>202103091105242_Safe Model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

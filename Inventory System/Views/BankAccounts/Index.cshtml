@@ -7,10 +7,9 @@
     ViewBag.Title = "Index";
 
     Layout = "~/Views/Shared/_Layout.cshtml";
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 
-    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
 }
 
 <h2>كشف حساب البنوك</h2>
@@ -39,19 +38,15 @@
                         @Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
                     </div>
                 </div>
-
-                @* @Html.Editor("StartDate", new { htmlAttributes = new { placeholder = "تاريخ بداية الفترة", data_provide = "datepicker", @id = "StartDate" } })*@
             </th>
             <th class="col-md-4 form-control">
                 <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
                     <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
-                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
                         @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
                     </div>
                 </div>
-
-                @*@Html.Editor("EndDate", new { htmlAttributes = new { placeholder = "تاريخ نهاية الفترة", data_provide = "datepicker", @id = "EndDate" } })*@
             </th>
+
             <th><input type="submit" value="بحث" class="btn-default btn" /></th>
         </tr>
     </table>
@@ -134,10 +129,10 @@
     </table>
 
     <br />
-    @*Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@ 
+    @*Page @(Model.PageCount< Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
 
     @Html.PagedListPager(Model, page => Url.Action("Index",
-        new { page, currentFilter = ViewBag.CurrentFilter , startDate=ViewBag.startDate , endDate=ViewBag.endDate,BankName=ViewBag.CurrentFilter })) 
+        new { page, currentFilter = ViewBag.CurrentFilter, startDate = ViewBag.startDate, endDate = ViewBag.endDate, BankName = ViewBag.CurrentFilter }))
 
     <br />
     <div class="form-control col-md-10" disabled="disabled">
@@ -169,33 +164,35 @@
 }
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
 
+<div class="datepicker-inline"></div>
 
+@section scripts{
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    <script src="~/Scripts/dt.js"></script>
 
-<script>
-    $(function () {
-        $('#requestDateTimePicker').datetimepicker({
-            // time: "far fa-clock",
-            format: 'DD-MM-YY',
-            defaultDate: new Date()
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY hh:mm a',
+                    defaultDate: new Date()
 
+                });
+            });
+            $(function () {
+                $('#requestDateTimePicker2').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY hh:mm a',
+                    defaultDate: new Date()
+
+                });
+            });
         });
-    });
-</script>
 
-<script>
-    $(function () {
-        $('#requestDateTimePicker2').datetimepicker({
-            // time: "far fa-clock",
-            format: 'DD-MM-YY',
-            defaultDate: new Date()
+    </script>
 
-        });
-    });
-</script>
-
+}

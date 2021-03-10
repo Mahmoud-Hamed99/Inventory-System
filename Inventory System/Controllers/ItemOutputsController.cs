@@ -61,8 +61,8 @@ namespace Inventory_System.Controllers
             else
                 return View(db.ItemOutputs.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
 
-
         }
+
 
         public ActionResult warehouse()
         {
@@ -109,16 +109,6 @@ namespace Inventory_System.Controllers
         }
 
         
-        //public ActionResult technicalList(int? Page , int? TechnicalDepartmentId, int? ProjectId)
-        //{
-        //    var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a=>a.Project.ProjectFinished == false);
-        //    ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
-        //    ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-            
-        //    return View(itemOutputs.ToList());
-        //}
-
-        //[HttpPost]
         public ActionResult technicalList(int? Page ,int? TechnicalDepartmentId, int? ProjectId)
         {
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
