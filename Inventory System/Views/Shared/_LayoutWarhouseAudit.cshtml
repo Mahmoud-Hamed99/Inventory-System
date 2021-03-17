@@ -21,9 +21,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
                     <li>@Html.ActionLink("قائمه الموردين", "Index", "Vendors")</li>
 
-                    <li>@Html.ActionLink("قائمه الأصناف", "Index","ItemInputs",new { acc=true},null)</li>
+                    <li>@Html.ActionLink("قائمه الأصناف", "Index", "ItemInputs", new { acc = true }, null)</li>
                 </ul>
             </div>
         </div>

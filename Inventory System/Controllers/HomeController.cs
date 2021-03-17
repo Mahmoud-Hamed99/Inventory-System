@@ -1,4 +1,5 @@
-﻿using System;
+﻿using helper.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,22 +9,20 @@ namespace Inventory_System.Controllers
 {
     public class HomeController : Controller
     {
+        [VerifyUser(Roles ="superadmin")]
+        // GET: Home
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
+            //////InventoryDB db = new InventoryDB();
+            //////Models.User mainUser = new Models.User()
+            //////{
+            //////    Fullname = "Noshy",
+            //////    Password = "123456",
+            //////    Roles = "superadmin",
+            //////    username = "mnoshy@offbeateg.com"
+            //////};
+            //////db.Users.Add(mainUser);
+            //////db.SaveChanges();
             return View();
         }
     }

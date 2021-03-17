@@ -1,0 +1,67 @@
+﻿@model Inventory_System.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+    <link rel="stylesheet" href='@Url.Content("~/content/bootstrap.min.css")' />
+</head>
+<body>
+    <div>
+        <h4>User</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.username)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.username)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Roles)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Roles)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Fullname)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Fullname)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

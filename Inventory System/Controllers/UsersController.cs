@@ -9,119 +9,113 @@ using System.Web.Mvc;
 using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
-using PagedList;
 
 namespace Inventory_System.Controllers
 {
-    public class ItemSubCategoriesController : Controller
+    [VerifyUser(Roles ="superadmin")]
+    public class UsersController : Controller
     {
         private InventoryDB db = new InventoryDB();
 
-        int pageSize = 2;
-        // GET: ItemSubCategories
-        public ActionResult Index(int? Page)
+        // GET: Users
+        public ActionResult Index()
         {
-            var itemSubCategories = db.ItemSubCategories.Include(i => i.ItemCategory);
-            int pageNumber = (Page ?? 1);
-            return View(itemSubCategories.OrderBy(a=>a.ItemCategoryId).ToPagedList(pageNumber,pageSize));
+            return View(db.Users.ToList());
         }
 
-        // GET: ItemSubCategories/Details/5
+        // GET: Users/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemSubCategory itemSubCategory = db.ItemSubCategories.Find(id);
-            if (itemSubCategory == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(itemSubCategory);
+            return View(user);
         }
-        [VerifyUser(Roles = "superadmin,warehouse")]
-        // GET: ItemSubCategories/Create
+
+        // GET: Users/Create
         public ActionResult Create()
         {
-            ViewBag.ItemCategoryId = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
             return View();
         }
 
-        // POST: ItemSubCategories/Create
+        // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse")]
-        public ActionResult Create([Bind(Include = "ItemSubCategoryId,ItemSubCategoryName,ItemCategoryId")] ItemSubCategory itemSubCategory)
+        public ActionResult Create([Bind(Include = "Id,username,Password,Roles,Fullname")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.ItemSubCategories.Add(itemSubCategory);
+                user.Roles = user.Roles.ToLower();
+                db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ItemCategoryId = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName", itemSubCategory.ItemCategoryId);
-            return View(itemSubCategory);
+            return View(user);
         }
 
-        // GET: ItemSubCategories/Edit/5
+        // GET: Users/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemSubCategory itemSubCategory = db.ItemSubCategories.Find(id);
-            if (itemSubCategory == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ItemCategoryId = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName", itemSubCategory.ItemCategoryId);
-            return View(itemSubCategory);
+            return View(user);
         }
 
-        // POST: ItemSubCategories/Edit/5
+        // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ItemSubCategoryId,ItemSubCategoryName,ItemCategoryId")] ItemSubCategory itemSubCategory)
+        public ActionResult Edit([Bind(Include = "Id,username,Password,Roles,Fullname")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(itemSubCategory).State = EntityState.Modified;
+                user.Roles = user.Roles.ToLower();
+                db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ItemCategoryId = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName", itemSubCategory.ItemCategoryId);
-            return View(itemSubCategory);
+            return View(user);
         }
 
-        // GET: ItemSubCategories/Delete/5
+        // GET: Users/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemSubCategory itemSubCategory = db.ItemSubCategories.Find(id);
-            if (itemSubCategory == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(itemSubCategory);
+            return View(user);
         }
 
-        // POST: ItemSubCategories/Delete/5
+        // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ItemSubCategory itemSubCategory = db.ItemSubCategories.Find(id);
-            db.ItemSubCategories.Remove(itemSubCategory);
+            User user = db.Users.Find(id);
+            db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

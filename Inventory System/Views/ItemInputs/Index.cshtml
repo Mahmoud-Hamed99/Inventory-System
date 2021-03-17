@@ -4,7 +4,14 @@
 @{
     ViewBag.Title = "أذونات الدخول";
 
-    Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+    if (((string)ViewBag.MainRole) == "warehouse")
+    {
+        Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
+    }
 
 }
 

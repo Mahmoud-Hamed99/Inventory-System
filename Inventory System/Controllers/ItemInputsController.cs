@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using PagedList;
+using helper.Classes;
 
 namespace Inventory_System.Controllers
 {
@@ -15,8 +16,20 @@ namespace Inventory_System.Controllers
 
         int pageSize = 2;
         // GET: ItemInputs
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
         public ActionResult Index( int? page , bool acc = false)
         {
+            User user;
+            Helper.CheckUser(HttpContext, db, out user);
+            ViewBag.MainRole = user.Roles;
+            if (user.Roles == "warehouse")
+            {
+                acc = false;
+            }
+            else
+            {
+                acc = true;
+            }
             ViewBag.IsAccountant = acc;
             var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
             int pageNumber = (page ?? 1);
@@ -37,7 +50,7 @@ namespace Inventory_System.Controllers
             }
             return View(itemInput);
         }
-
+        [VerifyUser(Roles = "superadmin,warehouse")]
         // GET: ItemInputs/Create
         public ActionResult Create(string ItemCategory)
         {
@@ -79,6 +92,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse")]
         public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
         {
             //  List<Item> itemList = db.Items.ToList();
@@ -198,6 +212,7 @@ namespace Inventory_System.Controllers
 
 
         // GET: ItemInputs/Delete/5
+        [VerifyUser(Roles = "superadmin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -215,6 +230,7 @@ namespace Inventory_System.Controllers
         // POST: ItemInputs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin")]
         public ActionResult DeleteConfirmed(int id)
         {
             ItemInput itemInput = db.ItemInputs.Find(id);

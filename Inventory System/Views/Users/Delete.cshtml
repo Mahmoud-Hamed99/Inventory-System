@@ -1,0 +1,73 @@
+﻿@model Inventory_System.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+    <link rel="stylesheet" href='@Url.Content("~/content/bootstrap.min.css")' />
+</head>
+<body>
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>User</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.username)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.username)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Roles)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Roles)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Fullname)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Fullname)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+    
+        </dl>
+    
+        @using (Html.BeginForm()) {
+            @Html.AntiForgeryToken()
+    
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</body>
+</html>

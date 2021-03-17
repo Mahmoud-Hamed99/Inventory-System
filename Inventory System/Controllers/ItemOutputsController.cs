@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
@@ -18,9 +19,12 @@ namespace Inventory_System.Controllers
 
         int pageSize = 2;
         // GET: ItemOutputs
-
+        [VerifyUser(Roles ="superadmin,warehouse")]
         public ActionResult Index(int? Page , int? TechnicalDepartmentId, int? ProjectId)
         {
+            User user;
+            Helper.CheckUser(HttpContext, db, out user);
+            ViewBag.MainRole = user.Roles;
             int pageNumber = (Page ?? 1);
 
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment);
@@ -222,7 +226,7 @@ namespace Inventory_System.Controllers
   
             return View(itemOutput);
         }
-
+        [VerifyUser(Roles = "superadmin,warehouse")]
         // GET: ItemOutputs/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -247,6 +251,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse")]
         public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId")] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
@@ -263,6 +268,7 @@ namespace Inventory_System.Controllers
         }
 
         // GET: ItemOutputs/Delete/5
+        [VerifyUser(Roles = "superadmin,warehouse")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -280,6 +286,7 @@ namespace Inventory_System.Controllers
         // POST: ItemOutputs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse")]
         public ActionResult DeleteConfirmed(int id)
         {
             ItemOutput itemOutput = db.ItemOutputs.Find(id);

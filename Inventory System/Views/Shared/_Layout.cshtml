@@ -32,6 +32,7 @@
                     @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
                     @*<li>@Html.ActionLink("About", "About", "Home")</li>
         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                    <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
                     <li>@Html.ActionLink("planning", "Index", "Projects")</li>
                     <li>@Html.ActionLink("Demand", "Index", "DemandItems")</li>
                     <li>@Html.ActionLink("Purchasing", "PurchasingApproval", "DemandItems")</li>
@@ -41,8 +42,8 @@
                     <li>@Html.ActionLink("أذونات الدخول", "Index", "ItemInputs")</li>
                     <li>@Html.ActionLink("قائمه الأصناف", "Index", "Items")</li>
 
-                    <li>@Html.ActionLink("مراجع المخازن", "Index","ItemInputs", new {acc=true},null)</li>
-                    
+                    <li>@Html.ActionLink("مراجع المخازن", "Index", "ItemInputs", new { acc = true }, null)</li>
+
 
 
                 </ul>

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Inventory_System
 {
-    public class InventoryDB : IdentityDbContext
+    public class InventoryDB : DbContext
     {
         public InventoryDB():base("name=InventoryDB")
         {
@@ -27,5 +27,6 @@ namespace Inventory_System
         public DbSet<Models.TechnicalDepartment> TechnicalDepartments { get; set; }
         public DbSet<Models.BankAccount> BankAccountants { get; set; }
         public DbSet<Models.Safe> Safe { get; set; }
+        public DbSet<Models.User> Users { get; set; }
     }
 }

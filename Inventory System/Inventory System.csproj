@@ -184,6 +184,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\Helper.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\DemandItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -193,9 +194,11 @@
     <Compile Include="Controllers\ItemReturnsController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\ItemSubCategoriesController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\SafesController.cs" />
     <Compile Include="Controllers\TechnicalDepartmentsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -301,6 +304,10 @@
     <Compile Include="Migrations\202103091105242_Safe Model.Designer.cs">
       <DependentUpon>202103091105242_Safe Model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103171257356_added_users_usernotifications_connection.cs" />
+    <Compile Include="Migrations\202103171257356_added_users_usernotifications_connection.Designer.cs">
+      <DependentUpon>202103171257356_added_users_usernotifications_connection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -314,6 +321,7 @@
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\Safe.cs" />
     <Compile Include="Models\TechnicalDepartment.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -542,6 +550,12 @@
     <Content Include="Views\Safes\Details.cshtml" />
     <Content Include="Views\Safes\Edit.cshtml" />
     <Content Include="Views\Safes\Index.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -634,6 +648,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103091105242_Safe Model.resx">
       <DependentUpon>202103091105242_Safe Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103171257356_added_users_usernotifications_connection.resx">
+      <DependentUpon>202103171257356_added_users_usernotifications_connection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
@@ -18,6 +19,7 @@ namespace Inventory_System.Controllers
 
         int pageSize = 2;
         // GET: Items
+        [VerifyUser(Roles ="superadmin,warehouse")]
         public ActionResult Index(int? year ,int? Page , int? category, int? subcategory)
         {
             int pageNumber = (Page ?? 1);
@@ -156,7 +158,7 @@ namespace Inventory_System.Controllers
             }
             return View(item);
         }
-
+        [VerifyUser(Roles = "superadmin,warehouse")]
         // GET: Items/Create
         public ActionResult Create()
         {
@@ -169,6 +171,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse")]
         public ActionResult Create([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated")] Item item)
         {
             if (ModelState.IsValid)
@@ -193,6 +196,7 @@ namespace Inventory_System.Controllers
             return View(item);
         }
 
+        [VerifyUser(Roles = "superadmin")]
         // GET: Items/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -214,6 +218,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin")]
         public ActionResult Edit([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated")] Item item)
         {
             if (ModelState.IsValid)
@@ -227,6 +232,7 @@ namespace Inventory_System.Controllers
         }
 
         // GET: Items/Delete/5
+        [VerifyUser(Roles = "superadmin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -244,6 +250,7 @@ namespace Inventory_System.Controllers
         // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin")]
         public ActionResult DeleteConfirmed(int id)
         {
             Item item = db.Items.Find(id);
