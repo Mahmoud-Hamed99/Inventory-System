@@ -55,16 +55,19 @@ namespace helper.Classes
             }
 
         }
-        static public bool Login(HttpContextBase context, InventoryDB dbcontext, string username, string password)
+        static public bool Login(HttpContextBase context, InventoryDB dbcontext, string username, string password,Controller controller=null)
         {
             Logout(context);
             bool res = false;
 
 
 
-            res = dbcontext.Users.Where(a => a.username == username.ToLower() && a.Password == password).Count() > 0;
+            var resAll = dbcontext.Users.Where(a => a.username == username.ToLower() && a.Password == password).ToList();
+            res = resAll.Count > 0;
             if (res)
             {
+                if(controller!=null)
+                    controller.ViewBag.mainUser = resAll.First();
                 var c1 = new HttpCookie("username", username);
                 c1.Expires = DateTime.Now.AddYears(1);
                 context.Response.Cookies.Add(c1);
@@ -84,6 +87,7 @@ namespace helper.Classes
         {
             User user;
             var found = Helper.CheckUser(filterContext.HttpContext, out user);
+            filterContext.Controller.ViewBag.mainUser = user;
             if (!found)
             {
                 filterContext.Result = new RedirectResult("~/Login?targetUrl=" + filterContext.HttpContext.Request.Url.AbsolutePath);

@@ -20,12 +20,37 @@ namespace Inventory_System.Controllers
         public ActionResult Index(string username, string password, string targetUrl)
         {
             ViewBag.targetUrl = targetUrl;
-            if (Helper.Login(HttpContext, db, username, password))
+            if (Helper.Login(HttpContext, db, username, password,this))
             {
-                if (String.IsNullOrEmpty(targetUrl))
-                    return RedirectToAction("Index", "Home");
-                else
-                    return Redirect(targetUrl);
+                //if (String.IsNullOrEmpty(targetUrl))
+                //{ 
+                    switch (((Models.User)ViewBag.mainUser).Roles)
+                    {
+                        case "warehouse":
+                            return RedirectToAction("Index", "Items");
+                            //break;
+                        case "warehouseaudit":
+                            return RedirectToAction("Index", "ItemInputs", new { acc = true });
+                            //break;
+                        case "purchasing":
+                            return RedirectToAction("PurchasingApproval", "DemandItems");
+                            //break;
+                        case "generalaccountant":
+                            return RedirectToAction("Index", "BankAccounts");
+                            //break;
+                        case "demandplanning":
+                            return RedirectToAction("Index", "DemandItems");
+                            //break;
+                        case "projectplanning":
+                            return RedirectToAction("Index", "Projects");
+                            //break;
+                        default:
+                            return RedirectToAction("Index", "Items");
+                            //break;
+                    }
+                //}
+                //else
+                //    return Redirect(targetUrl);
             }
             return View();
         }
