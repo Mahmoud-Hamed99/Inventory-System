@@ -16,18 +16,30 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        int pageSize = 2;
+        int pageSize = 20;
 
-        public ActionResult Index(string BankName , DateTime? StartDate , DateTime? EndDate ,string CurrentFilter , int? page)
+        public ActionResult Index(string BankName , int? year , int? month1,int? month2 ,string CurrentFilter , int? page)
         {
-            var BankNameList = db.BankAccountants.GroupBy(a => a.BankName).ToList();
-            List<string> banks = new List<string>();
-
-            foreach (var x in BankNameList)
+            DateTime StartDate = new DateTime();
+            DateTime EndDate = new DateTime();
+            if(year!=null && month1!=null&& month2!=null)
             {
-                banks.Add(x.First().BankName);
+                StartDate = new DateTime(year.Value, month1.Value, 1);
+                if(month2.Value>month1.Value)
+                {
+                    EndDate = new DateTime(year.Value, month2.Value, 1);
+                    EndDate = EndDate.AddMonths(1).AddDays(-1);
+                }
+                else
+                {
+                    EndDate = StartDate.AddMonths(1);
+                }
             }
-                ViewBag.BankName = new SelectList(banks);
+            //var BankNameList = db.BankAccountants.GroupBy(a => a.BankName).ToList();
+            List<string> banks = new List<string>();
+            banks.Add("الاهلي");
+            banks.Add("كريدي أجريكول");
+            ViewBag.BankName = new SelectList(banks);
 
 
             ViewBag.CurrentFilter = BankName;
@@ -35,7 +47,7 @@ namespace Inventory_System.Controllers
 
             // with every search .. show detailed bank account in detected period.
 
-            if (BankName != null && StartDate != null && EndDate != null)
+            if (!String.IsNullOrEmpty(BankName) && year!=null && month1!=null && month2!=null)
             {
                 List<BankAccount> items = db.BankAccountants.Where(a => a.BankName.Contains(BankName) && a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
                 ViewBag.CurrentFilter = BankName;
@@ -44,14 +56,14 @@ namespace Inventory_System.Controllers
                 return Calc(items, BankName, StartDate, EndDate, CurrentFilter, page, pageNumber);
             }
 
-            else if (BankName == null && StartDate != null && EndDate != null)
+            else if (String.IsNullOrEmpty(BankName) && year != null && month1 != null && month2 != null)
             {
                 List<BankAccount> items = db.BankAccountants.Where(a => a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
                 ViewBag.BankName = new SelectList(banks);
                 return View(items.ToPagedList(pageNumber,pageSize));
             }
 
-            else if (BankName != null && StartDate == null && EndDate == null)
+            else if (!String.IsNullOrEmpty(BankName))
             {
                 List<BankAccount> items = db.BankAccountants.Where(a => a.BankName.Contains(BankName)).ToList();
                 ViewBag.BankName = new SelectList(banks);
@@ -136,6 +148,16 @@ namespace Inventory_System.Controllers
         // GET: BankAccounts/Create
         public ActionResult Create()
         {
+            List<string> banks = new List<string>();
+            banks.Add("الاهلي");
+            banks.Add("كريدي أجريكول");
+            var sl = new SelectList(banks);
+            foreach (var v in sl)
+            {
+                if (v.Value == "الاهلي")
+                    v.Selected = true;
+            }
+            ViewBag.BankName = sl;
             return View();
         }
 
@@ -146,6 +168,16 @@ namespace Inventory_System.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance,CheckIsPaied")] BankAccount bankAccount)
         {
+            List<string> banks = new List<string>();
+            banks.Add("الاهلي");
+            banks.Add("كريدي أجريكول");
+            var sl = new SelectList(banks);
+            foreach(var v in sl)
+            {
+                if(v.Value == "الاهلي")
+                    v.Selected = true;
+            }
+            ViewBag.BankName = sl;
             if (ModelState.IsValid)
             {
                 double allDeposit, allWithdraw = 0.0;
@@ -195,11 +227,22 @@ namespace Inventory_System.Controllers
         // GET: BankAccounts/Edit/5
         public ActionResult Edit(int? id)
         {
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             BankAccount bankAccount = db.BankAccountants.Find(id);
+            List<string> banks = new List<string>();
+            banks.Add("الاهلي");
+            banks.Add("كريدي أجريكول");
+            var sl = new SelectList(banks);
+            foreach (var v in sl)
+            {
+                if (v.Text == bankAccount.BankName)
+                    v.Selected = true;
+            }
+            ViewBag.BankName = sl;
             oldDeposit = bankAccount.Deposit;
             oldWithdraw = bankAccount.Withdraw;
             ViewBag.oldDeposit = oldDeposit;
@@ -218,6 +261,7 @@ namespace Inventory_System.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "BankAccountId,BankName,DateCreated,TransitionNumber,Statement,TransitionType,Deposit,Withdraw,Balance,CheckIsPaied")] BankAccount bankAccount,double oldDeposit, double oldWithdraw)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Entry(bankAccount).State = EntityState.Modified;
@@ -290,6 +334,16 @@ namespace Inventory_System.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            List<string> banks = new List<string>();
+            banks.Add("الاهلي");
+            banks.Add("كريدي أجريكول");
+            var sl = new SelectList(banks);
+            foreach (var v in sl)
+            {
+                if (v.Text == bankAccount.BankName)
+                    v.Selected = true;
+            }
+            ViewBag.BankName = sl;
             return View(bankAccount);
         }
 

@@ -17,68 +17,80 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        int pageSize = 2;
+        int pageSize = 20;
         // GET: ItemOutputs
-        [VerifyUser(Roles ="superadmin,warehouse")]
-        public ActionResult Index(int? Page , int? TechnicalDepartmentId, int? ProjectId)
+        [VerifyUser(Roles = "superadmin,warehouse,cost")]
+        public ActionResult Index(int? Page , int? TechnicalDepartmentId, int? ProjectId,int? year,int? month)
         {
             User user;
             Helper.CheckUser(HttpContext, db, out user);
             ViewBag.MainRole = user.Roles;
             int pageNumber = (Page ?? 1);
 
-            var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-            
+
             //---------------------------------------------------
-            
-            if (TechnicalDepartmentId != null && ProjectId != null) 
-            {
-                var items = db.ItemOutputs.Include(i => i.Project)
-                      .Include(i => i.TechnicalDepartment)
-                      .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId);
+            var res = itemOutputs.ToList();
+            if (TechnicalDepartmentId != null)
+                res = res.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId).ToList();
+            if (ProjectId != null)
+                res = res.Where(a => a.ProjectId == ProjectId).ToList();
+            if (year != null)
+                res = res.Where(a => a.DateCreated.Year == year).ToList();
+            if (month != null)
+                res = res.Where(a => a.DateCreated.Month == month).ToList();
+            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //if (TechnicalDepartmentId != null && ProjectId != null) 
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.Project)
+            //          .Include(i => i.TechnicalDepartment)
+            //          .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId);
 
-                ViewBag.ProjectIdv = ProjectId;
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
-                return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
-            }
-            else if (ProjectId == null && TechnicalDepartmentId != null)
-            {
-                var items = db.ItemOutputs.Include(i => i.TechnicalDepartment)
-                    .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
+            //    ViewBag.ProjectIdv = ProjectId;
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //}
+            //else if (ProjectId == null && TechnicalDepartmentId != null)
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.TechnicalDepartment)
+            //        .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
 
-                ViewBag.ProjectIdv = ProjectId;
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
-                return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
-            }
-            else if(ProjectId !=null && TechnicalDepartmentId ==null)
-            {
-                var items = db.ItemOutputs.Include(i => i.Project)
-                   .Where(a => a.ProjectId == ProjectId);
+            //    ViewBag.ProjectIdv = ProjectId;
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //}
+            //else if(ProjectId !=null && TechnicalDepartmentId ==null)
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.Project)
+            //       .Where(a => a.ProjectId == ProjectId);
 
-                ViewBag.ProjectIdv = ProjectId;
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    ViewBag.ProjectIdv = ProjectId;
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
 
-                return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
-            }
-            else
-                return View(db.ItemOutputs.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //    return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //}
+            //else
+            //    return View(db.ItemOutputs.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
 
         }
 
 
-        public ActionResult warehouse()
+        public ActionResult warehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
-            return ReturnWarehouse();
+            return ReturnWarehouse(TechnicalDepartmentId,ProjectId);
         }
 
-        ActionResult ReturnWarehouse()
+        ActionResult ReturnWarehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.ItemOutputApproved == false);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-
+            if (TechnicalDepartmentId != null)
+                itemOutputs = itemOutputs.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
+            if (ProjectId != null)
+                itemOutputs = itemOutputs.Where(a => a.ProjectId == ProjectId);
             return View("warehouse",itemOutputs.ToList());
         }
 
@@ -90,8 +102,9 @@ namespace Inventory_System.Controllers
                 foreach (var v in ItemApproved)
                 {
                     var res = db.ItemOutputs.Find(v);
+                    var vv = db.Items.Find(res.ItemId);
 
-                    var AvailableQnt = db.Items.Find(res.ItemId).ItemReminder;
+                    var AvailableQnt = vv.ItemQuantityAdded - vv.ItemQuantityWithdraw + vv.ItemReturn;
                     if (res.ItemOutputQuantity <= AvailableQnt)
                     {
                         if (res != null)
@@ -99,7 +112,6 @@ namespace Inventory_System.Controllers
                             res.ItemOutputApproved = true;
                             db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
                             db.SaveChanges();
-                            
                         }
                     }
                     else
@@ -109,7 +121,7 @@ namespace Inventory_System.Controllers
                     }
                 }
             }
-            return ReturnWarehouse();
+            return ReturnWarehouse(null,null);
         }
 
         
@@ -117,37 +129,43 @@ namespace Inventory_System.Controllers
         {
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             int pageNumber = (Page ?? 1);
+            var res = db.ItemOutputs.Include(a => a.Project).Include(a => a.TechnicalDepartment).Include(a => a.Item).ToList();
+            if (TechnicalDepartmentId != null)
+                res = res.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId).ToList();
+            if (ProjectId != null)
+                res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
-            {
-                var items = db.ItemOutputs.Include(i => i.Project)
-                      .Include(i => i.TechnicalDepartment)
-                      .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
-                ViewBag.ProjectIdv = ProjectId;
-                return View(items.OrderBy(a=>a.DateCreated).ToPagedList(pageNumber,pageSize));
-            }
-            else if (ProjectId == null && TechnicalDepartmentId != null)
-            {
-                var items = db.ItemOutputs.Include(i => i.TechnicalDepartment).Include(i => i.Project)
-                    .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.Project.ProjectFinished == false);
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
-                ViewBag.ProjectIdv = ProjectId; 
-                return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
-            }
-            else if (ProjectId != null && TechnicalDepartmentId == null)
-            {
-                var items = db.ItemOutputs.Include(i => i.Project)
-                   .Where(a => a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
-                ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
-                ViewBag.ProjectIdv = ProjectId;
-                return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
-            }
+            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.Project)
+            //          .Include(i => i.TechnicalDepartment)
+            //          .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    ViewBag.ProjectIdv = ProjectId;
+            //    return View(items.OrderBy(a=>a.DateCreated).ToPagedList(pageNumber,pageSize));
+            //}
+            //else if (ProjectId == null && TechnicalDepartmentId != null)
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.TechnicalDepartment).Include(i => i.Project)
+            //        .Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId && a.Project.ProjectFinished == false);
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    ViewBag.ProjectIdv = ProjectId; 
+            //    return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //}
+            //else if (ProjectId != null && TechnicalDepartmentId == null)
+            //{
+            //    var items = db.ItemOutputs.Include(i => i.Project)
+            //       .Where(a => a.ProjectId == ProjectId && a.Project.ProjectFinished == false);
+            //    ViewBag.TechnicalDepartmentIdv = TechnicalDepartmentId;
+            //    ViewBag.ProjectIdv = ProjectId;
+            //    return View(items.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //}
 
-            else
-                return View(itemOutputs.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            //else
+            //    return View(itemOutputs.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
 
         }
 
@@ -170,7 +188,7 @@ namespace Inventory_System.Controllers
         public ActionResult Create()
         {
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             return View();
         }
@@ -220,13 +238,13 @@ namespace Inventory_System.Controllers
                     }
                 }
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","projects");
             }
 
   
             return View(itemOutput);
         }
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,projectplanning")]
         // GET: ItemOutputs/Edit/5
         public ActionResult Edit(int? id)
         {

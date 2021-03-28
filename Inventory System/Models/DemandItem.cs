@@ -20,5 +20,6 @@ namespace Inventory_System.Models
         public bool DemandItemApproval { get; set; } = false;
 
         public bool PurchasingApproval { get; set; } = false;
+
     }
 }

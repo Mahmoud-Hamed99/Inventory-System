@@ -43,6 +43,8 @@ namespace Inventory_System.Controllers
                             //break;
                         case "projectplanning":
                             return RedirectToAction("Index", "Projects");
+                        case "cost":
+                            return RedirectToAction("Index", "ItemInputs");
                             //break;
                         default:
                             return RedirectToAction("Index", "Items");

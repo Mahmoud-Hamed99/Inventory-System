@@ -16,7 +16,7 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        int pageSize = 2;
+        int pageSize = 20;
         // GET: Vendors
         public ActionResult Index(int? Page)
         {

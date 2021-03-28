@@ -308,6 +308,10 @@
     <Compile Include="Migrations\202103171257356_added_users_usernotifications_connection.Designer.cs">
       <DependentUpon>202103171257356_added_users_usernotifications_connection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103272236095_added project code to projects.cs" />
+    <Compile Include="Migrations\202103272236095_added project code to projects.Designer.cs">
+      <DependentUpon>202103272236095_added project code to projects.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -330,6 +334,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\all.css" />
     <Content Include="Content\css\cs.css" />
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.min.css" />
@@ -556,6 +561,7 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutGeneral.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -651,6 +657,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103171257356_added_users_usernotifications_connection.resx">
       <DependentUpon>202103171257356_added_users_usernotifications_connection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103272236095_added project code to projects.resx">
+      <DependentUpon>202103272236095_added project code to projects.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

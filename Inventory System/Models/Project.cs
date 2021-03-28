@@ -10,6 +10,8 @@ namespace Inventory_System.Models
     {
         public int ProjectId { set; get; }
 
+        public string ProjectCode { get; set; } = "1234";
+
         [Required(ErrorMessage = "من فضلك ادخل اسم المشروع")]
         public string ProjectName { set; get; }
 

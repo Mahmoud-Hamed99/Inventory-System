@@ -18,25 +18,27 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ItemInputId)
     @Html.HiddenFor(model => model.ItemId)
-    @Html.HiddenFor(model=>model.VendorId)
-    <div class="form-group">
-        <div class="col-md-10 text-right">
-            @Html.EditorFor(model => model.Item.ItemName, "ItemName", new { htmlAttributes = new { @id = "id", @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Item.ItemName, "", new { @class = "text-danger" })
-        </div>
-        @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
-
+    @Html.HiddenFor(model => model.VendorId)
+<div class="form-group">
+    <div class="col-md-10 text-right">
+        @Html.Label(Model.Item.ItemName, new { htmlAttributes = new { @id = "id", @class = "form-control" } })
+        @*@Html.ValidationMessageFor(model => model.Item.ItemName, "", new { @class = "text-danger" })*@
     </div>
+    @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
+    @Html.HiddenFor(model => model.Item.ItemUnit, new { htmlAttributes = new { @class = "form-control" } })
+    
+
+</div>
+    @*@Html.HiddenFor(model => model.Item.ItemName, "ItemName", new { htmlAttributes = new { @id = "id", @class = "form-control" } })*@
 
 
-    <div class="form-group">
-        <div class="col-md-10 text-right">
-            @Html.EditorFor(model => model.Item.ItemUnit, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })
-        </div>
-        @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
+    @*<div class="form-group">
+        <div class="col-md-10 text-right">*@
+    @*@Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })*@
+    @*</div>
+            @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
 
-    </div>
+        </div>*@
 
     <div class="form-group">
         <div class="col-md-10 text-center">
@@ -59,7 +61,7 @@
 
     <div class="form-group">
         <div class="col-md-10 text-right">
-            @Html.EditorFor(model=>model.ItemReturn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.ItemReturn, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.ItemReturn, "", new { @class = "text-danger" })
         </div>
         @Html.Label("الكميه المرتجعه ان وجدت", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -83,11 +85,11 @@
     </div>
 
     <div class="form-group">
-            <div class="col-md-10">
-                <input name="minimumAllowed" type="number" class="form-control" />
-            </div>
+        <div class="col-md-10">
+            <input name="minimumAllowed" type="number" class="form-control" min="0" value="@Model.Item.ItemMinQuantity" required/>
+        </div>
         @Html.Label("الحد الأدني للصنف", htmlAttributes: new { @class = "control-label col-md-2" })
-            </div>
+    </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

@@ -9,20 +9,20 @@ namespace Inventory_System.Controllers
 {
     public class HomeController : Controller
     {
-        [VerifyUser(Roles ="superadmin")]
+        //[VerifyUser(Roles ="superadmin")]
         // GET: Home
         public ActionResult Index()
         {
-            //////InventoryDB db = new InventoryDB();
-            //////Models.User mainUser = new Models.User()
-            //////{
-            //////    Fullname = "Noshy",
-            //////    Password = "123456",
-            //////    Roles = "superadmin",
-            //////    username = "mnoshy@offbeateg.com"
-            //////};
-            //////db.Users.Add(mainUser);
-            //////db.SaveChanges();
+            //InventoryDB db = new InventoryDB();
+            //Models.User mainUser = new Models.User()
+            //{
+            //    Fullname = "cost",
+            //    Password = "123456",
+            //    Roles = "cost",
+            //    username = "cost"
+            //};
+            //db.Users.Add(mainUser);
+            //db.SaveChanges();
             return View();
         }
     }

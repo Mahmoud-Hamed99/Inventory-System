@@ -6,11 +6,20 @@
 @{
     ViewBag.Title = "Index";
 
-    Layout = "~/Views/Shared/_Layout.cshtml";
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+    List<int> year = new List<int>();
+    for (int i = 2000; i <= DateTime.Now.Year; i++)
+    {
+        year.Add(i);
+    }
+    List<int> month = new List<int>();
+    for (int i = 1; i <= 12; i++)
+    {
+        month.Add(i);
+    }
 
 }
+<link rel="stylesheet" href="~/Content/css/all.css" />
 
 <h2>كشف حساب البنوك</h2>
 
@@ -19,35 +28,47 @@
 @using (Html.BeginForm())
 {
     <table>
-        <tr class="col-md-10 text-right form-control">
+        <tr class="col-md-10 text-right">
             <th class="text-right">
                 @Html.ActionLink("اضافة جديد", "Create")
             </th>
 
         </tr>
-
+        <tr></tr>
         <tr>
-            <th class="col-md-4 form-control">
+            <th class="col-md-2">
                 @Html.DropDownList("BankName", ViewBag.BankName as SelectList, "اختر بنك", htmlAttributes: new { @class = "form-control col-md-3", @id = "BankName" })
             </th>
-            <th class="col-md-4 form-control">
+            <th class="col-md-2">
+                @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+            </th>
 
-                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
-                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
-                        @Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
-                    </div>
-                </div>
+            <th class="col-md-2">
+                @Html.DropDownList("month1", new SelectList(month), "من شهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
             </th>
-            <th class="col-md-4 form-control">
-                <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
-                        @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
-                    </div>
-                </div>
+            <th class="col-md-2">
+                @Html.DropDownList("month2", new SelectList(month), "إلى شهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
             </th>
+
+            <!--<th class="col-md-4 form-control">
+
+    <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+        <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">-->
+            @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+            <!--@Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
+            </div>
+        </div>
+    </th>
+    <th class="col-md-4 form-control">
+        <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
+            <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+                @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
+            </div>
+        </div>
+    </th>-->
 
             <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+            <th class="col-md-1"><input type="button" class="goRight btn-default btn" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
         </tr>
     </table>
 
@@ -169,29 +190,29 @@
 
 @section scripts{
 
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
     <link href="~/Content/css/cs.css" rel="stylesheet" />
     <script src="~/Scripts/dt.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $(function () {
-                $('#requestDateTimePicker').datetimepicker({
-                    // time: "far fa-clock",
-                    format: 'DD-MM-YYYY hh:mm a',
-                    defaultDate: new Date()
+        //$(document).ready(function () {
+        //    $(function () {
+        //        $('#requestDateTimePicker').datetimepicker({
+        //            // time: "far fa-clock",
+        //            format: 'DD-MM-YYYY hh:mm a',
+        //            defaultDate: new Date()
 
-                });
-            });
-            $(function () {
-                $('#requestDateTimePicker2').datetimepicker({
-                    // time: "far fa-clock",
-                    format: 'DD-MM-YYYY hh:mm a',
-                    defaultDate: new Date()
+        //        });
+        //    });
+        //    $(function () {
+        //        $('#requestDateTimePicker2').datetimepicker({
+        //            // time: "far fa-clock",
+        //            format: 'DD-MM-YYYY hh:mm a',
+        //            defaultDate: new Date()
 
-                });
-            });
-        });
+        //        });
+        //    });
+        //});
 
     </script>
 

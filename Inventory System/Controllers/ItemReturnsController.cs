@@ -6,25 +6,44 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
 
 namespace Inventory_System.Controllers
 {
+    [VerifyUser(Roles = "superadmin,warehouse,cost")]
     public class ItemReturnsController : Controller
     {
         private InventoryDB db = new InventoryDB();
-        int pageSize = 2;
+        int pageSize = 20;
 
         // GET: ItemReturns
         public ActionResult Index(int? Page)
         {
-            var itemReturns = db.ItemReturns.Include(i => i.Item).Include(i => i.Project).Include(i=> i.ItemInput.Vendor);
+            var itemReturns = db.ItemReturns.Include(i => i.Item).Include(a=>a.Item.ItemInputs).Include(i => i.Project).Include(i=> i.ItemInput.Vendor);
             int pageNumber = (Page ?? 1);
             return View(itemReturns.OrderBy(a=>a.DateCreated).ToPagedList(pageNumber,pageSize));
         }
+        [HttpPost]
+        
+        public ActionResult Index(int? year, int? month)
+        {
+            
 
+            
+            var itemReturns = db.ItemReturns.Include(i => i.Item).Include(a => a.Item.ItemInputs).Include(i => i.Project).Include(i => i.ItemInput.Vendor);
+            if(year!=null)
+            {
+                itemReturns = itemReturns.Where(a => a.DateCreated.Year == year);
+            }
+            if (month != null)
+            {
+                itemReturns = itemReturns.Where(a => a.DateCreated.Month == month);
+            }
+            return View(itemReturns.OrderBy(a => a.DateCreated).ToPagedList(1, 1000000000));
+        }
         // GET: ItemReturns/Details/5
         public ActionResult Details(int? id)
         {

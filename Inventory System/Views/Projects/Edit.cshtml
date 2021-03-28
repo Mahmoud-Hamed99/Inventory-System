@@ -20,7 +20,11 @@
     <div class="form-group">
         <div class="col-md-10 text-right">
             @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ProjectName,"", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-10 text-right">
+            @Html.EditorFor(model => model.ProjectCode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProjectCode, "", new { @class = "text-danger" })
         </div>
         @Html.Label("اسم المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
     </div>

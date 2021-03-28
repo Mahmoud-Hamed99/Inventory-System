@@ -2,8 +2,9 @@
 @model PagedList.IPagedList<Inventory_System.Models.ItemOutput>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
+    var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
     ViewBag.Title = "قائمه أذونات الخروج";
-    if(((string)ViewBag.MainRole) == "warehouse")
+    if(((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
     {
         Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
     }
@@ -11,7 +12,16 @@
     {
         Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
     }
-
+    List<int> year = new List<int>();
+    for (int i = 2000; i <= DateTime.Now.Year; i++)
+    {
+        year.Add(i);
+    }
+    List<int> month = new List<int>();
+    for (int i = 1; i <= 12; i++)
+    {
+        month.Add(i);
+    }
 }
 
 <h2>قائمه أذونات الخروج</h2>
@@ -24,22 +34,35 @@
     @using (Html.BeginForm())
     {
         <table>
-            <tr  class="col-md-10 text-right form-control">
-                <th class="text-right">
+            <tr  class="text-right">
+                @*<th class="col-md-4 text-right">
                     @Html.ActionLink("طلب جديد", "Create")
-                </th>
+                </th>*@
                 <th class="col-md-4 text-right">
-                    @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
+                    @if (currentRoleNow != "cost")
+                    {
+                        @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
+                    }
                 </th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
-            
             <tr>
-                <th class="col-md-4 form-control">
-                    @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })
-
-                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control col-md-3", @id = "ProjectId" })
+                <th class="col-md-2">
+                    @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control", @id = "TechnicalDepartmentId" })
                 </th>
-                <th><input type="submit" value="بحث" /></th>
+                <th class="col-md-2">
+                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
+                </th>
+                <th class="col-md-2">
+                    @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                </th>
+                <th class="col-md-2">
+                    @Html.DropDownList("month", new SelectList(month), "الشهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                </th>
+                <th class="col-md-1"><input type="submit" value="بحث" /></th>
+                <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
         </table>
     }
@@ -65,7 +88,14 @@
             @Html.DisplayName("اسم المنتج")
         </th>
         <th class="text-center">
-            @Html.DisplayName("الكميه")
+            @if (currentRoleNow != "cost")
+            {
+                @Html.DisplayName("الكميه")
+            }
+            else
+            {
+                @Html.DisplayName("المبلغ")
+            }
         </th>
         <th class="text-center">
             @Html.DisplayName("تاريخ الاصدار")
@@ -81,7 +111,7 @@
     {
         <tr>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectId)
+                @Html.DisplayFor(modelItem => item.Project.ProjectCode)
             </td>
 
             <td class="text-center">
@@ -95,7 +125,14 @@
                 @Html.DisplayFor(modelItem => item.Item.ItemName)
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+                @if (currentRoleNow != "cost")
+                {
+                    @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+                }
+                else
+                {
+                    @(item.Item.ItemInputs.Last().ItemPrice*item.ItemOutputQuantity)
+                }
             </td>
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.DateCreated)
@@ -106,9 +143,15 @@
             </td>
 
             <td class="text-center">
-                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId }) |
-                @*@Html.ActionLink("Details", "Details", new { id = item.ItemOutputId }) |*@
-                @Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId })
+                @if(currentRoleNow!="cost")
+                {
+                <div>
+                    @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
+
+                    @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
+                </div>
+                    
+                }
             </td>
         </tr>
     }

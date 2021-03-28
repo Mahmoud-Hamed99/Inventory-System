@@ -3,7 +3,7 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     ViewBag.Title = "قائمه أذونات الخروج";
-    Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
+    Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
 }
 
 <h2>قائمه أذونات الخروج</h2>
@@ -68,7 +68,7 @@
     {
         <tr>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectId)
+                @Html.DisplayFor(modelItem => item.Project.ProjectCode)
             </td>
 
             <td class="text-center">
@@ -93,7 +93,13 @@
             </td>
 
             <td class="text-center">
-                @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId }) |
+
+                @if (item.ItemOutputApproved == false)
+                {
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })
+
+                }
+                |
                 @*@Html.ActionLink("Details", "Details", new { id = item.ItemOutputId }) |*@
                 @Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId })
             </td>

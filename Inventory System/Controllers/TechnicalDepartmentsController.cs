@@ -16,7 +16,7 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        int PageSize = 2; 
+        int PageSize = 20; 
         // GET: TechnicalDepartments
         public ActionResult Index(int? Page)
         {

@@ -1,24 +1,62 @@
 ﻿@using PagedList.Mvc
 @model PagedList.IPagedList<Inventory_System.Models.ItemInput>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
+<style>
+    
+</style>
 @{
+    var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
     ViewBag.Title = "أذونات الدخول";
 
-    if (((string)ViewBag.MainRole) == "warehouse")
+    if (((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
     {
         Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+    }
+    else if (((string)ViewBag.MainRole) == "warehouseaudit" )
+    {
+        Layout = "~/Views/Shared/_LayoutWarhouseAudit.cshtml";
     }
     else
     {
         Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
     }
-
+    List<int> year = new List<int>();
+    for (int i = 2000; i <= DateTime.Now.Year; i++)
+    {
+        year.Add(i);
+    }
+    List<int> month = new List<int>();
+    for (int i = 1; i <= 12; i++)
+    {
+        month.Add(i);
+    }
 }
 
 <h2>أذونات الدخول</h2>
+<p>
 
+    @using (Html.BeginForm())
+    {
+        @*@Html.HiddenFor(mod)*@
+        <table>
+            <tr>
+                <th class="col-md-2">
+                    @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                </th>
+                <th class="col-md-2">
+                    @Html.DropDownList("month", new SelectList(month), "الشهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                </th>
+                <th class="col-md-1"><input type="submit" class="goRight" value="بحث" /></th>
+                <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
+            </tr>
+
+        </table>
+    }
+
+
+</p>
 <br />
-@if (ViewBag.IsAccountant == false)
+@if (ViewBag.IsAccountant == false && currentRoleNow !="cost")
 {<p>
         @Html.ActionLink("اضافه جديد", "Create")
     </p>
@@ -44,7 +82,14 @@
         </th>
 
         <th class="text-center">
-            @Html.DisplayName("الكميه")
+            @if (currentRoleNow != "cost")
+            {
+                @Html.DisplayName("الكميه")
+            }
+            else
+            {
+                @Html.DisplayName("المبلغ")
+            }
         </th>
 
         @*<th class="text-center">
@@ -59,7 +104,7 @@
             @Html.DisplayName("تاريخ الاصدار")
         </th>
 
-        <th >
+        <th>
             @Html.DisplayName("ملاحظات")
         </th>
 
@@ -67,71 +112,78 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemInputId)
-    </td>
+        <tr>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemInputId)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DocCode)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DocCode)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemName)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemUnit)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemQuantity)
-    </td>
+            <td class="text-center">
+                @if (currentRoleNow != "cost")
+                {
+                    @Html.DisplayFor(modelItem => item.ItemQuantity)
+                }
+                else
+                {
+                    @(item.ItemTotalCost)
+                }
+            </td>
 
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Vendor.VendorName)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Vendor.VendorName)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
 
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Notes , new { htmlAttributes = new { @class = "col-md-4" } })
-    </td>
-    <td class="text-left">
-        @if (ViewBag.IsAccountant)
-        {
-            @Html.ActionLink("تعديل", "WarhouseManager", new { id = item.ItemInputId })
-            @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.Notes, new { htmlAttributes = new { @class = "col-md-4" } })
+            </td>
+            <td class="text-left">
+                @if (ViewBag.IsAccountant && currentRoleNow != "cost")
+                {
+                    @Html.ActionLink("تعديل", "WarhouseManager", new { id = item.ItemInputId })
+                    @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
 
-        }
-        else
-        {
-            @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
-          
-        }
+                }
+                else if(currentRoleNow != "cost")
+                {
+                    @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
 
-    </td>
+                }
 
-    @*<td>
-             @Html.Label("الكميه المرتجعه", new { htmlAttributes = new {@id="text", @style = "display:none;" } })
-        </td>*@
+            </td>
 
-    @*<td >
-        @Html.Editor("ReturnQnt", new { htmlAttributes = new { @id = "ItemQntReturned", @class = "col-md-4"} })
-    </td>*@
+            @*<td>
+                     @Html.Label("الكميه المرتجعه", new { htmlAttributes = new {@id="text", @style = "display:none;" } })
+                </td>*@
 
-    @*<td >
-        <div class="col-md-2">
-            <input type="submit" value="حفظ" class="btn btn-default" />
-        </div>
-       
-    </td>*@
-</tr>
+            @*<td >
+                    @Html.Editor("ReturnQnt", new { htmlAttributes = new { @id = "ItemQntReturned", @class = "col-md-4"} })
+                </td>*@
+
+            @*<td >
+                    <div class="col-md-2">
+                        <input type="submit" value="حفظ" class="btn btn-default" />
+                    </div>
+
+                </td>*@
+        </tr>
     }
 
 </table>
 <br />
-@Html.PagedListPager(Model,Page=>Url.Action("Index",new { Page}))
+@Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }))

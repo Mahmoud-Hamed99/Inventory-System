@@ -3,42 +3,72 @@
 
 @{
     ViewBag.Title = "Index";
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+    List<int> year = new List<int>();
+    for (int i = 2000; i <= DateTime.Now.Year; i++)
+    {
+        year.Add(i);
+    }
+    List<int> month = new List<int>();
+    for (int i = 1; i <= 12; i++)
+    {
+        month.Add(i);
+    }
 
-    <link href="~/Content/PagedList.css" rel="stylesheet" />
 }
-
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 <h2>سجل الخزنة</h2>
-<p>
+@*<p>
     @Html.ActionLink("اضافة جديد", "Create")
-</p>
+</p>*@
 <br />
 @using (Html.BeginForm())
 {
-    <table>
-        <tr>
-            <th class="col-md-5">
+<table>
+    <tr class="col-md-10 text-right">
+        <th class="text-right">
+            @Html.ActionLink("اضافة جديد", "Create")
+        </th>
 
-                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
-                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
-                        @Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
-                    </div>
+    </tr>
+    <tr></tr>
+    <tr>
+        @*<th class="col-md-2">
+            @Html.DropDownList("BankName", ViewBag.BankName as SelectList, "اختر بنك", htmlAttributes: new { @class = "form-control col-md-3", @id = "BankName" })
+        </th>*@
+        <th class="col-md-2">
+            @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+        </th>
+
+        <th class="col-md-2">
+            @Html.DropDownList("month1", new SelectList(month), "من شهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+        </th>
+        <th class="col-md-2">
+            @Html.DropDownList("month2", new SelectList(month), "إلى شهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+        </th>
+
+        <!--<th class="col-md-4 form-control">
+
+        <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+            <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">-->
+        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
+        <!--@Html.Editor("startDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker", placeholder = "تاريخ بداية الفترة", @id = "StartDate" } })
                 </div>
-            </th>
-
-            <th class="col-md-5">
-                <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
-                        @*<div class="input-group-text"><i class="far fa-clock"></i></div>*@
-                        @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
-                    </div>
+            </div>
+        </th>
+        <th class="col-md-4 form-control">
+            <div class="input-group date" id="requestDateTimePicker2" data-target-input="nearest">
+                <div class="input-group-append" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+                    @Html.Editor("EndDate", new { htmlAttributes = new { @class = "datetimepicker-input", data_target = "#requestDateTimePicker2", placeholder = "تاريخ نهاية الفترة", @id = "EndDate" } })
                 </div>
-            </th>
+            </div>
+        </th>-->
 
-            <th><input type="submit" value="بحث" class="btn-default btn" /></th>
-        </tr>
-    </table>
+        <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+        <th class="col-md-1"><input type="button" class="goRight btn-default btn" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
+    </tr>
+</table>
 
     <br />
     <table class="table">
@@ -123,18 +153,18 @@
                 });
             });
     </script>
-    <script> 
+    <script>
         $('#requestDateTimePicker2').click(function () {
             $(function () {
-            $('#requestDateTimePicker').datetimepicker({
-            format: 'DD-MM-YYYY hh:mm a',
-                defaultDate: new Date()
+                $('#requestDateTimePicker').datetimepicker({
+                    format: 'DD-MM-YYYY hh:mm a',
+                    defaultDate: new Date()
+                });
             });
-                });   
 
     </script>
 
-    @Html.PagedListPager(Model,Page=>Url.Action("Index",new {Page}))
+    @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }))
 
 }
 

@@ -17,14 +17,29 @@ namespace Inventory_System.Controllers
         private InventoryDB db = new InventoryDB();
 
         // GET: Safes
-        int pageSize = 2;
-        public ActionResult Index(int? Page,DateTime? StartDate, DateTime? EndDate)
+        int pageSize = 20;
+        public ActionResult Index(int? Page, int? year, int? month1, int? month2)
         {
+            DateTime StartDate = new DateTime();
+            DateTime EndDate = new DateTime();
+            if (year != null && month1 != null && month2 != null)
+            {
+                StartDate = new DateTime(year.Value, month1.Value, 1);
+                if (month2.Value > month1.Value)
+                {
+                    EndDate = new DateTime(year.Value, month2.Value, 1);
+                    EndDate = EndDate.AddMonths(1).AddDays(-1);
+                }
+                else
+                {
+                    EndDate = StartDate.AddMonths(1);
+                }
+            }
             List<Safe> SafeList = new List<Safe>();
             double Balance = 0.0;
             int pageNumber = (Page ?? 1);
 
-            if (StartDate != null && EndDate != null)
+            if (year != null && month1 != null && month2 != null)
                 SafeList = db.Safe.Where(a => a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
             else
                 SafeList = db.Safe.ToList();

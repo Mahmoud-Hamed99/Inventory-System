@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
 }
 
-<h2>قائمه المنتجات بالمخزن</h2>
+<h2>قائمه الأصناف</h2>
 
 <p>
 
@@ -16,15 +16,18 @@
         @*@Html.HiddenFor(mod)*@
         <table>
             <tr>
-                <th class="col-md-4 form-control">
-                    @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3", @id = "category" })
+                <th class="col-md-2">
 
-                    @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3", @id = "subcategory" })
+                    @Html.DropDownList("category", ViewBag.category as SelectList, "اختر صنف", htmlAttributes: new { @class = "form-control col-md-3 goRight", @id = "category" })
 
-                    @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-1", @id = "item" })
                 </th>
-
-                <th><input type="submit" value="بحث" /></th>
+                <th class="col-md-2">
+                    @Html.DropDownList("subcategory", new SelectList(""), "اختر صنف جزئي", htmlAttributes: new { @class = "form-control col-md-3 goRight", @id = "subcategory" })
+                </th>
+                <th class="col-md-2">
+                    @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-3 goRight", @id = "item" })
+                </th>
+                <th class="col-md-2"><input class="goRight" type="submit" value="بحث" /></th>
             </tr>
         </table>
     }
@@ -128,8 +131,10 @@
 
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.min.js"></script>
+@*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>*@
 <script>
     $("#category").select2({
         placeholder: "اختر صنف",

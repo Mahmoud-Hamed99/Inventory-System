@@ -14,9 +14,9 @@ namespace Inventory_System.Controllers
     {
         private InventoryDB db = new InventoryDB();
 
-        int pageSize = 2;
+        int pageSize = 20;
         // GET: ItemInputs
-        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
         public ActionResult Index( int? page , bool acc = false)
         {
             User user;
@@ -35,6 +35,33 @@ namespace Inventory_System.Controllers
             int pageNumber = (page ?? 1);
             return View(itemInputs.OrderBy(a=>a.ItemInputId).ToPagedList(pageNumber,pageSize));
         }
+        [HttpPost]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
+        public ActionResult Index(int? year,int? month)
+        {
+            User user;
+            Helper.CheckUser(HttpContext, db, out user);
+            ViewBag.MainRole = user.Roles;
+            if (user.Roles == "warehouse")
+            {
+                ViewBag.IsAccountant = false;
+            }
+            else
+            {
+                ViewBag.IsAccountant = true;
+            }
+
+            var itemInputs = db.ItemInputs.OrderBy(a=>a.ItemInputId).Include(i => i.Item).Include(a => a.Vendor).ToList();
+            if (year != null)
+            {
+                itemInputs = itemInputs.Where(a => a.DateCreated.Year == year).ToList();
+            }
+            if (month != null)
+            {
+                itemInputs = itemInputs.Where(a => a.DateCreated.Month == month).ToList();
+            }
+            return View(itemInputs.ToPagedList(1,1000000000));
+        }
 
         // GET: ItemInputs/Details/5
         public ActionResult Details(int? id)
@@ -50,7 +77,7 @@ namespace Inventory_System.Controllers
             }
             return View(itemInput);
         }
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,cost")]
         // GET: ItemInputs/Create
         public ActionResult Create(string ItemCategory)
         {
@@ -92,7 +119,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,cost")]
         public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
         {
             //  List<Item> itemList = db.Items.ToList();
@@ -105,11 +132,33 @@ namespace Inventory_System.Controllers
 
 
                 var x = db.Items.Find(itemInput.ItemId);
-
+                if (x.ItemQuantity == 0)
+                {
                     x.ItemQuantity = itemInput.ItemQuantity;
+                }
              
-                    x.ItemQuantityAdded += itemInput.ItemQuantity;
-             
+                x.ItemQuantityAdded += itemInput.ItemQuantity;
+                double itemQ = itemInput.ItemQuantity;
+                foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.DemandItemQuantity > 0))
+                {
+                    if (itemQ > 0)
+                    {
+                        if (v.DemandItemQuantity >= itemQ)
+                        {
+                            v.DemandItemQuantity -= itemQ;
+                            itemQ = 0;
+                            
+                            
+                        }
+                        else
+                        {
+                            itemQ -= v.DemandItemQuantity;
+                            v.DemandItemQuantity = 0;
+                        }
+                        
+                    }
+                    
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -185,10 +234,20 @@ namespace Inventory_System.Controllers
             if (ModelState.IsValid)
             {
                 itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
-                db.Items.Single(a => a.ItemId == itemInput.ItemId).ItemMinQuantity = minimumAllowed;
+                var itm = db.Items.Single(a => a.ItemId == itemInput.ItemId);
+                itm.ItemMinQuantity = minimumAllowed;
+                //if(itm.ItemInputs.Count == 1)
+                //{
+                //    itm.ItemQuantity = itemInput.ItemQuantity;
+                //}
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
-                
+                itm = db.Items.Include(a => a.ItemInputs).Single(a => a.ItemId == itemInput.ItemId);
+                if (itm.ItemInputs.Count == 1)
+                {
+                    itm.ItemQuantity = itemInput.ItemQuantity;
+                }
+                db.SaveChanges();
                 var xy = itemInput.Item.ItemMinQuantity;
 
                 if(itemInput.ItemReturn != 0)

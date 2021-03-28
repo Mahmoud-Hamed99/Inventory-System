@@ -15,7 +15,7 @@ namespace Inventory_System.Controllers
 {
     public class DemandItemsController : Controller
     {
-        int pageSize = 2;
+        int pageSize = 20;
         private InventoryDB db = new InventoryDB();
 
         // GET: DemandItems
