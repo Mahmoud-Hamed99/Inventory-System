@@ -45,7 +45,9 @@ namespace Inventory_System.Controllers
                             return RedirectToAction("Index", "Projects");
                         case "cost":
                             return RedirectToAction("Index", "ItemInputs");
-                            //break;
+                        case "safe":
+                             return RedirectToAction("Index", "Safes");
+                        //break;
                         default:
                             return RedirectToAction("Index", "Items");
                             //break;

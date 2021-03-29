@@ -16,10 +16,10 @@ namespace Inventory_System.Controllers
             //InventoryDB db = new InventoryDB();
             //Models.User mainUser = new Models.User()
             //{
-            //    Fullname = "cost",
+            //    Fullname = "safe",
             //    Password = "123456",
-            //    Roles = "cost",
-            //    username = "cost"
+            //    Roles = "safe",
+            //    username = "safe"
             //};
             //db.Users.Add(mainUser);
             //db.SaveChanges();

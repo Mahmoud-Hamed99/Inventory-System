@@ -22,9 +22,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
-                    <li>@Html.ActionLink("قائمه البنوك", "Index", "BankAccounts")</li>
+                    @*<li>@Html.ActionLink("قائمه البنوك", "Index", "BankAccounts")</li>*@
 
-                    @*<li>@Html.ActionLink("الخزينة", "Index", "Safes", new { acc = true }, null)</li>*@
+                    <li>@Html.ActionLink("الخزينة", "Index", "Safes", new { acc = true }, null)</li>
                 </ul>
             </div>
         </div>
