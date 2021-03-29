@@ -198,6 +198,7 @@
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\SafeCategoriesController.cs" />
     <Compile Include="Controllers\SafesController.cs" />
+    <Compile Include="Controllers\SafeSubCategoriesController.cs" />
     <Compile Include="Controllers\TechnicalDepartmentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
@@ -573,6 +574,11 @@
     <Content Include="Views\SafeCategories\Details.cshtml" />
     <Content Include="Views\SafeCategories\Edit.cshtml" />
     <Content Include="Views\SafeCategories\Index.cshtml" />
+    <Content Include="Views\SafeSubCategories\Create.cshtml" />
+    <Content Include="Views\SafeSubCategories\Delete.cshtml" />
+    <Content Include="Views\SafeSubCategories\Details.cshtml" />
+    <Content Include="Views\SafeSubCategories\Edit.cshtml" />
+    <Content Include="Views\SafeSubCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

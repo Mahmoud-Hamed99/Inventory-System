@@ -21,8 +21,9 @@ namespace Inventory_System.Models
         public double Withdraw { get; set; }
 
         public string Notes { get; set; }
-
+        [Display(Name = "النوع")]
         public SafeSubCategory SafeSubCategory { get; set; }
+        [Display(Name ="النوع")]
         public int? SafeSubCategoryId { get; set; }
     }
     public class SafeCategory
@@ -44,7 +45,9 @@ namespace Inventory_System.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [Display(Name = "تاريخ الإضافة")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
+        [Display(Name = "الجهة")]
         public SafeCategory SafeCategory { get; set; }
+        [Display(Name = "الجهة")]
         public int SafeCategoryId { get; set; }
         public List<Safe> Saves { get; set; }
     }

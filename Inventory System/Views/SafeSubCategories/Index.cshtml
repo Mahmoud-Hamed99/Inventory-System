@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Inventory_System.Models.SafeSubCategory>
+
+@{
+    ViewBag.Title = "إضافة نوع";
+    Layout = "~/Views/Shared/_LayoutSafe.cshtml";
+}
+
+<h2>الانواع</h2>
+
+<p>
+    @Html.ActionLink("اضافة نوع جديد", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th  class="text-right">
+            @Html.DisplayNameFor(model => model.SafeCategory.Name)
+        </th>
+        <th  class="text-right">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th  class="text-right">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td  class="text-right">
+            @Html.DisplayFor(modelItem => item.SafeCategory.Name)
+        </td>
+        <td  class="text-right">
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td  class="text-right">
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td  class="text-right">
+            @Html.ActionLink("تعديل", "Edit", new { id=item.SafeSubCategoryId }) |
+            
+            @Html.ActionLink("حذف", "Delete", new { id=item.SafeSubCategoryId })
+        </td>
+    </tr>
+}
+
+</table>
