@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
 }
 
-    <h2>أضافه جديد</h2>
+<h2>هأضافه جديده</h2>
 
 
 @using (Html.BeginForm())
@@ -28,7 +28,7 @@
             @Html.DropDownListFor(model => model.Item.ItemSubCategory.ItemCategoryId, ViewBag.ItemCategory as SelectList, "اختار الصنف", htmlAttributes: new { @class = "form-control", @id = "ItemCategoryId" })
             @Html.ValidationMessageFor(model => model.Item.ItemSubCategory.ItemCategory.ItemCategoryName, "", new { @class = "text-danger" })
         </div>
-        @Html.Label("نوع الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("إسم الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
 
     </div>
 
@@ -36,7 +36,7 @@
     <div class="form-group">
 
         <div class="col-md-5 text-right">
-            <a href='@Url.Action("Create","ItemSubCategories")' target="_blank">اضافه صنف جزئي جديد</a>
+            <a href='@Url.Action("Create","ItemSubCategories")' target="_blank">اضافه نوع صنف جديد</a>
         </div>
 
         <div class="col-md-4 text-right">
@@ -45,7 +45,7 @@
         </div>
 
 
-        @Html.Label("نوع الصنف الفرعي", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("نوع الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
 
     </div>
 
@@ -53,14 +53,14 @@
     <div class="form-group">
 
         <div class="col-md-5 text-right">
-            <a href='@Url.Action("Create","Items")'>اضافه منتج جديد</a>
+            <a href='@Url.Action("Create","Items")'>اضافه خامة جديدة</a>
         </div>
 
         <div class="col-md-4 text-right">
             @Html.DropDownListFor(model => model.ItemId, new SelectList(""), htmlAttributes: new { @id = "ItemId", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
         </div>
-        @Html.Label("اسم المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("إسم الخامة", htmlAttributes: new { @class = "control-label col-md-2" })
     </div>
 
     <div class="form-group">
@@ -69,7 +69,7 @@
             @Html.EditorFor(model => model.Item.ItemUnit, new { htmlAttributes = new { @id = "ItemUnit", @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })
         </div>
-        @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("وحدة القياس", htmlAttributes: new { @class = "control-label col-md-2" })
 
     </div>
 

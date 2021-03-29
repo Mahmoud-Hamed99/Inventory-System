@@ -212,7 +212,8 @@ namespace Inventory_System.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ItemInput itemInput = db.ItemInputs.Find(id);
-
+            var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
+            ViewBag.lastPrice = itemsRes.Count()==0?0:itemsRes.FirstOrDefault().ItemPrice;
             if (itemInput == null)
             {
                 return HttpNotFound();
@@ -234,6 +235,8 @@ namespace Inventory_System.Controllers
             if (ModelState.IsValid)
             {
                 itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
+                var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
+                ViewBag.lastPrice = itemsRes.Count() == 0 ? 0 : itemsRes.FirstOrDefault().ItemPrice;
                 var itm = db.Items.Single(a => a.ItemId == itemInput.ItemId);
                 itm.ItemMinQuantity = minimumAllowed;
                 //if(itm.ItemInputs.Count == 1)

@@ -2,11 +2,11 @@
 @model PagedList.IPagedList<Inventory_System.Models.ItemOutput>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
-    ViewBag.Title = "قائمه أذونات الخروج";
+    ViewBag.Title = "أذون الصرف";
     Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
 }
 
-<h2>قائمه أذونات الخروج</h2>
+<h2>أذون الصرف</h2>
 <br />
 
 <p>
@@ -49,7 +49,7 @@
             @Html.DisplayName("القسم")
         </th>
         <th class="text-center">
-            @Html.DisplayName("اسم المنتج")
+            @Html.DisplayName("إسم الخامة")
         </th>
         <th class="text-center">
             @Html.DisplayName("الكميه")

@@ -105,14 +105,12 @@ namespace Inventory_System.Controllers
                 ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
                 return View(demandItem);
             }
-
             else
             {
                 ViewBag.msg2 = "لا يمكنك التعديل الان";
                 return RedirectToAction("Index");
             }
-       
-    }
+        }
 
         // POST: DemandItems/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

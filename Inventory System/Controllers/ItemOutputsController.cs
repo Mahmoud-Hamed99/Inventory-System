@@ -258,7 +258,7 @@ namespace Inventory_System.Controllers
                 return HttpNotFound();
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", itemOutput.ProjectId);
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode", itemOutput.ProjectId);
             ViewBag.DepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName",itemOutput.TechnicalDepartmentId);
 
             return View(itemOutput);
@@ -279,7 +279,7 @@ namespace Inventory_System.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectName", itemOutput.ProjectId);
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode", itemOutput.ProjectId);
             ViewBag.DepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName",itemOutput.TechnicalDepartmentId);
 
             return View(itemOutput);

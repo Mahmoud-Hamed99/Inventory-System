@@ -22,13 +22,20 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
-                    <li>@Html.ActionLink("قائمه المرتجعات", "Index", "ItemReturns")</li>
-                    <li>@Html.ActionLink("أذونات الخروج", "Index", "ItemOutputs")</li>
+                    <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
+                    <li>@Html.ActionLink("أذون الصرف", "Index", "ItemOutputs")</li>
 
-                    <li>@Html.ActionLink("أذونات الدخول", "Index", "ItemInputs")</li>
-                    @if (((Inventory_System.Models.User)ViewBag.mainUser).Roles != "cost")
+                    <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs")</li>
+                    @if (ViewBag.mainUser != null)
                     {
-                        <li>@Html.ActionLink("قائمه الأصناف", "Index", "Items")</li>
+                        if (((Inventory_System.Models.User)ViewBag.mainUser).Roles != "cost")
+                        {
+                            <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
+                        }
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
                     }
 
                 </ul>

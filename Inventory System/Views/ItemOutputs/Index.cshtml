@@ -3,7 +3,7 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
     var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
-    ViewBag.Title = "قائمه أذونات الخروج";
+    ViewBag.Title = "أذون الصرف";
     if(((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
     {
         Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
@@ -24,7 +24,7 @@
     }
 }
 
-<h2>قائمه أذونات الخروج</h2>
+<h2>أذون الصرف</h2>
 <br />
 
 
@@ -35,9 +35,9 @@
     {
         <table>
             <tr  class="text-right">
-                @*<th class="col-md-4 text-right">
+                <th class="col-md-4 text-right">
                     @Html.ActionLink("طلب جديد", "Create")
-                </th>*@
+                </th>
                 <th class="col-md-4 text-right">
                     @if (currentRoleNow != "cost")
                     {
@@ -85,7 +85,7 @@
             @Html.DisplayName("القسم")
         </th>
         <th class="text-center">
-            @Html.DisplayName("اسم المنتج")
+            @Html.DisplayName("إسم الخامة")
         </th>
         <th class="text-center">
             @if (currentRoleNow != "cost")

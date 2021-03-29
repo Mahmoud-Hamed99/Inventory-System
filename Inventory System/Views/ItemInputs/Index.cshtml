@@ -6,7 +6,7 @@
 </style>
 @{
     var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
-    ViewBag.Title = "أذونات الدخول";
+    ViewBag.Title = "أذون إضافة";
 
     if (((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
     {
@@ -32,7 +32,7 @@
     }
 }
 
-<h2>أذونات الدخول</h2>
+<h2>أذون إضافة</h2>
 <p>
 
     @using (Html.BeginForm())
@@ -159,7 +159,7 @@
                     @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
 
                 }
-                else if(currentRoleNow != "cost")
+                @if(ViewBag.IsAccountant && currentRoleNow != "cost")
                 {
                     @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
 
