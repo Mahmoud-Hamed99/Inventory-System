@@ -25,9 +25,11 @@
                     @*<li>@Html.ActionLink("About", "About", "Home")</li>
         <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
-                    <li>@Html.ActionLink("أذونات الخروج", "Index", "ItemOutputs")</li>
-                    <li>@Html.ActionLink("قائمه الأصناف", "Index", "Items")</li>
-                    <li>@Html.ActionLink("أذون إضافة", "Index", "ItemInputs")</li>
+                    <li>@Html.ActionLink("قائمه الموردين", "Index", "Vendors")</li>
+                    <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
+                    <li>@Html.ActionLink("أذون الصرف", "Index", "ItemOutputs")</li>
+                    <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs", new { acc = true }, null)</li>
+                    <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
                     @* <li>@Html.ActionLink("المشاريع", "Index", "Projects")</li>*@
                     @* <li>@Html.ActionLink("الموردين", "Index", "Vendors")</li>*@
                     @*<li>@Html.ActionLink("الأقسام", "Index", "TechnicalDepartments")</li>*@

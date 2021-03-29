@@ -22,21 +22,31 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
+                    @if (ViewBag.mainUser != null)
+                    {
+                        if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouseaudit")
+                        {
+                            <li>@Html.ActionLink("قائمه الموردين", "Index", "Vendors")</li>
+
+                        }
+                    }
                     <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
                     <li>@Html.ActionLink("أذون الصرف", "Index", "ItemOutputs")</li>
 
                     <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs")</li>
-                    @if (ViewBag.mainUser != null)
-                    {
-                        if (((Inventory_System.Models.User)ViewBag.mainUser).Roles != "cost")
-                        {
-                            <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
-                        }
-                    }
-                    else
-                    {
-                        <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
-                    }
+                    <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
+
+                    @*@if (ViewBag.mainUser != null)
+        {
+            if (((Inventory_System.Models.User)ViewBag.mainUser).Roles != "cost")
+            {
+                <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
+            }
+        }
+        else
+        {
+            <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
+        }*@
 
                 </ul>
             </div>

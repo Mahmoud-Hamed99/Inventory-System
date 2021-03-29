@@ -1,11 +1,11 @@
 ﻿@model Inventory_System.Models.ItemOutput
 
 @{
-    ViewBag.Title = "اضافه أذون خروج";
+    ViewBag.Title = "اضافه طلب جديد";
     Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
 }
 
-<h2>اضافه أذون خروج</h2>
+<h2>اضافه طلب جديد</h2>
 <br />
 
 @using (Html.BeginForm())
@@ -31,7 +31,7 @@
                 @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
                 @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
             </div>
-            @Html.Label("اسم المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label("كود المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
 
         </div>
 

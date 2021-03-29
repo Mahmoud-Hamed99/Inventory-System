@@ -19,7 +19,7 @@ namespace Inventory_System.Controllers
 
         int pageSize = 20;
         // GET: ItemOutputs
-        [VerifyUser(Roles = "superadmin,warehouse,cost")]
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult Index(int? Page , int? TechnicalDepartmentId, int? ProjectId,int? year,int? month)
         {
             User user;
@@ -244,7 +244,7 @@ namespace Inventory_System.Controllers
   
             return View(itemOutput);
         }
-        [VerifyUser(Roles = "superadmin,warehouse,projectplanning")]
+        [VerifyUser(Roles = "superadmin,warehouse,projectplanning,warehouseaudit")]
         // GET: ItemOutputs/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -269,7 +269,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
         public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId")] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
@@ -286,7 +286,7 @@ namespace Inventory_System.Controllers
         }
 
         // GET: ItemOutputs/Delete/5
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -304,7 +304,7 @@ namespace Inventory_System.Controllers
         // POST: ItemOutputs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
         public ActionResult DeleteConfirmed(int id)
         {
             ItemOutput itemOutput = db.ItemOutputs.Find(id);

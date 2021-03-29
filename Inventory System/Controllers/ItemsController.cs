@@ -19,7 +19,7 @@ namespace Inventory_System.Controllers
 
         int pageSize = 20;
         // GET: Items
-        [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit")]
+        [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit,cost")]
         public ActionResult Index(int? year ,int? Page , int? category, int? subcategory)
         {
             int pageNumber = (Page ?? 1);

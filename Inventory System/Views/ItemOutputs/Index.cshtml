@@ -36,7 +36,14 @@
         <table>
             <tr  class="text-right">
                 <th class="col-md-4 text-right">
-                    @Html.ActionLink("طلب جديد", "Create")
+                    @if (ViewBag.mainUser != null)
+                    {
+                        if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+                        {
+                            @Html.ActionLink("طلب جديد", "Create")
+                        }
+                    }
+
                 </th>
                 <th class="col-md-4 text-right">
                     @if (currentRoleNow != "cost")
