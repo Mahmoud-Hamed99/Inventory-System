@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Inventory_System.Models.SafeCategory>
+
+@{
+    ViewBag.Title = "إضافة توجيه";
+    Layout = "~/Views/Shared/_LayoutSafe.cshtml";
+}
+
+<h2>التوجيهات</h2>
+
+<p>
+    @Html.ActionLink("إضافة توجيه", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th class="text-right">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th class="text-right">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td class="text-right">
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td class="text-right">
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>
+        <td class="text-right">
+            @Html.ActionLink("تعديل", "Edit", new { id=item.SafeCategoryId }) |
+            @Html.ActionLink("حذف", "Delete", new { id=item.SafeCategoryId })
+        </td>
+    </tr>
+}
+
+</table>

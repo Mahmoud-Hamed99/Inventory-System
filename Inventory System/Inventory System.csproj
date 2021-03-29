@@ -196,6 +196,7 @@
     <Compile Include="Controllers\ItemSubCategoriesController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\SafeCategoriesController.cs" />
     <Compile Include="Controllers\SafesController.cs" />
     <Compile Include="Controllers\TechnicalDepartmentsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -311,6 +312,10 @@
     <Compile Include="Migrations\202103272236095_added project code to projects.cs" />
     <Compile Include="Migrations\202103272236095_added project code to projects.Designer.cs">
       <DependentUpon>202103272236095_added project code to projects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103291301592_added categories and subs to safe entries.cs" />
+    <Compile Include="Migrations\202103291301592_added categories and subs to safe entries.Designer.cs">
+      <DependentUpon>202103291301592_added categories and subs to safe entries.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
@@ -563,6 +568,11 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutGeneral.cshtml" />
     <Content Include="Views\Shared\_LayoutSafe.cshtml" />
+    <Content Include="Views\SafeCategories\Create.cshtml" />
+    <Content Include="Views\SafeCategories\Delete.cshtml" />
+    <Content Include="Views\SafeCategories\Details.cshtml" />
+    <Content Include="Views\SafeCategories\Edit.cshtml" />
+    <Content Include="Views\SafeCategories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -661,6 +671,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103272236095_added project code to projects.resx">
       <DependentUpon>202103272236095_added project code to projects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103291301592_added categories and subs to safe entries.resx">
+      <DependentUpon>202103291301592_added categories and subs to safe entries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

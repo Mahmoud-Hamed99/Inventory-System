@@ -27,6 +27,8 @@ namespace Inventory_System
         public DbSet<Models.TechnicalDepartment> TechnicalDepartments { get; set; }
         public DbSet<Models.BankAccount> BankAccountants { get; set; }
         public DbSet<Models.Safe> Safe { get; set; }
+        public DbSet<Models.SafeCategory> SafeCategories { get; set; }
+        public DbSet<Models.SafeSubCategory> safeSubCategories { get; set; }
         public DbSet<Models.User> Users { get; set; }
     }
 }

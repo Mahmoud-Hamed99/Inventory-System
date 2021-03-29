@@ -21,5 +21,31 @@ namespace Inventory_System.Models
         public double Withdraw { get; set; }
 
         public string Notes { get; set; }
+
+        public SafeSubCategory SafeSubCategory { get; set; }
+        public int? SafeSubCategoryId { get; set; }
+    }
+    public class SafeCategory
+    {
+        public int SafeCategoryId { get; set; }
+        [Display(Name = "إسم التوجيه")]
+        public string Name { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "تاريخ الإضافة")]
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public List<SafeSubCategory> SafeSubCategories { get; set; }
+    }
+
+    public class SafeSubCategory
+    {
+        public int SafeSubCategoryId { get; set; }
+        [Display(Name= "إسم نوع المصروف")]
+        public string Name { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Display(Name = "تاريخ الإضافة")]
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public SafeCategory SafeCategory { get; set; }
+        public int SafeCategoryId { get; set; }
+        public List<Safe> Saves { get; set; }
     }
 }
