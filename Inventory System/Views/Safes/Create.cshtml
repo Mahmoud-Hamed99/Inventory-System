@@ -13,81 +13,89 @@ Layout = "~/Views/Shared/_LayoutSafe.cshtml";
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PermessionNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PermessionNumber, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("رقم الأذون", htmlAttributes: new { @class = "control-label col-md-2" })
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PermessionNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PermessionNumber, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("رقم الأذون", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
+    <div class="form-group">
 
-        <div class="form-group">
-            <div class="col-md-10">
+        <div class="col-md-10">
+            @Html.DropDownList("SafeSubCategoryId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.SafeSubCategoryId, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.SafeSubCategoryId, "النوع", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="far fa-clock"></i></div>
-                        @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control datetimepicker-input", data_target = "#requestDateTimePicker" } })
-                    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+
+            <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+                <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                    @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control datetimepicker-input", data_target = "#requestDateTimePicker" } })
                 </div>
-
-                @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })
             </div>
-            @Html.Label("تاريخ الاصدار", htmlAttributes: new { @class = "control-label col-md-2" })
+
+            @Html.ValidationMessageFor(model => model.DateCreated, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("تاريخ الاصدار", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-10">
+    <div class="form-group">
+        <div class="col-md-10">
 
-                @Html.DropDownListFor(model => model.TransactionType, new List<SelectListItem>
-            {
-            new SelectListItem{ Text="اختر العملية", Value = "اختر العملية" },
-            new SelectListItem{ Text="ايداع", Value = "ايداع" },
-            new SelectListItem{ Text="سحب", Value = "سحب" },
+            @Html.DropDownListFor(model => model.TransactionType, new List<SelectListItem>
+        {
+        new SelectListItem{ Text="اختر العملية", Value = "اختر العملية" },
+        new SelectListItem{ Text="ايداع", Value = "ايداع" },
+        new SelectListItem{ Text="سحب", Value = "سحب" },
 
-            }, new { @id = "TransitionTypeId", @class = "form-control", onchange = "MyFunction()" })
+        }, new { @id = "TransitionTypeId", @class = "form-control", onchange = "MyFunction()" })
 
-                @Html.ValidationMessageFor(model => model.TransactionType, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("نوع الحركه", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.ValidationMessageFor(model => model.TransactionType, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("نوع الحركه", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Deposit, new { htmlAttributes = new { @id = "depositId", @class = "form-control", @disabled = "disabled" } })
-                @Html.ValidationMessageFor(model => model.Deposit, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("الايداع", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Deposit, new { htmlAttributes = new { @id = "depositId", @class = "form-control", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.Deposit, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("الايداع", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Withdraw, new { htmlAttributes = new { @class = "form-control", @id = "withdrawId", @disabled = "disabled" } })
-                @Html.ValidationMessageFor(model => model.Withdraw, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("السحب", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Withdraw, new { htmlAttributes = new { @class = "form-control", @id = "withdrawId", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.Withdraw, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("السحب", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("ملاحظات", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("ملاحظات", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="اضافة" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="اضافة" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 <div>

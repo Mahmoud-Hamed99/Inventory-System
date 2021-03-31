@@ -16,12 +16,31 @@ namespace Inventory_System.Controllers
         private InventoryDB db = new InventoryDB();
 
         // GET: SafeSubCategories
-        public ActionResult Index()
+        public ActionResult Index(string startDate,string endDate)
         {
-            var safeSubCategories = db.safeSubCategories.Include(s => s.SafeCategory);
+            ViewBag.startDate = startDate;
+            ViewBag.endDate = endDate;
+            var safeSubCategories = db.safeSubCategories.Include(s => s.SafeCategory).Include(s=>s.Saves);
+            List<CatsSums> catSumsList = new List<CatsSums>();
+            foreach(var v in safeSubCategories)
+            {
+                catSumsList.Add(new CatsSums()
+                {
+                    SafeSubCategory = v,
+                    FinanceStatement = new helper.Classes.FinanceStatement()
+                });
+                catSumsList.Last().FinanceStatement =
+                    helper.Classes.Helper.DoCalculation(
+                        v.Saves.AsQueryable(), startDate, endDate);
+            }
+            ViewBag.Statement = catSumsList;
             return View(safeSubCategories.ToList());
         }
-
+        public class CatsSums
+        {
+            public SafeSubCategory SafeSubCategory { get; set; }
+            public helper.Classes.FinanceStatement FinanceStatement { get; set; }
+        }
         // GET: SafeSubCategories/Details/5
         public ActionResult Details(int? id)
         {

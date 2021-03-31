@@ -2,14 +2,93 @@
 using Inventory_System.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace helper.Classes
 {
+    public interface TableWithDate
+    {
+        
+        DateTime DateCreated { get; set; }
+    }
+    public interface TableWithDepositWithdraw:TableWithDate
+    {
+        double Deposit { get; set; }
+
+        double Withdraw { get; set; }
+    }
+    public class FinanceStatement {
+        public double StartingBalance { get; set; }
+        public double EndBalance { get; set; }
+        public double CurrentBalance { get; set; }
+        public double Deposits { get; set; }
+        public double Withdraws { get; set; }
+        public double Diff { get; set; }
+    }
     public class Helper
     {
+        static public List<T> FilterByDate<T>(string fromDateString,string toDateString, 
+            IQueryable<TableWithDate> data)
+        {
+            if(fromDateString!=null && toDateString!=null)
+            {
+                DateTime fromDT = DateTime.ParseExact(fromDateString,
+                    "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                DateTime toDT = DateTime.ParseExact(toDateString,
+                    "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                toDT = toDT.AddDays(1);
+                return data.Where(a => a.DateCreated >= fromDT && a.DateCreated <= toDT).
+                    ToList().ConvertAll(Convert<T>);
+            }
+            else
+            {
+                return data.ToList().ConvertAll(Convert<T>); ;
+            }
+            
+        }
+        
+        static public FinanceStatement DoCalculation(IQueryable<TableWithDepositWithdraw> data, string fromDateString, string toDateString)
+        {
+            double firstBalance = 0.0;
+            double lastBalance = 0.0;
+            double currentBalance = 0.0;
+            double deposits = 0.0;
+            double withdraws = 0.0;
+            currentBalance = data.Sum(a => a.Deposit) - data.Sum(a => a.Withdraw);
+            if (fromDateString != null && toDateString != null)
+            {
+                DateTime fromDT = DateTime.ParseExact(fromDateString,
+                    "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                var dt = data.Where(a => a.DateCreated < fromDT);
+                firstBalance = dt.Sum(a => a.Deposit) - dt.Sum(a => a.Withdraw);
+                
+            }
+            var filteredData = 
+                FilterByDate<TableWithDepositWithdraw>(fromDateString, toDateString, data);
+            deposits = filteredData.Sum(a => a.Deposit);
+            withdraws = filteredData.Sum(a => a.Withdraw);
+            lastBalance = (firstBalance + deposits) - withdraws;
+
+
+            return new FinanceStatement()
+            {
+                CurrentBalance = currentBalance,
+                Deposits = deposits,
+                EndBalance = lastBalance,
+                StartingBalance = firstBalance,
+                Withdraws = withdraws,
+                Diff = deposits - withdraws
+            };
+
+        }
+        static public T Convert<T>(object dt)
+        {
+            return (T)dt;
+        }
         static public bool CheckUser(HttpContextBase context, InventoryDB dbcontext,out User user)
         {
             bool res = false;

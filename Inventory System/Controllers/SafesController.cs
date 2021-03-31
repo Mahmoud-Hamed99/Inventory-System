@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -18,40 +19,21 @@ namespace Inventory_System.Controllers
 
         // GET: Safes
         int pageSize = 20;
-        public ActionResult Index(int? Page, int? year, int? month1, int? month2)
+        public ActionResult Index(int? Page, string startDate,string endDate)
         {
-            DateTime StartDate = new DateTime();
-            DateTime EndDate = new DateTime();
-            if (year != null && month1 != null && month2 != null)
-            {
-                StartDate = new DateTime(year.Value, month1.Value, 1);
-                if (month2.Value > month1.Value)
-                {
-                    EndDate = new DateTime(year.Value, month2.Value, 1);
-                    EndDate = EndDate.AddMonths(1).AddDays(-1);
-                }
-                else
-                {
-                    EndDate = StartDate.AddMonths(1);
-                }
-            }
+
+
+            ViewBag.startDate = startDate;
+            ViewBag.endDate = endDate;
             List<Safe> SafeList = new List<Safe>();
-            double Balance = 0.0;
+            
             int pageNumber = (Page ?? 1);
 
-            if (year != null && month1 != null && month2 != null)
-                SafeList = db.Safe.Where(a => a.DateCreated >= StartDate && a.DateCreated <= EndDate).ToList();
-            else
-                SafeList = db.Safe.ToList();
+            SafeList = helper.Classes.Helper.FilterByDate<Safe>(startDate, endDate,
+                db.Safe.Include(a => a.SafeSubCategory).Include(a => a.SafeSubCategory.SafeCategory));
+            var res = helper.Classes.Helper.DoCalculation(db.Safe, startDate, endDate);
 
-                foreach (var i in SafeList)
-                {
-                    if (i.TransactionType.Contains("ايداع"))
-                        Balance += i.Deposit;
-                    else if (i.TransactionType.Contains("سحب"))
-                        Balance -= i.Withdraw;
-                }
-            ViewBag.Balance = Balance;
+            ViewBag.Statement = res;
             
             return View(SafeList.OrderBy(a=>a.SafeId).ToPagedList(pageNumber,pageSize));
         }
@@ -74,6 +56,7 @@ namespace Inventory_System.Controllers
         // GET: Safes/Create
         public ActionResult Create()
         {
+            ViewBag.SafeSubCategoryId = new SelectList(db.safeSubCategories, "SafeSubCategoryId", "Name");
             return View();
         }
 
@@ -82,7 +65,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SafeId,PermessionNumber,DateCreated,TransactionType,Deposit,Withdraw,Notes")] Safe safe)
+        public ActionResult Create([Bind(Include = "SafeId,PermessionNumber,DateCreated,TransactionType,Deposit,Withdraw,Notes,SafeSubCategoryId")] Safe safe)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +74,7 @@ namespace Inventory_System.Controllers
 
                 return RedirectToAction("Index");
             }
-
+            ViewBag.SafeSubCategoryId = new SelectList(db.safeSubCategories, "SafeSubCategoryId", "Name");
             return View(safe);
         }
 
@@ -107,6 +90,7 @@ namespace Inventory_System.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.SafeSubCategoryId = new SelectList(db.safeSubCategories, "SafeCategoryId", "Name", safe.SafeSubCategoryId);
             return View(safe);
         }
 
@@ -115,7 +99,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SafeId,PermessionNumber,DateCreated,TransactionType,Deposit,Withdraw,Notes")] Safe safe)
+        public ActionResult Edit([Bind(Include = "SafeId,PermessionNumber,DateCreated,TransactionType,Deposit,Withdraw,Notes,SafeSubCategoryId")] Safe safe)
         {
             if (ModelState.IsValid)
             {
@@ -138,19 +122,12 @@ namespace Inventory_System.Controllers
             {
                 return HttpNotFound();
             }
-            return View(safe);
-        }
-
-        // POST: Safes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Safe safe = db.Safe.Find(id);
             db.Safe.Remove(safe);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        
 
         protected override void Dispose(bool disposing)
         {

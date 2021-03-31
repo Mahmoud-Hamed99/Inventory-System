@@ -5,6 +5,7 @@
  */
 
 .bootstrap-datetimepicker-widget {
+    direction:ltr!important;
     list-style: none;
 }
 

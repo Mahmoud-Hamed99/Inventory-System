@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Inventory_System.Models.SafeSubCategory>
-
+@using Inventory_System.Controllers
 @{
+   
     ViewBag.Title = "إضافة نوع";
     Layout = "~/Views/Shared/_LayoutSafe.cshtml";
 }
@@ -10,37 +11,145 @@
 <p>
     @Html.ActionLink("اضافة نوع جديد", "Create")
 </p>
+@using (Html.BeginForm())
+{
+    <table>
+
+        <tr></tr>
+        <tr>
+
+            <th class="col-md-1 text-right">
+                @Html.Label("من تاريخ", new { @class = "text-right" })
+            </th>
+            <th class="col-md-2">
+                <div class="input-group date text-right" id="requestDateTimePicker" data-target-input="nearest">
+                    <div class="input-group-append text-right" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+
+                        @Html.TextBox("startDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker", placeholder = "من تاريخ" })
+                    </div>
+                </div>
+            </th>
+            <th class="col-md-1 text-right">
+                @Html.Label("إلى تاريخ", new { @class = "text-right" })
+            </th>
+            <th class="col-md-2">
+                <div class="input-group date text-right" id="requestDateTimePicker2" data-target-input="nearest">
+                    <div class="input-group-append text-right" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+
+                        @Html.TextBox("endDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker2", placeholder = "إلى تاريخ" })
+                    </div>
+                </div>
+            </th>
+
+
+
+
+            <th><input type="submit" value="بحث" class="btn-default btn" /></th>
+            <th class="col-md-1"><input type="button" class="goRight btn-default btn" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
+        </tr>
+    </table>
+
+
+}
 <table class="table">
     <tr>
-        <th  class="text-right">
+        <th class="text-right">
             @Html.DisplayNameFor(model => model.SafeCategory.Name)
         </th>
-        <th  class="text-right">
+        <th class="text-right">
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th  class="text-right">
+        <th class="text-right">
             @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+
+        <th class="text-right">
+            المستلم
+        </th>
+        <th class="text-right">
+            المصروف
+        </th>
+        <th class="text-right">
+            المتبقي
+        </th>
+        <th class="text-right">
+            الرصيد الفعلي
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td  class="text-right">
-            @Html.DisplayFor(modelItem => item.SafeCategory.Name)
-        </td>
-        <td  class="text-right">
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td  class="text-right">
-            @Html.DisplayFor(modelItem => item.DateCreated)
-        </td>
-        <td  class="text-right">
-            @Html.ActionLink("تعديل", "Edit", new { id=item.SafeSubCategoryId }) |
-            
-            @Html.ActionLink("حذف", "Delete", new { id=item.SafeSubCategoryId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.SafeCategory.Name)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td class="text-right">
+                @(
+            ((List<SafeSubCategoriesController.CatsSums>)ViewBag.Statement)
+            .Single(a => a.SafeSubCategory.SafeSubCategoryId == item.SafeSubCategoryId)
+            .FinanceStatement.Deposits)
+            </td>
+            <td class="text-right">
+                @(
+            ((List<SafeSubCategoriesController.CatsSums>)ViewBag.Statement)
+            .Single(a => a.SafeSubCategory.SafeSubCategoryId == item.SafeSubCategoryId)
+            .FinanceStatement.Withdraws)
+            </td>
+            <td class="text-right">
+                @(
+            ((List<SafeSubCategoriesController.CatsSums>)ViewBag.Statement)
+            .Single(a=>a.SafeSubCategory.SafeSubCategoryId == item.SafeSubCategoryId)
+            .FinanceStatement
+            .Diff)
+            </td>
+            <td class="text-right">
+                @(
+            ((List<SafeSubCategoriesController.CatsSums>)ViewBag.Statement)
+            .Single(a => a.SafeSubCategory.SafeSubCategoryId == item.SafeSubCategoryId)
+            .FinanceStatement.CurrentBalance)
+            </td>
+            <td class="text-right">
+                @Html.ActionLink("تعديل", "Edit", new { id = item.SafeSubCategoryId }) |
+
+                @Html.ActionLink("حذف", "Delete", new { id = item.SafeSubCategoryId })
+            </td>
+        </tr>
+    }
 
 </table>
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    <script src="~/Scripts/dt.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $(function () {
+                $('#requestDateTimePicker2').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+            });
+        });
+    </script>
+}

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using helper.Classes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace Inventory_System.Models
 {
-    public class BankAccount
+    public class BankAccount: TableWithDate
     {
         public int BankAccountId { get; set; }
 
