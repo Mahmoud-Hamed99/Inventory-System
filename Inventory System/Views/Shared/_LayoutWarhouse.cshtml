@@ -1,5 +1,7 @@
 ﻿<!DOCTYPE html>
-
+@{ 
+    var mainrole = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
+}
 <html dir="rtl" lang="ar">
 <head>
     <meta charset="utf-8" />
@@ -30,11 +32,17 @@
 
                         }
                     }
-                    <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
-                    <li>@Html.ActionLink("أذون الصرف", "Index", "ItemOutputs")</li>
+                    @if (mainrole != "cost")
+                    {
+                        <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
+                    }
+                    <li>@Html.ActionLink(mainrole=="cost"?"تكاليف المشاريع":"أذون الصرف", "Index", "ItemOutputs")</li>
+                    @if (mainrole != "cost")
+                    {
+                        <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs")</li>
+                    }
 
-                    <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs")</li>
-                    <li>@Html.ActionLink("كروت الصنف", "Index", "Items")</li>
+                    <li>@Html.ActionLink(mainrole == "cost" ? "تكاليف المخزون" : "كروت الصنف", "Index", "Items")</li>
 
                     @*@if (ViewBag.mainUser != null)
         {

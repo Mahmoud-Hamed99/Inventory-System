@@ -88,7 +88,7 @@
 
     <div class="form-group">
         <div class="col-md-10 text-right">
-            @Html.DropDownList("VendorId", ViewBag.VendorId as SelectList, "إختر المورد", htmlAttributes: new { @id = "VendorId", @class = "form-control" })
+            @Html.DropDownList("VendorId", ViewBag.VendorId as SelectList, htmlAttributes: new { @id = "VendorId", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Vendor.VendorName, "", new { @class = "text-danger" })
         </div>
         @Html.Label("اسم المورد", htmlAttributes: new { @class = "control-label col-md-2" })

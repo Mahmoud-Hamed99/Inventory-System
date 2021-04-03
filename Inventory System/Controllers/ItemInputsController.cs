@@ -136,7 +136,11 @@ namespace Inventory_System.Controllers
                 {
                     x.ItemQuantity = itemInput.ItemQuantity;
                 }
-             
+                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == x.ItemId && a.ItemPrice > 0).ToList();
+                if(itmWithPrice.Count()>0)
+                {
+                    x.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+                }
                 x.ItemQuantityAdded += itemInput.ItemQuantity;
                 double itemQ = itemInput.ItemQuantity;
                 foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.DemandItemQuantity > 0))
@@ -199,6 +203,15 @@ namespace Inventory_System.Controllers
 
                 db.Entry(itemInput).State = EntityState.Modified;
                 db.SaveChanges();
+                var x = db.Items.Find(itemInput.ItemId);
+                
+                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == x.ItemId && a.ItemPrice > 0).ToList();
+                if (itmWithPrice.Count() > 0)
+                {
+                    x.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+                }
+                x.ItemQuantityAdded += itemInput.ItemQuantity;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(itemInput);
@@ -234,16 +247,28 @@ namespace Inventory_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
-                var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
-                ViewBag.lastPrice = itemsRes.Count() == 0 ? 0 : itemsRes.FirstOrDefault().ItemPrice;
-                var itm = db.Items.Single(a => a.ItemId == itemInput.ItemId);
-                itm.ItemMinQuantity = minimumAllowed;
+
+
                 //if(itm.ItemInputs.Count == 1)
                 //{
                 //    itm.ItemQuantity = itemInput.ItemQuantity;
                 //}
+                itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
                 db.Entry(itemInput).State = EntityState.Modified;
+                db.SaveChanges();
+                
+                var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
+                ViewBag.lastPrice = itemsRes.Count() == 0 ? 0 : itemsRes.FirstOrDefault().ItemPrice;
+                var itm = db.Items.Single(a => a.ItemId == itemInput.ItemId);
+                itm.ItemMinQuantity = minimumAllowed;
+                var x = db.Items.Find(itemInput.ItemId);
+
+                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == x.ItemId && a.ItemPrice > 0).ToList();
+                if (itmWithPrice.Count() > 0)
+                {
+                    x.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+                }
+                x.ItemQuantityAdded += itemInput.ItemQuantity;
                 db.SaveChanges();
                 itm = db.Items.Include(a => a.ItemInputs).Single(a => a.ItemId == itemInput.ItemId);
                 if (itm.ItemInputs.Count == 1)
@@ -261,7 +286,7 @@ namespace Inventory_System.Controllers
                     itemReturn.ItemQuantity = itemInput.ItemReturn;
                     
                    
-                    var x = db.Items.Find(itemInput.ItemId);
+                    
                     x.ItemQuantityWithdraw += itemInput.ItemReturn;
                     
                     db.ItemReturns.Add(itemReturn);

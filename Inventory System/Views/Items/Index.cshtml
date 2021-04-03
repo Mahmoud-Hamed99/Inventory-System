@@ -5,9 +5,10 @@
 @{
     ViewBag.Title = "قائمه المنتجات بالمخزن";
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+    var mainrole = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
 }
 
-<h2>كروت الصنف</h2>
+<h2>@(mainrole=="cost"?"تكاليف المخزون":"كروت الصنف")</h2>
 
 <p>
 
@@ -62,15 +63,15 @@
         </th>
 
         <th class="text-center">
-            @Html.DisplayName("الاضافه")
+            @Html.DisplayName(mainrole == "cost" ? "تكاليف المشتريات" : "الاضافه")
         </th>
 
         <th class="text-center">
-            @Html.DisplayName("الصرف")
+            @Html.DisplayName(mainrole == "cost" ? "تكاليف انتاج تحت التشغيل" : "الصرف")
         </th>
 
         <th class="text-center">
-            @Html.DisplayName("المتبقي")
+            @Html.DisplayName(mainrole == "cost" ? "تكاليف المخزون المتبقي" : "المتبقي")
         </th>
 
         <th class="text-center">
@@ -97,27 +98,59 @@
                 @Html.DisplayFor(modelItem => item.ItemUnit)
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemQuantity)
+                @if (mainrole == "cost")
+                {
+                    @((item.ItemQuantity * item.ItemAvgPrice) + " $")
+                }
+                else
+                {
+                    @item.ItemQuantity
+                }
+
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemQuantityAdded)
+                @if (mainrole == "cost")
+                {
+                    @(item.ItemInputs.Sum(a => a.ItemTotalCost)+" $")
+                }
+                else
+                {
+                    @item.ItemQuantityAdded
+                }
+
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemQuantityWithdraw)
+                @if (mainrole == "cost")
+                {
+                    @((item.ItemOutputs.Sum(a => a.ItemOutputQuantity)*item.ItemAvgPrice)+" $")
+                }
+                else
+                {
+                    @item.ItemQuantityWithdraw
+                }
+
             </td>
             @*<td class="text-center">
                     @Html.DisplayFor(modelItem => item.ItemReturn)
                 </td>*@
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemReminder)
+                @if (mainrole == "cost")
+                {
+                    @(((item.ItemInputs.Sum(a => a.ItemTotalCost))- (item.ItemOutputs.Sum(a => a.ItemOutputQuantity) * item.ItemAvgPrice))+" $")
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.ItemReminder)
+
+                }
             </td>
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             @*<td class="text-center">*@
-                @*@Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |*@
-                @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
-                @*@Html.ActionLink("حذف", "Delete", new { id = item.ItemId })*@
+            @*@Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |*@
+            @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
+            @*@Html.ActionLink("حذف", "Delete", new { id = item.ItemId })*@
             @*</td>*@
         </tr>
     }
@@ -126,15 +159,15 @@
 <br />
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, subcategory=ViewBag.subcategoryv , category=ViewBag.categoryv }))
+    new { page, subcategory = ViewBag.subcategoryv, category = ViewBag.categoryv }))
 
 
 
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>*@
 <link href="~/Content/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.min.js"></script>
 @*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>*@
 <script>
     $("#category").select2({
         placeholder: "اختر صنف",

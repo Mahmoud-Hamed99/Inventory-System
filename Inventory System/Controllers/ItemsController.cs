@@ -22,6 +22,11 @@ namespace Inventory_System.Controllers
         [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit,cost")]
         public ActionResult Index(int? year ,int? Page , int? category, int? subcategory)
         {
+            //foreach(var v in db.Items.Include(a=>a.ItemInputs))
+            //{
+            //    v.ItemAvgPrice = v.ItemInputs.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+            //}
+            //db.SaveChanges();
             int pageNumber = (Page ?? 1);
 
             if(year.HasValue == false)
@@ -30,61 +35,40 @@ namespace Inventory_System.Controllers
             }
             DateTime toCompare = new DateTime(year.Value, 1, 1);
             ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
-         
-            var items = db.Items.Include(a=>a.ItemSubCategory).Include(a=>a.ItemSubCategory.ItemCategory).Include(a=>a.ItemInputs).ToList();
-
-            foreach(var v in items)
+            var baseitems = db.Items
+               .Include(a => a.ItemSubCategory)
+               .Include(a => a.ItemSubCategory.ItemCategory)
+               .Include(a => a.ItemInputs)
+               .Include(a => a.ItemOutputs);
+            if (subcategory.HasValue)
             {
-                var inputsSum = db.ItemInputs.Where(a => a.DateCreated < toCompare &&
-                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemQuantity);
-                inputsSum += db.ItemReturns.Where(a => a.DateCreated < toCompare &&
-                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemQuantity);
-
-                var outputsSum = db.ItemOutputs.Where(a => a.DateCreated < toCompare &&
-                a.ItemId == v.ItemId).ToList().Sum(a => a.ItemOutputQuantity);
-                var remainder = inputsSum - outputsSum;
-                if(remainder > 0)
-                {
-                    v.ItemQuantity = remainder;
-                }
-                v.ItemReminder = v.ItemQuantityAdded - v.ItemQuantityWithdraw + v.ItemReturn;
+                baseitems = baseitems.Where(a=>a.ItemSubCategoryId == subcategory.Value);
             }
-            db.SaveChanges();
+            else if (category.HasValue)
+            {
+                baseitems = baseitems.Where(a => a.ItemSubCategory.ItemCategoryId == category.Value);
+                
+            }
+            var items = baseitems
+                .OrderBy(a=>a.ItemId)
+                .ToPagedList(pageNumber, pageSize)
+                .Select(
+                a =>
+                {
+                    var itms = db.ItemInputs.Where(aa => aa.DateCreated < toCompare).ToList();
+                    a.ItemQuantity = itms.Count()==0?0:itms.Sum(aa=>aa.ItemQuantity);
+                    a.ItemInputs =
+                    db.ItemInputs.
+                    Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
+                    a.ItemOutputs = db.ItemOutputs
+                    .Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
+                    a.ItemReminder = (a.ItemInputs.Sum(aa => aa.ItemQuantity)) - (a.ItemOutputs.Sum(aa => aa.ItemOutputQuantity));
+                    return a;
+                });
 
-            //--------------------------------------------------
 
+            return View(items.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
             
-            if (subcategory != null && subcategory!=0 && category != null) 
-            {
-                var items2 = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
-                      .Include(i => i.ItemSubCategory)
-                      .Where(a => a.ItemSubCategory.ItemCategoryId == category && a.ItemSubCategoryId == subcategory);
-                foreach (var v in items2)
-                {
-                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
-                }
-                db.SaveChanges();
-                ViewBag.subcategoryv = subcategory;
-                ViewBag.categoryv = category;
-                return View(items2.OrderBy(a=>a.ItemId).ToPagedList(pageNumber,pageSize));
-            }
-            else if (category != null && (subcategory==null || subcategory==0))
-            {
-
-                var items3 = db.Items.Include(i => i.ItemSubCategory.ItemCategory)
-                    .Where(a => a.ItemSubCategory.ItemCategoryId == category);
-                foreach (var v in items3)
-                {
-                    v.ItemReminder = v.ItemQuantity + v.ItemQuantityAdded - v.ItemQuantityWithdraw - v.ItemReturn;
-                }
-                db.SaveChanges();
-
-                ViewBag.subcategoryv = subcategory;
-                ViewBag.categoryv = category;
-                return View(items3.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
-            }
-            else
-                return View(db.Items.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
 
 
         }
