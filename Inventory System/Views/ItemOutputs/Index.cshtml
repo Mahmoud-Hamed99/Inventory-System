@@ -4,7 +4,7 @@
 @{
     var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
     ViewBag.Title = "أذون الصرف";
-    if(((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
+    if (((string)ViewBag.MainRole) == "warehouse" || ((string)ViewBag.MainRole) == "cost")
     {
         Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
     }
@@ -22,9 +22,10 @@
     {
         month.Add(i);
     }
+    double totalPrices = 0;
 }
 
-<h2>أذون الصرف</h2>
+<h2>@(currentRoleNow=="cost"?"تكاليف المشاريع": "أذون الصرف")</h2>
 <br />
 
 
@@ -34,8 +35,8 @@
     @using (Html.BeginForm())
     {
         <table>
-            <tr  class="text-right">
-                <th class="col-md-4 text-right">
+            <tr class="text-right">
+                <th class="col-md-2 text-right">
                     @if (ViewBag.mainUser != null)
                     {
                         if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
@@ -45,7 +46,7 @@
                     }
 
                 </th>
-                <th class="col-md-4 text-right">
+                <th class="col-md-2 text-right">
                     @if (currentRoleNow != "cost")
                     {
                         @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
@@ -54,22 +55,23 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
             </tr>
             <tr>
-                <th class="col-md-2">
+                <th class="col-md-2 text-right">
                     @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control", @id = "TechnicalDepartmentId" })
                 </th>
-                <th class="col-md-2">
+                <th class="col-md-2 text-right">
                     @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
                 </th>
-                <th class="col-md-2">
+                <th class="col-md-2 text-right">
                     @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
                 </th>
-                <th class="col-md-2">
+                <th class="col-md-2 text-right">
                     @Html.DropDownList("month", new SelectList(month), "الشهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
                 </th>
-                <th class="col-md-1"><input type="submit" value="بحث" /></th>
-                <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
+                <th class="col-md-1 text-right"><input type="submit" value="بحث" /></th>
+                <th class="col-md-1 text-right"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
         </table>
     }
@@ -138,7 +140,8 @@
                 }
                 else
                 {
-                    @(item.Item.ItemInputs.Last().ItemPrice*item.ItemOutputQuantity)
+                    @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
+                    totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
                 }
             </td>
             <td class="text-center">
@@ -150,23 +153,33 @@
             </td>
 
             <td class="text-center">
-                @if(currentRoleNow!="cost")
+                @if (currentRoleNow != "cost")
                 {
-                <div>
-                    @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
+                    <div>
+                        @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
 
-                    @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
-                </div>
-                    
+                        @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
+                    </div>
+
                 }
             </td>
+        </tr>
+    }
+    @if (currentRoleNow == "cost")
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <th class="text-center">@totalPrices $</th>
         </tr>
     }
 
 </table>
 <br />
-@Html.PagedListPager(Model,Page=>Url.Action("Index",
-    new { Page, TechnicalDepartmentId=ViewBag.TechnicalDepartmentIdv , ProjectId=ViewBag.ProjectIdv }))
+@Html.PagedListPager(Model, Page => Url.Action("Index",
+    new { Page, TechnicalDepartmentId = ViewBag.TechnicalDepartmentIdv, ProjectId = ViewBag.ProjectIdv }))
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -178,7 +191,7 @@
     });
     $('#TechnicalDepartmentId').on('select2:select', function (e) {
         $.get("/ItemOutputs/Index", { id: $("#TechnicalDepartmentId").val() }, function (data) {
-            
+
         });
     })
 </script>
@@ -190,7 +203,7 @@
     });
     $('#ProjectId').on('select2:select', function (e) {
         $.get("/ItemOutputs/Index", { id: $("#ProjectId").val() }, function (data) {
-        
+
         });
     })
 </script>

@@ -20,12 +20,12 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Index(int? Page , int? TechnicalDepartmentId, int? ProjectId,int? year,int? month)
+        public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId,int? year,int? month)
         {
             User user;
             Helper.CheckUser(HttpContext, db, out user);
             ViewBag.MainRole = user.Roles;
-            int pageNumber = (Page ?? 1);
+            int pageNumber =1;
 
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
@@ -41,7 +41,7 @@ namespace Inventory_System.Controllers
                 res = res.Where(a => a.DateCreated.Year == year).ToList();
             if (month != null)
                 res = res.Where(a => a.DateCreated.Month == month).ToList();
-            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, 1000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -76,12 +76,12 @@ namespace Inventory_System.Controllers
 
         }
 
-
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult warehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
             return ReturnWarehouse(TechnicalDepartmentId,ProjectId);
         }
-
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         ActionResult ReturnWarehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.ItemOutputApproved == false);
@@ -95,6 +95,7 @@ namespace Inventory_System.Controllers
         }
 
         [HttpPost]
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult Approve(int[] ItemApproved)
         {
             if (ItemApproved != null)
