@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Inventory_System.Models
 {
-    public class ItemOutput
+    public class ItemOutput:helper.Classes.TableWithDate
     {
         public int ItemOutputId { set; get; }
 

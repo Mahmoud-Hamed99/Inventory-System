@@ -20,8 +20,11 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId,int? year,int? month)
+        public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId,string startDate,string endDate)
         {
+
+
+
             User user;
             Helper.CheckUser(HttpContext, db, out user);
             ViewBag.MainRole = user.Roles;
@@ -37,10 +40,13 @@ namespace Inventory_System.Controllers
                 res = res.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId).ToList();
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
-            if (year != null)
-                res = res.Where(a => a.DateCreated.Year == year).ToList();
-            if (month != null)
-                res = res.Where(a => a.DateCreated.Month == month).ToList();
+            if (startDate != null && endDate != null)
+            {
+
+                res = helper.Classes.Helper.FilterByDate<ItemOutput>(startDate, endDate,
+                    res.AsQueryable());
+            }
+            
             return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, 1000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
