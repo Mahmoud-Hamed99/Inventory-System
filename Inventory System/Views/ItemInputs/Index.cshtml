@@ -2,7 +2,6 @@
 @model PagedList.IPagedList<Inventory_System.Models.ItemInput>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 <style>
-    
 </style>
 @{
     var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
@@ -12,7 +11,7 @@
     {
         Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
     }
-    else if (((string)ViewBag.MainRole) == "warehouseaudit" )
+    else if (((string)ViewBag.MainRole) == "warehouseaudit")
     {
         Layout = "~/Views/Shared/_LayoutWarhouseAudit.cshtml";
     }
@@ -42,12 +41,30 @@
         @*@Html.HiddenFor(mod)*@
         <table>
             <tr>
-                <th class="col-md-2">
-                    @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                <th class="col-md-1 text-right">
+                    @Html.Label("من تاريخ", new { @class = "text-right" })
                 </th>
                 <th class="col-md-2">
-                    @Html.DropDownList("month", new SelectList(month), "الشهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
+                    <div class="input-group date text-right" id="requestDateTimePicker2" data-target-input="nearest">
+                        <div class="input-group-append text-right" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+
+                            @Html.TextBox("startDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker2", placeholder = "من تاريخ" })
+                        </div>
+                    </div>
                 </th>
+
+                <th class="col-md-1 text-right">
+                    @Html.Label("إلى تاريخ", new { @class = "text-right" })
+                </th>
+                <th class="col-md-2">
+                    <div class="input-group date text-right" id="requestDateTimePicker" data-target-input="nearest">
+                        <div class="input-group-append text-right" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+
+                            @Html.TextBox("endDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker", placeholder = "إلى تاريخ" })
+                        </div>
+                    </div>
+                </th>
+                
                 <th class="col-md-1"><input type="submit" class="goRight" value="بحث" /></th>
                 <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
@@ -58,7 +75,7 @@
 
 </p>
 <br />
-@if (ViewBag.IsAccountant == false && currentRoleNow !="cost")
+@if (ViewBag.IsAccountant == false && currentRoleNow != "cost")
 {<p>
         @Html.ActionLink("اضافه جديد", "Create")
     </p>
@@ -161,7 +178,7 @@
                     @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
 
                 }
-                @if(ViewBag.IsAccountant && currentRoleNow != "cost")
+                @if (ViewBag.IsAccountant && currentRoleNow != "cost")
                 {
                     @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
 
@@ -189,3 +206,30 @@
 </table>
 <br />
 @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }))
+
+@section scripts{
+
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    <script src="~/Scripts/dt.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+                $('#requestDateTimePicker2').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+            });
+        });
+    </script>
+
+}

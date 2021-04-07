@@ -318,6 +318,10 @@
     <Compile Include="Migrations\202103291301592_added categories and subs to safe entries.Designer.cs">
       <DependentUpon>202103291301592_added categories and subs to safe entries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104051109484_demand priority dt.cs" />
+    <Compile Include="Migrations\202104051109484_demand priority dt.Designer.cs">
+      <DependentUpon>202104051109484_demand priority dt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -680,6 +684,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103291301592_added categories and subs to safe entries.resx">
       <DependentUpon>202103291301592_added categories and subs to safe entries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104051109484_demand priority dt.resx">
+      <DependentUpon>202104051109484_demand priority dt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

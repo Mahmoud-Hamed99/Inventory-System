@@ -21,7 +21,7 @@ namespace Inventory_System.Controllers
         public ActionResult Index()
         {
            // int pageNumber = (Page ?? 1);
-            return View(db.Projects.ToList());
+            return View(db.Projects.Where(a=>a.ProjectFinished == false).ToList());
         }
 
         
@@ -45,9 +45,10 @@ namespace Inventory_System.Controllers
                         if (res != null)
                         {
                             res.ProjectFinished = true;
-                            db.SaveChanges();
+                            
                         }   
                 }
+                db.SaveChanges();
             }
             return ReturnIndex();
         }

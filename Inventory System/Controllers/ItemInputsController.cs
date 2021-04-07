@@ -37,7 +37,7 @@ namespace Inventory_System.Controllers
         }
         [HttpPost]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
-        public ActionResult Index(int? year,int? month)
+        public ActionResult Index(string startDate, string endDate)
         {
             User user;
             Helper.CheckUser(HttpContext, db, out user);
@@ -51,15 +51,10 @@ namespace Inventory_System.Controllers
                 ViewBag.IsAccountant = true;
             }
 
-            var itemInputs = db.ItemInputs.OrderBy(a=>a.ItemInputId).Include(i => i.Item).Include(a => a.Vendor).ToList();
-            if (year != null)
-            {
-                itemInputs = itemInputs.Where(a => a.DateCreated.Year == year).ToList();
-            }
-            if (month != null)
-            {
-                itemInputs = itemInputs.Where(a => a.DateCreated.Month == month).ToList();
-            }
+            var itemInputs = helper.Classes.Helper.FilterByDate<ItemInput>(startDate, endDate,
+                    db.ItemInputs.OrderBy(a => a.ItemInputId).Include(i => i.Item).Include(a => a.Vendor));
+            
+            
             return View(itemInputs.ToPagedList(1,1000000000));
         }
 
@@ -85,6 +80,62 @@ namespace Inventory_System.Controllers
             ViewBag.VendorId = new SelectList(db.Vendors, "VendorId", "VendorName");
             ViewBag.ItemCategory = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
             return View();
+        }
+        // POST: ItemInputs/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse,cost")]
+        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
+        {
+            //  List<Item> itemList = db.Items.ToList();
+
+            // int itemLen = db.Items.Count();
+            if (ModelState.IsValid)
+            {
+                db.ItemInputs.Add(itemInput);
+                db.SaveChanges();
+
+
+                var x = db.Items.Find(itemInput.ItemId);
+                if (x.ItemQuantity == 0)
+                {
+                    x.ItemQuantity = itemInput.ItemQuantity;
+                }
+                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == x.ItemId && a.ItemPrice > 0).ToList();
+                if (itmWithPrice.Count() > 0)
+                {
+                    x.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+                }
+                x.ItemQuantityAdded += itemInput.ItemQuantity;
+                double itemQ = itemInput.ItemQuantity;
+                foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.DemandItemQuantity > 0))
+                {
+                    if (itemQ > 0)
+                    {
+                        if (v.DemandItemQuantity >= itemQ)
+                        {
+                            v.DemandItemQuantity -= itemQ;
+                            itemQ = 0;
+
+
+                        }
+                        else
+                        {
+                            itemQ -= v.DemandItemQuantity;
+                            v.DemandItemQuantity = 0;
+                        }
+
+                    }
+
+                }
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+
+            return View(itemInput);
         }
 
 
@@ -114,63 +165,7 @@ namespace Inventory_System.Controllers
 
 
 
-        // POST: ItemInputs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse,cost")]
-        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
-        {
-            //  List<Item> itemList = db.Items.ToList();
-
-            // int itemLen = db.Items.Count();
-            if (ModelState.IsValid)
-            {
-                db.ItemInputs.Add(itemInput);
-                db.SaveChanges();
-
-
-                var x = db.Items.Find(itemInput.ItemId);
-                if (x.ItemQuantity == 0)
-                {
-                    x.ItemQuantity = itemInput.ItemQuantity;
-                }
-                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == x.ItemId && a.ItemPrice > 0).ToList();
-                if(itmWithPrice.Count()>0)
-                {
-                    x.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
-                }
-                x.ItemQuantityAdded += itemInput.ItemQuantity;
-                double itemQ = itemInput.ItemQuantity;
-                foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.DemandItemQuantity > 0))
-                {
-                    if (itemQ > 0)
-                    {
-                        if (v.DemandItemQuantity >= itemQ)
-                        {
-                            v.DemandItemQuantity -= itemQ;
-                            itemQ = 0;
-                            
-                            
-                        }
-                        else
-                        {
-                            itemQ -= v.DemandItemQuantity;
-                            v.DemandItemQuantity = 0;
-                        }
-                        
-                    }
-                    
-                }
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-
-            return View(itemInput);
-        }
-
+        
         // GET: ItemInputs/Edit/5
         public ActionResult Edit(int? id)
         {
