@@ -23,6 +23,8 @@ namespace Inventory_System.Controllers
         [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit,cost")]
         public ActionResult Index(int? year ,int? Page , int? category, int? subcategory, string startDate, string endDate)
         {
+            ViewBag.categoryv = category;
+            ViewBag.subcategoryv = subcategory;
             //foreach(var v in db.Items.Include(a=>a.ItemInputs))
             //{
             //    v.ItemAvgPrice = v.ItemInputs.OrderByDescending(a => a.DateCreated).First().ItemPrice;
@@ -61,7 +63,13 @@ namespace Inventory_System.Controllers
                .Include(a=>a.ItemReturns);
             if (subcategory.HasValue)
             {
-                baseitems = baseitems.Where(a=>a.ItemSubCategoryId == subcategory.Value);
+                if(subcategory.Value != 0)
+                    baseitems = baseitems.Where(a=>a.ItemSubCategoryId == subcategory.Value);
+                else if (category.HasValue)
+                {
+                    baseitems = baseitems.Where(a => a.ItemSubCategory.ItemCategoryId == category.Value);
+
+                }
             }
             else if (category.HasValue)
             {
@@ -70,7 +78,7 @@ namespace Inventory_System.Controllers
             }
             var items = baseitems
                 .OrderBy(a=>a.ItemId)
-                .ToPagedList(pageNumber, pageSize)
+                .ToList()
                 .Select(
                 a =>
                 {
