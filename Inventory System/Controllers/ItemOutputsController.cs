@@ -134,17 +134,26 @@ namespace Inventory_System.Controllers
         
         public ActionResult technicalList(int? Page ,int? TechnicalDepartmentId, int? ProjectId)
         {
-            var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
+            var itemOutputs = db.ItemOutputs
+                .Include(a => a.Item.ItemInputs)
+                .Include(i => i.Item)
+                .Include(i => i.Project)
+                .Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             int pageNumber = (Page ?? 1);
-            var res = db.ItemOutputs.Include(a => a.Project).Include(a => a.TechnicalDepartment).Include(a => a.Item).ToList();
+            var res = db.ItemOutputs.
+                Include(a => a.Project).
+                Include(a => a.TechnicalDepartment)
+                .Include(a => a.Item.ItemInputs)
+                .Include(a => a.Item.ItemOutputs)
+                .Include(a => a.Item).ToList();
             if (TechnicalDepartmentId != null)
                 res = res.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId).ToList();
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, pageSize));
+            return View(res.OrderBy(a => a.DateCreated).ToPagedList(1, 10000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -213,39 +222,30 @@ namespace Inventory_System.Controllers
                 db.ItemOutputs.Add(itemOutput);
 
                 DemandItem demandItem = new DemandItem();
+                var selInputs = db.ItemInputs.Where(a => a.ItemId == itemOutput.ItemId);
+                var selOutputs = db.ItemOutputs.Where(aa => aa.ItemOutputApproved && aa.ItemId == itemOutput.ItemId);
+                var AvailableQntInStore = 
+                    (selInputs.Count()==0?0:selInputs.Sum(aa => aa.ItemQuantity)) - (selOutputs.Count()==0?0:selOutputs.Sum(aa => aa.ItemOutputQuantity));
 
-                var AvailableQntInStore = db.Items.Find(itemOutput.ItemId).ItemReminder;
+                db.SaveChanges();
+                double RequiredQnt = itemOutput.ItemOutputQuantity;
 
-                var ItemRequiredQntList = db.ItemOutputs.Where(a => a.ItemId == itemOutput.ItemId && a.ItemOutputApproved== false).ToList();
-
-                double RequiredQnt =itemOutput.ItemOutputQuantity;
-
-                for(int i=0; i<ItemRequiredQntList.Count; i++)
-                {
-                    RequiredQnt += ItemRequiredQntList[i].ItemOutputQuantity;
-                }
+                
 
                 if (RequiredQnt > AvailableQntInStore)
                 {
                     //check if item available in demand table 
-                    var demanItemAvailable = db.DemandItems.Where(a => a.ItemId == itemOutput.ItemId && a.DemandItemApproval==false).ToList();
 
-                    if (demanItemAvailable.Count != 0) // if available , add quantity only
-                    {
-                         // will calculate required qnt in every item output order to prevent mistakes in quantities.
-                         db.DemandItems.FirstOrDefault(a => a.ItemId == itemOutput.ItemId && a.DemandItemApproval == false).DemandItemQuantity = RequiredQnt - AvailableQntInStore  ;
-                    }
-                    else // add qnt and item name .
-                    {
-                        demandItem.ItemId = itemOutput.ItemId;
+
+                    
+                        demandItem.ItemOutputId = itemOutput.ItemOutputId;
 
                         demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
 
                         db.DemandItems.Add(demandItem);
-                    }
                 }
                 db.SaveChanges();
-                return RedirectToAction("Index","projects");
+                return RedirectToAction("technicallist", "itemoutputs");
             }
 
   

@@ -322,6 +322,10 @@
     <Compile Include="Migrations\202104051109484_demand priority dt.Designer.cs">
       <DependentUpon>202104051109484_demand priority dt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104071114246_added itemoutput link to demand.cs" />
+    <Compile Include="Migrations\202104071114246_added itemoutput link to demand.Designer.cs">
+      <DependentUpon>202104071114246_added itemoutput link to demand.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -398,6 +402,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\dt.js" />
+    <Content Include="Scripts\globalize.js" />
     <Content Include="Scripts\i18n\af.js" />
     <Content Include="Scripts\i18n\ar.js" />
     <Content Include="Scripts\i18n\az.js" />
@@ -687,6 +692,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104051109484_demand priority dt.resx">
       <DependentUpon>202104051109484_demand priority dt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104071114246_added itemoutput link to demand.resx">
+      <DependentUpon>202104071114246_added itemoutput link to demand.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

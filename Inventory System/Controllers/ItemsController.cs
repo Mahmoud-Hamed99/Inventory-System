@@ -62,7 +62,7 @@ namespace Inventory_System.Controllers
                     Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
                     a.ItemOutputs = db.ItemOutputs
                     .Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
-                    a.ItemReminder = (a.ItemInputs.Sum(aa => aa.ItemQuantity)) - (a.ItemOutputs.Sum(aa => aa.ItemOutputQuantity));
+                    a.ItemReminder = (a.ItemInputs.Sum(aa => aa.ItemQuantity)) - (a.ItemOutputs.Where(aa=>aa.ItemOutputApproved).Sum(aa => aa.ItemOutputQuantity));
                     return a;
                 });
 

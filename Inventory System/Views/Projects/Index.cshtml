@@ -18,6 +18,7 @@
 {
     <table class="table">
         <tr>
+            
             <th class="text-right">
                 @Html.DisplayName("كود المشروع")
             </th>
@@ -27,7 +28,7 @@
             <th class="text-right">
                 @Html.DisplayName("تاريخ الاصدار")
             </th>
-
+            
             <th class="text-right">
                 @Html.DisplayName("مكتمل")
             </th>
@@ -47,7 +48,7 @@
                 <td class="text-right">
                     @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
-
+                
                 <td class="text-right">
                     <input type="checkbox" name="ProjectFinishedList" value="@item.ProjectId" />
                 </td>
@@ -55,8 +56,7 @@
 
                 <td class="text-right">
                     @Html.ActionLink("تعديل", "Edit", new { id = item.ProjectId })
-                    @*@Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |*@
-                    @* @Html.ActionLink("حذف", "Delete", new { id = item.ProjectId })*@
+                    
                 </td>
             </tr>
         }

@@ -12,58 +12,61 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        @*<h4>DemandItem</h4>*@
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.DemandItemId)
+<div class="form-horizontal">
+    @*<h4>DemandItem</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.DemandItemId)
+    @Html.HiddenFor(model => model.ItemOutputId)
+    @Html.HiddenFor(model => model.DateCreated)
+    @Html.HiddenFor(model=>model.DemandItemQuantity)
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.ItemOutput.Item.ItemName)
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("اسم الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
         </div>
+        @Html.Label("اسم الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DemandItemQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DemandItemQuantity, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("الكميه المطلوبه", htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.DemandItemQuantity)
         </div>
+        @Html.Label("الكميه المطلوبه", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
-                    <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="far fa-clock"></i></div>
-                        @Html.EditorFor(model => model.DateCreated, new { htmlAttributes = new { @class = "form-control datetimepicker-input", data_target = "#requestDateTimePicker" } })
-                    </div>
-                </div>
-                @*@Html.EditorFor(model => model.DemandItemPriority , new { htmlAttributes = new { @class = "form-control" } })*@
-                @*@Html.ValidationMessageFor(model => model.DemandItemPriority, "", new { @class = "text-danger" })*@
-            </div>
-            @Html.Label("الأولويه", htmlAttributes: new { @class = "control-label col-md-2" })
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.DemandItemApproval)
-                    @Html.ValidationMessageFor(model => model.DemandItemApproval, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="input-group date" id="requestDateTimePicker" data-target-input="nearest">
+                <div class="input-group-append" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+
+                    @Html.TextBox("DemandItemPriority", Model.DemandItemPriority, new { htmlAttributes = new { @class = "form -control datetimepicker-input", data_target = "#requestDateTimePicker" } })
                 </div>
             </div>
-            @Html.Label("الموافقة", htmlAttributes: new { @class = "control-label col-md-2" })
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="حفظ" class="btn btn-default" />
+
+        </div>
+        @Html.Label("الأولويه", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.DemandItemApproval)
+                @Html.ValidationMessageFor(model => model.DemandItemApproval, "", new { @class = "text-danger" })
             </div>
+        </div>
+        @Html.Label("الموافقة", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="حفظ" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 <div>
@@ -75,16 +78,26 @@
     <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
     <link href="~/Content/css/cs.css" rel="stylesheet" />
     <script src="~/Scripts/dt.js"></script>
+    <script src="~/Scripts/globalize.js"></script>
     <script>
-    $(document).ready(function () {
-        $(function () {
-            $('#requestDateTimePicker').datetimepicker({
-                // time: "far fa-clock",
-                format: 'DD-MM-YYYY',
-                defaultDate: new Date()
 
+        $(document).ready(function () {
+            $(function () {
+                $.validator.methods.date = function (value, element) {
+                    return true;
+                }
             });
+             
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+            });
+
         });
-    });
-</script>
+    </script>
+
 }

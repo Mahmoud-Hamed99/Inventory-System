@@ -21,29 +21,66 @@ namespace Inventory_System.Controllers
         // GET: DemandItems
         public ActionResult Index(int? page)
         {
-            var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == false);
+            var demandItems = db.DemandItems
+                .Include(d => d.ItemOutput)
+                .Include(a=>a.ItemOutput.Item)
+                .Include(a=>a.ItemOutput.Project)
+                .Where(a => a.DemandItemApproval == false);
             int pageNumber = (page ?? 1);
-            return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(pageNumber,pageSize));
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            return View(demandItems.OrderBy(a=>a.DemandItemPriority).ToPagedList(1, 1000000000));
         }
+        [HttpPost]
+        public ActionResult Index(int ProjectId)
+        {
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            var demandItems = db.DemandItems
+                .Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project)
+                .Where(a => a.DemandItemApproval == false && a.ItemOutput.ProjectId == ProjectId);
 
+            return View(demandItems.OrderBy(a => a.DemandItemPriority).ToPagedList(1, 1000000000));
+        }
         public ActionResult DemandHistory(int? page)
         {
-            var demandItems = db.DemandItems.Include(d => d.Item);
+
+            var demandItems = db.DemandItems.Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project);
             int pageNumber = (page ?? 1);
             return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult PurchasingApproval(int? page)
         {
-            var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == true && a.PurchasingApproval==false);
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            var demandItems = db.DemandItems.Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project)
+                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval==false);
             int pageNumber = (page ?? 1);
-            return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(pageNumber,pageSize));
+            return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(1, 1000000000));
+        }
+        [HttpPost]
+        public ActionResult PurchasingApproval(int? page, int ProjectId)
+        {
+            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            var demandItems = db.DemandItems.Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project)
+                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval == false && a.ItemOutput.ProjectId == ProjectId);
+            int pageNumber = (page ?? 1);
+            return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(1, 1000000000));
         }
 
-        
+
         public ActionResult PurchasingHistory(int? page)
         {
-            var demandItems = db.DemandItems.Include(d => d.Item).Where(a => a.DemandItemApproval == true);
+            var demandItems = db.DemandItems.Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project)
+                .Where(a => a.DemandItemApproval == true);
             int pageNumber = (page ?? 1);
             return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(pageNumber, pageSize));
         }
@@ -70,23 +107,23 @@ namespace Inventory_System.Controllers
             return View();
         }
 
-        // POST: DemandItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DemandItemId,ItemId,DemandItemQuantity,DemandItemPriority,DemandItemApproval")] DemandItem demandItem)
-        {
-            if (ModelState.IsValid)
-            {
-                db.DemandItems.Add(demandItem);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //// POST: DemandItems/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "DemandItemId,ItemId,DemandItemQuantity,DemandItemPriority,DemandItemApproval")] DemandItem demandItem)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.DemandItems.Add(demandItem);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
-            return View(demandItem);
-        }
+        //    ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemOutputId);
+        //    return View(demandItem);
+        //}
 
         // GET: DemandItems/Edit/5
         public ActionResult Edit(int? id)
@@ -97,12 +134,14 @@ namespace Inventory_System.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                DemandItem demandItem = db.DemandItems.Find(id);
+                DemandItem demandItem = db.DemandItems.Include(d => d.ItemOutput)
+                .Include(a => a.ItemOutput.Item)
+                .Include(a => a.ItemOutput.Project).Single(a=>a.DemandItemId == id);
                 if (demandItem == null)
                 {
                     return HttpNotFound();
                 }
-                ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
+                
                 return View(demandItem);
             }
             else
@@ -117,7 +156,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DemandItemId,ItemId,DemandItemQuantity,DemandItemPriority,DemandItemApproval")] DemandItem demandItem)
+        public ActionResult Edit([Bind(Include = "DemandItemId,ItemOutputId,DemandItemQuantity,DemandItemPriority,DemandItemApproval")] DemandItem demandItem)
         {
             if (ModelState.IsValid)
             {
@@ -125,7 +164,7 @@ namespace Inventory_System.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
+            
             return View(demandItem);
         }
 
@@ -137,12 +176,15 @@ namespace Inventory_System.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                DemandItem demandItem = db.DemandItems.Find(id);
+                DemandItem demandItem = db.DemandItems.Include(a=>a.ItemOutput)
+                .Include(a=>a.ItemOutput.Item)
+                .Include(a=>a.ItemOutput.Project)
+                .Single(a=>a.DemandItemId == id);
                 if (demandItem == null)
                 {
                     return HttpNotFound();
                 }
-                ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
+                //ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
                 return View(demandItem);
            
 
@@ -153,7 +195,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PurchasingEdit([Bind(Include = "DemandItemId,ItemId,DemandItemQuantity,DemandItemApproval,PurchasingApproval")] DemandItem demandItem)
+        public ActionResult PurchasingEdit([Bind(Include = "DemandItemId,ItemOutputId,DemandItemQuantity,DemandItemPriority,DemandItemApproval,PurchasingApproval")] DemandItem demandItem)
         {
             if (ModelState.IsValid)
             {
@@ -161,7 +203,7 @@ namespace Inventory_System.Controllers
                 db.SaveChanges();
                 return RedirectToAction("PurchasingApproval");
             }
-            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
+            //ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
             return View(demandItem);
         }
         //*********************************************************************************

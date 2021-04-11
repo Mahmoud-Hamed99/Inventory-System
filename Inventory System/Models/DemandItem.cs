@@ -10,13 +10,14 @@ namespace Inventory_System.Models
     {
         public int DemandItemId { get; set; }
 
-        public int ItemId { get; set; }
+        public int ItemOutputId { get; set; }
 
-        public Item Item  { get; set; }
+        public ItemOutput ItemOutput  { get; set; }
 
         public double DemandItemQuantity { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode =true,DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DemandItemPriority { get; set; } = DateTime.Now;
 
         public bool DemandItemApproval { get; set; } = false;

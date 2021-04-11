@@ -21,7 +21,10 @@ namespace Inventory_System.Controllers
         public ActionResult Index()
         {
            // int pageNumber = (Page ?? 1);
-            return View(db.Projects.Where(a=>a.ProjectFinished == false).ToList());
+            return View(
+                db.Projects
+                
+                .Where(a=>a.ProjectFinished == false).ToList());
         }
 
         

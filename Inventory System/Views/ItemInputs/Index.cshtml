@@ -1,8 +1,7 @@
 ﻿@using PagedList.Mvc
 @model PagedList.IPagedList<Inventory_System.Models.ItemInput>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
-<style>
-</style>
+
 @{
     var currentRoleNow = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
     ViewBag.Title = "أذون إضافة";

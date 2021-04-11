@@ -1,4 +1,4 @@
-﻿@using PagedList.Mvc 
+﻿@using PagedList.Mvc
 @model PagedList.IPagedList<Inventory_System.Models.DemandItem>
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 
@@ -9,55 +9,87 @@
 
 <h2>قائمه متطلبات المشاريع</h2>
 
-<br />
-<table class="table">
-    <tr>
-        
-        <th class="text-center">
-            @Html.DisplayName("اسم الخامة")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("الكميه")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("الأولويه")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("موافقه ال demand")
-        </th>
-        <th class="text-center">
-            @Html.DisplayName("موافقه ال purchasing")
-        </th>
-        <th class="text-center"></th>
-    </tr>
+<p>
 
-@foreach (var item in Model) {
-<tr>
-    
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DemandItemQuantity)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DemandItemPriority)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DemandItemApproval)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.PurchasingApproval)
-    </td>
-    <td class="text-center">
-        @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })
-        @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
-    </td>
-</tr>
+
+    @using (Html.BeginForm())
+    {
+        <table>
+
+
+            <tr>
+                <th class="col-md-2 text-right">
+                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
+                </th>
+                <th class="col-md-1"><input type="submit" class="goRight" value="بحث" /></th>
+                <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("purchasingapproval"))';" /></th>
+            </tr>
+        </table>
+    }
+
+
+</p>
+<br />
+
+
+@foreach (var grp in Model.GroupBy(a => a.ItemOutput.Item))
+{
+    <h4>@grp.First().ItemOutput.Item.ItemName</h4>
+    <h4>مطلوب : @grp.Sum(a => a.DemandItemQuantity)</h4>
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                @Html.DisplayName("اسم الخامة ")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الكميه المطلوبه")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("الأولويه")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("المشروع")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("موافقه ال demand")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("موافقه ال purchasing")
+            </th>
+            <th class="text-center"></th>
+        </tr>
+
+        @foreach (var item in grp)
+        {
+            <tr>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemPriority)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.DemandItemApproval)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.PurchasingApproval)
+                </td>
+                <td class="text-center">
+                    @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })
+                    @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
+                </td>
+            </tr>
+        }
+
+    </table>
 }
 
-</table>
-
 <br />
-@Html.PagedListPager(Model, Page=> Url.Action("PurchasingApproval", new { Page}))
+@Html.PagedListPager(Model, Page => Url.Action("PurchasingApproval", new { Page }))
