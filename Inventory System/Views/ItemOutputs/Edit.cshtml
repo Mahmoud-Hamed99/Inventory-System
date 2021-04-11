@@ -2,10 +2,19 @@
 
 @{
     ViewBag.Title = "تعديل بيانات التصريح";
-    Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
+
+    var currentRole = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
+    if (currentRole != "projectplanning")
+    {
+        Layout = "~/Views/Shared/_LayoutTechnical.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
+    }
 }
 
-    <h2>تعديل بيانات التصريح</h2>
+<h2>تعديل بيانات التصريح</h2>
 <br />
 
 @using (Html.BeginForm())
@@ -70,9 +79,9 @@
     </div>
 }
 
-<div>
+@*<div>
     @Html.ActionLink("الرجوع لقائمه الأذونات", "Index")
-</div>
+</div>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

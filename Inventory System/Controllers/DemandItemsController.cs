@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
@@ -18,6 +19,7 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         private InventoryDB db = new InventoryDB();
 
+        [VerifyUser(Roles = "demandplanning")]
         // GET: DemandItems
         public ActionResult Index(int? page)
         {
@@ -42,6 +44,7 @@ namespace Inventory_System.Controllers
 
             return View(demandItems.OrderBy(a => a.DemandItemPriority).ToPagedList(1, 1000000000));
         }
+        [VerifyUser(Roles = "demandplanning")]
         public ActionResult DemandHistory(int? page)
         {
 
@@ -51,7 +54,7 @@ namespace Inventory_System.Controllers
             int pageNumber = (page ?? 1);
             return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(pageNumber, pageSize));
         }
-
+        [VerifyUser(Roles = "purchasing")]
         public ActionResult PurchasingApproval(int? page)
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
@@ -74,7 +77,7 @@ namespace Inventory_System.Controllers
             return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(1, 1000000000));
         }
 
-
+        [VerifyUser(Roles = "purchasing")]
         public ActionResult PurchasingHistory(int? page)
         {
             var demandItems = db.DemandItems.Include(d => d.ItemOutput)
@@ -126,6 +129,7 @@ namespace Inventory_System.Controllers
         //}
 
         // GET: DemandItems/Edit/5
+        [VerifyUser(Roles = "demandplanning")]
         public ActionResult Edit(int? id)
         {
             if (DateTime.Now.Hour >0 && DateTime.Now.Hour < 24)
@@ -169,6 +173,7 @@ namespace Inventory_System.Controllers
         }
 
         ////////////////////////////////////////////////////////////////////////////////
+        [VerifyUser(Roles = "purchasing")]
         public ActionResult PurchasingEdit(int? id)
         {
             
@@ -195,6 +200,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "purchasing")]
         public ActionResult PurchasingEdit([Bind(Include = "DemandItemId,ItemOutputId,DemandItemQuantity,DemandItemPriority,DemandItemApproval,PurchasingApproval")] DemandItem demandItem)
         {
             if (ModelState.IsValid)

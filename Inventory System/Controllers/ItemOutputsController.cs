@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using helper.Classes;
@@ -22,8 +23,7 @@ namespace Inventory_System.Controllers
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId,string startDate,string endDate)
         {
-
-
+            
 
             User user;
             Helper.CheckUser(HttpContext, db, out user);
@@ -85,11 +85,16 @@ namespace Inventory_System.Controllers
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult warehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
+            
             return ReturnWarehouse(TechnicalDepartmentId,ProjectId);
         }
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         ActionResult ReturnWarehouse(int? TechnicalDepartmentId, int? ProjectId)
         {
+            if (ProjectId != null)
+            {
+                ViewBag.prid = ProjectId;
+            }
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.ItemOutputApproved == false);
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
@@ -106,32 +111,69 @@ namespace Inventory_System.Controllers
         {
             if (ItemApproved != null)
             {
-                foreach (var v in ItemApproved)
+                double qToAdd = 0;
+                int outputIdToAdd = 0;
+                using (var scope = new TransactionScope(TransactionScopeOption.Required,
+        new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted }))
                 {
-                    var res = db.ItemOutputs.Find(v);
-                    var vv = db.Items.Find(res.ItemId);
 
-                    var AvailableQnt = vv.ItemQuantityAdded - vv.ItemQuantityWithdraw + vv.ItemReturn;
-                    if (res.ItemOutputQuantity <= AvailableQnt)
+                    foreach (var v in ItemApproved)
                     {
-                        if (res != null)
+                        var res = db.ItemOutputs.Include(a => a.Item)
+                            .Include(a => a.Item.ItemInputs)
+                            .Include(a => a.Item.ItemOutputs)
+                            .Include(a => a.Item.ItemReturns)
+                            .Single(a => a.ItemOutputId == v);
+
+                        var AvailableQnt = (res.Item.ItemInputs.Sum(a => a.ItemQuantity)
+                            -
+                            res.Item.ItemOutputs.Where(a => a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity))
+                            + res.Item.ItemReturns.Where(a=>a.projectId!=null).Sum(a => a.ItemQuantity)
+                            - res.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity);
+                        if (res.ItemOutputQuantity <= AvailableQnt)
                         {
-                            res.ItemOutputApproved = true;
-                            db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
-                            db.SaveChanges();
+                            if (res != null)
+                            {
+                                res.ItemOutputApproved = true;
+                                db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
+
+                            }
+                        }
+                        else
+                        {
+                            outputIdToAdd = v;
+                            qToAdd = res.ItemOutputQuantity - AvailableQnt;
+                            ViewBag.msg = " هذه الكميه غير متاحه";
+                            break;
                         }
                     }
-                    else
+                    if (qToAdd == 0)
                     {
-                        ViewBag.msg = " هذه الكميه غير متاحه";
+                        db.SaveChanges();
+                    }
 
+                    scope.Complete();
+                }
+                if(qToAdd!=0)
+                {
+                    if (db.DemandItems.Where(a => a.ItemOutputId == outputIdToAdd).ToList().Count() == 0)
+                    {
+                        db.DemandItems.Add(new DemandItem()
+                        {
+                            DemandItemPriority = DateTime.Now,
+                            DemandItemQuantity = qToAdd,
+                            ItemOutputId = outputIdToAdd
+                        });
+                        db.SaveChanges();
                     }
                 }
+                
+                
             }
-            return ReturnWarehouse(null,null);
+            return RedirectToAction("Index");
         }
 
-        
+        [VerifyUser(Roles = "projectplanning")]
         public ActionResult technicalList(int? Page ,int? TechnicalDepartmentId, int? ProjectId)
         {
             var itemOutputs = db.ItemOutputs
@@ -200,10 +242,26 @@ namespace Inventory_System.Controllers
             return View(itemOutput);
         }
 
+        [VerifyUser(Roles = "warehouse,projectplanning")]
         // GET: ItemOutputs/Create
-        public ActionResult Create()
+        public ActionResult Create(int? prid)
         {
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
+            if (prid != null)
+            {
+                ViewBag.prid = prid;
+                List<Item> itms = new List<Item>();
+                foreach(var v in db.Projects
+                    .Include(a=>a.ItemOutputs)
+                    .Include(a=>a.ItemOutputs.Select(aa=>aa.Item))
+                    .Single(a => a.ProjectId == prid.Value).ItemOutputs)
+                {
+                    if(itms.Where(a=>a.ItemId==v.ItemId).Count()==0)
+                        itms.Add(v.Item);
+                }
+                ViewBag.ItemId = new SelectList(itms, "ItemId", "ItemName");
+            }
+            
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             return View();
@@ -214,6 +272,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "warehouse,projectplanning")]
         public ActionResult Create([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,TechnicalDepartmentId,ItemOutputApproved,DateCreated")] ItemOutput itemOutput)
         {
            
@@ -245,6 +304,10 @@ namespace Inventory_System.Controllers
                         db.DemandItems.Add(demandItem);
                 }
                 db.SaveChanges();
+                if(((Inventory_System.Models.User)ViewBag.mainUser).Roles=="warehouse")
+                {
+                    return RedirectToAction("warehouse", "itemoutputs");
+                }
                 return RedirectToAction("technicallist", "itemoutputs");
             }
 
@@ -276,7 +339,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
         public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId")] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
@@ -293,7 +356,7 @@ namespace Inventory_System.Controllers
         }
 
         // GET: ItemOutputs/Delete/5
-        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -311,7 +374,7 @@ namespace Inventory_System.Controllers
         // POST: ItemOutputs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
         public ActionResult DeleteConfirmed(int id)
         {
             ItemOutput itemOutput = db.ItemOutputs.Find(id);

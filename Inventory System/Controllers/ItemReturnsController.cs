@@ -62,7 +62,7 @@ namespace Inventory_System.Controllers
         // GET: ItemReturns/Create
         public ActionResult Create()
         {
-            ViewBag.projectId = new SelectList(db.Projects, "ProjectId", "ProjectName");
+            ViewBag.projectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.depId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
             return View();

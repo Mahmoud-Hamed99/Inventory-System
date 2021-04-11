@@ -294,7 +294,7 @@ namespace Inventory_System.Controllers
 
 
         // GET: ItemInputs/Delete/5
-        [VerifyUser(Roles = "superadmin")]
+        [VerifyUser(Roles = "superadmin,warehouseaudit")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -312,7 +312,7 @@ namespace Inventory_System.Controllers
         // POST: ItemInputs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin")]
+        [VerifyUser(Roles = "superadmin,warehouseaudit")]
         public ActionResult DeleteConfirmed(int id)
         {
             ItemInput itemInput = db.ItemInputs.Find(id);

@@ -6,11 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 
 namespace Inventory_System.Controllers
 {
+    [VerifyUser(Roles = "generalaccountant")]
     public class SafeCategoriesController : Controller
     {
         private InventoryDB db = new InventoryDB();

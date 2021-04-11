@@ -6,12 +6,14 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
 
 namespace Inventory_System.Controllers
 {
+    [VerifyUser(Roles = "projectplanning")]
     public class ProjectsController : Controller
     {
         private InventoryDB db = new InventoryDB();

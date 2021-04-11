@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -20,7 +21,7 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: Items
         [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit,cost")]
-        public ActionResult Index(int? year ,int? Page , int? category, int? subcategory)
+        public ActionResult Index(int? year ,int? Page , int? category, int? subcategory, string startDate, string endDate)
         {
             //foreach(var v in db.Items.Include(a=>a.ItemInputs))
             //{
@@ -28,18 +29,36 @@ namespace Inventory_System.Controllers
             //}
             //db.SaveChanges();
             int pageNumber = (Page ?? 1);
+            //if (startDate != null && endDate != null)
+            //{
 
-            if(year.HasValue == false)
+            //    res = helper.Classes.Helper.FilterByDate<ItemOutput>(startDate, endDate,
+            //        res.AsQueryable());
+            //}
+            if (year.HasValue == false)
             {
                 year = DateTime.Now.Year;
             }
             DateTime toCompare = new DateTime(year.Value, 1, 1);
+            toCompare = toCompare.AddYears(1);
+            if(endDate!=null)
+            {
+                toCompare = DateTime.ParseExact(endDate,
+                    "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            }
+            DateTime fromCompare = toCompare.AddYears(-1);
+            if (startDate != null)
+            {
+                fromCompare = DateTime.ParseExact(startDate,
+                    "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            }
             ViewBag.category = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
             var baseitems = db.Items
                .Include(a => a.ItemSubCategory)
                .Include(a => a.ItemSubCategory.ItemCategory)
                .Include(a => a.ItemInputs)
-               .Include(a => a.ItemOutputs);
+               .Include(a => a.ItemOutputs)
+               .Include(a=>a.ItemReturns);
             if (subcategory.HasValue)
             {
                 baseitems = baseitems.Where(a=>a.ItemSubCategoryId == subcategory.Value);
@@ -55,14 +74,27 @@ namespace Inventory_System.Controllers
                 .Select(
                 a =>
                 {
-                    var itms = db.ItemInputs.Where(aa => aa.DateCreated < toCompare).ToList();
-                    a.ItemQuantity = itms.Count()==0?0:itms.Sum(aa=>aa.ItemQuantity);
+                    var itms = db.ItemInputs.Where(aa => aa.DateCreated < fromCompare).ToList();
+                    a.ItemQuantity = itms.Count()==0?0:itms.Where(aa=>aa.ItemId == a.ItemId).Sum(aa=>aa.ItemQuantity);
+                    a.ItemReturns = db.ItemReturns
+                    .Where(aa => 
+                    aa.DateCreated <= toCompare &&
+                    aa.DateCreated >= fromCompare &&
+                    aa.ItemId == a.ItemId).ToList();
                     a.ItemInputs =
                     db.ItemInputs.
-                    Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
+                    Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare && aa.ItemId == a.ItemId).ToList();
                     a.ItemOutputs = db.ItemOutputs
-                    .Where(aa => aa.DateCreated >= toCompare && aa.ItemId == a.ItemId).ToList();
-                    a.ItemReminder = (a.ItemInputs.Sum(aa => aa.ItemQuantity)) - (a.ItemOutputs.Where(aa=>aa.ItemOutputApproved).Sum(aa => aa.ItemOutputQuantity));
+                    .Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare && aa.ItemId == a.ItemId && aa.ItemOutputApproved).ToList();
+                    var a1 = (a.ItemInputs.Sum(aa => aa.ItemQuantity));
+                    var a2 = (a.ItemOutputs.Where(aa => aa.ItemOutputApproved).Sum(aa => aa.ItemOutputQuantity));
+                    var a3 = (a.ItemReturns.Where(aa => aa.projectId == null).Sum(aa => aa.ItemQuantity));
+                    var a4 = (a.ItemReturns.Where(aa => aa.projectId != null).Sum(aa => aa.ItemQuantity));
+                    a.ItemReminder = 
+                    a1 - 
+                    a2 - 
+                    a3 + 
+                    a4;
                     return a;
                 });
 
@@ -156,7 +188,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse")]
-        public ActionResult Create([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated")] Item item)
+        public ActionResult Create([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated,BinCode")] Item item)
         {
             if (ModelState.IsValid)
             {
@@ -203,7 +235,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin")]
-        public ActionResult Edit([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated")] Item item)
+        public ActionResult Edit([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated,BinCode")] Item item)
         {
             if (ModelState.IsValid)
             {

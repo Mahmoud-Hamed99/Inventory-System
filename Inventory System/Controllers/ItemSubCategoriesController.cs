@@ -13,6 +13,7 @@ using PagedList;
 
 namespace Inventory_System.Controllers
 {
+    [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
     public class ItemSubCategoriesController : Controller
     {
         private InventoryDB db = new InventoryDB();

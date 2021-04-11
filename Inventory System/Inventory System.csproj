@@ -121,6 +121,7 @@
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -325,6 +326,10 @@
     <Compile Include="Migrations\202104071114246_added itemoutput link to demand.cs" />
     <Compile Include="Migrations\202104071114246_added itemoutput link to demand.Designer.cs">
       <DependentUpon>202104071114246_added itemoutput link to demand.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104110452517_added bincode to item.cs" />
+    <Compile Include="Migrations\202104110452517_added bincode to item.Designer.cs">
+      <DependentUpon>202104110452517_added bincode to item.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
@@ -695,6 +700,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104071114246_added itemoutput link to demand.resx">
       <DependentUpon>202104071114246_added itemoutput link to demand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104110452517_added bincode to item.resx">
+      <DependentUpon>202104110452517_added bincode to item.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -8,21 +8,35 @@
 <h2>أذون الصرف</h2>
 <br />
 
-
+@if (ViewBag.mainUser != null)
+{
+    if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+    {
+        <p>
+            @Html.ActionLink("طلب جديد", "Create", null, new { id = "CreateLink" })
+        </p>
+    }
+}
 <p>
 
     @using (Html.BeginForm())
     {
         <table>
-         
-            <tr>
-                <th class="col-md-4 form-control">
-                    @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control col-md-3", @id = "TechnicalDepartmentId" })
 
-                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control col-md-3", @id = "ProjectId" })
+            <tr class=" text-right">
+                @*<th class="col-md-2 text-right">
+                        @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, null, htmlAttributes: new { @class = "form-control", @id = "TechnicalDepartmentId" })
+
+
+
+                    </th>*@
+                <th class="col-md-2 text-right">
+
+
+                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, null, htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
 
                 </th>
-                <th><input type="submit" value="بحث" /></th>
+                <th class="col-md-1 text-right"><input type="submit" value="بحث" /></th>
             </tr>
         </table>
     }
@@ -33,9 +47,8 @@
 
 <br />
 
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>
-<link href="~/Content/css/select2.min.css" />
-<script src="~/Scripts/select2.min.js"></script>
+
+
 
 @using (Html.BeginForm("Approve", "ItemOutputs"))
 {
@@ -50,6 +63,9 @@
             </th>
             <th class="text-center">
                 @Html.DisplayName("القسم")
+            </th>
+            <th class="text-center">
+                @Html.DisplayName("بن كود")
             </th>
             <th class="text-center">
                 @Html.DisplayName("إسم الخامة")
@@ -82,6 +98,9 @@
                     @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
                 </td>
                 <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.Item.BinCode)
+                </td>
+                <td class="text-center">
                     @Html.DisplayFor(modelItem => item.Item.ItemName)
                 </td>
                 <td class="text-center">
@@ -97,10 +116,10 @@
                 </td>
 
                 @*<td class="text-center">
-                    <a>
-                        @Html.Label("أوافق")
-                    </a>
-                </td>*@
+                        <a>
+                            @Html.Label("أوافق")
+                        </a>
+                    </td>*@
 
             </tr>
         }
@@ -111,36 +130,57 @@
     if (ViewBag.msg != null)
     {
         <script type="text/javascript">
-            
+
                 alert("@ViewBag.msg");
-            
+
 
         </script>
     }
 
 
 }
+@section scripts{
+    <link href="~/Content/css/select2.min.css" />
+    <script src="~/Scripts/select2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    @if (ViewBag.prid != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#CreateLink").attr("href", '@Url.Action("Create")?prid=@ViewBag.prid');
+            });
+        </script>
+    }
+    <script>
 
-<script>
-    $("#TechnicalDepartmentId").select2({
-        placeholder: "اختر قسم",
-        allowClear: true
-    });
-    $('#TechnicalDepartmentId').on('select2:select', function (e) {
-        $.get("/ItemOutputs/Index", { id: $("#TechnicalDepartmentId").val() }, function (data) {
+        $("#ProjectId").change(function () {
 
-        });
-    })
-</script>
+            $("#CreateLink").attr("href", '@Url.Action("Create")?prid=' + $("#ProjectId").val());
+});
+    </script>
+    @*<script>
+            $("#TechnicalDepartmentId").select2({
+                placeholder: "اختر القسم",
+                allowClear: true
+            });
+            $('#TechnicalDepartmentId').on('select2:select', function (e) {
+                $.get("/ItemOutputs/Index", { id: $("#TechnicalDepartmentId").val() }, function (data) {
 
-<script>
-    $("#ProjectId").select2({
-        placeholder: "اختر مشروع",
-        allowClear: true
-    });
-    $('#ProjectId').on('select2:select', function (e) {
-        $.get("/ItemOutputs/Index", { id: $("#ProjectId").val() }, function (data) {
+                });
+            })
+        </script>
 
-        });
-    })
-</script>
+        <script>
+            $("#ProjectId").select2({
+                placeholder: "اختر مشروع",
+                allowClear: true
+            });
+            $('#ProjectId').on('select2:select', function (e) {
+                $.get("/ItemOutputs/Index", { id: $("#ProjectId").val() }, function (data) {
+
+                });
+            })
+        </script>*@
+
+}

@@ -6,6 +6,10 @@
     ViewBag.Title = "قائمه المنتجات بالمخزن";
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
     var mainrole = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
+    double totalAVG = 0;
+    double totalAdded = 0;
+    double totalOut = 0;
+    double totalRemainder = 0;
 }
 
 <h2>@(mainrole=="cost"?"تكاليف المخزون":"كروت الصنف")</h2>
@@ -28,7 +32,30 @@
                 <th class="col-md-2">
                     @Html.DropDownList("item", new SelectList(""), "اختر منتج", htmlAttributes: new { @class = "form-control col-md-3 goRight", @id = "item" })
                 </th>
+                <th class="col-md-1 text-right">
+                    @Html.Label("من تاريخ", new { @class = "text-right" })
+                </th>
+                <th class="col-md-2">
+                    <div class="input-group date text-right" id="requestDateTimePicker2" data-target-input="nearest">
+                        <div class="input-group-append text-right" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+
+                            @Html.TextBox("startDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker2", placeholder = "من تاريخ" })
+                        </div>
+                    </div>
+                </th>
+                <th class="col-md-1 text-right">
+                    @Html.Label("إلى تاريخ", new { @class = "text-right" })
+                </th>
+                <th class="col-md-2">
+                    <div class="input-group date text-right" id="requestDateTimePicker" data-target-input="nearest">
+                        <div class="input-group-append text-right" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+
+                            @Html.TextBox("endDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker", placeholder = "إلى تاريخ" })
+                        </div>
+                    </div>
+                </th>
                 <th class="col-md-2"><input class="goRight" type="submit" value="بحث" /></th>
+                <th class="col-md-1 text-right"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
         </table>
     }
@@ -44,6 +71,9 @@
             </th>*@
         <th class="text-right">
             @Html.DisplayName("كود المنتج")
+        </th>
+        <th class="text-right">
+            @Html.DisplayName("بن كود")
         </th>
         <th class="text-center">
             @Html.DisplayName("إسم الصنف")
@@ -86,6 +116,9 @@
                 @Html.DisplayFor(modelItem => item.ItemId)
             </td>
             <td class="text-center">
+                @Html.DisplayFor(modelItem => item.BinCode)
+            </td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.ItemSubCategory.ItemCategory.ItemCategoryName)
             </td>
             <td class="text-center">
@@ -100,6 +133,7 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
+                    @(totalAVG+= (item.ItemQuantity * item.ItemAvgPrice))
                     @((item.ItemQuantity * item.ItemAvgPrice) + " $")
                 }
                 else
@@ -111,22 +145,28 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    @(item.ItemInputs.Sum(a => a.ItemTotalCost)+" $")
+                    {
+                        totalAdded += (item.ItemInputs.Sum(a => a.ItemTotalCost) + (item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) * item.ItemAvgPrice));
+                    }
+                    @((item.ItemInputs.Sum(a => a.ItemTotalCost) + (item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) * item.ItemAvgPrice)) + " $")
                 }
                 else
                 {
-                    @item.ItemQuantityAdded
+                    @(item.ItemInputs.Sum(a => a.ItemQuantity)+(item.ItemReturns.Where(a=>a.projectId!=null).Sum(a=>a.ItemQuantity)))
                 }
 
             </td>
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    @((item.ItemOutputs.Sum(a => a.ItemOutputQuantity)*item.ItemAvgPrice)+" $")
+                    {
+                        totalOut += ((item.ItemOutputs.Sum(a => a.ItemOutputQuantity) + item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity)) * item.ItemAvgPrice);
+                    }
+                    @(((item.ItemOutputs.Sum(a => a.ItemOutputQuantity) + item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity)) *item.ItemAvgPrice)+" $")
                 }
                 else
                 {
-                    @item.ItemQuantityWithdraw
+                    @(item.ItemOutputs.Sum(a => a.ItemOutputQuantity)+item.ItemReturns.Where(a=>a.projectId == null).Sum(a=>a.ItemQuantity))
                 }
 
             </td>
@@ -136,11 +176,14 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    @(((item.ItemInputs.Sum(a => a.ItemTotalCost))- (item.ItemOutputs.Sum(a => a.ItemOutputQuantity) * item.ItemAvgPrice))+" $")
+                    {
+                        totalRemainder += (item.ItemReminder * item.ItemAvgPrice);
+                    }
+                    @(((item.ItemReminder * item.ItemAvgPrice))+" $")
                 }
                 else
                 {
-                    @Html.DisplayFor(modelItem => item.ItemReminder)
+                    @item.ItemReminder
 
                 }
             </td>
@@ -154,6 +197,46 @@
             @*</td>*@
         </tr>
     }
+    @if (mainrole == "cost")
+    {
+        <tr>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+            </td>
+            <td class="text-center">
+
+                <b> @totalAVG</b>
+
+
+            </td>
+            <td class="text-center">
+                <b> @totalAdded</b>
+
+            </td>
+            <td class="text-center">
+                <b> @totalOut</b>
+
+            </td>
+            @*<td class="text-center">
+                    @Html.DisplayFor(modelItem => item.ItemReturn)
+                </td>*@
+            <td class="text-center">
+                <b>@totalRemainder</b>
+            </td>
+            <td class="text-center">
+            </td>
+        </tr>
+
+    }
 
 </table>
 <br />
@@ -164,54 +247,77 @@
 
 
 @*<script src="~/Scripts/jquery-3.4.1.min.js"></script>*@
-<link href="~/Content/css/select2.min.css" rel="stylesheet" />
-<script src="~/Scripts/select2.min.js"></script>
-@*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>*@
-<script>
-    $("#category").select2({
-        placeholder: "اختر صنف",
-        allowClear: true
-    });
-    $('#category').on('select2:select', function (e) {
-        $.get("/Items/GetMembers", { id: $("#category").val() }, function (data) {
-            $("#subcategory").empty();
+@section scripts{
+    <link href="~/Content/css/select2.min.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <link href="~/Content/css/cs.css" rel="stylesheet" />
+    <script src="~/Scripts/dt.js"></script>
+    @*<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>*@
+    <script>
+        $("#category").select2({
+            placeholder: "اختر صنف",
+            allowClear: true
+        });
+        $('#category').on('select2:select', function (e) {
+            $.get("/Items/GetMembers", { id: $("#category").val() }, function (data) {
+                $("#subcategory").empty();
 
-            $("#subcategory").append("<option value='0'>اختر صنف جزئي</option>")
+                $("#subcategory").append("<option value='0'>اختر صنف جزئي</option>")
 
 
-            $.each(data, function (index, row) {
-                $("#subcategory").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+                $.each(data, function (index, row) {
+                    $("#subcategory").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+                });
+            });
+        })
+    </script>
+
+    <script>
+        $("#item").select2({
+            placeholder: "اختر منتج",
+            allowClear: true
+        });
+
+    </script>
+
+    <script>
+        $("#subcategory").select2({
+            placeholder: "اختر صنف جزئي",
+            allowClear: true
+        });
+        $('#subcategory').on('select2:select', function (e) {
+            $.get("/Items/GetSubCategories", { id: $("#subcategory").val() }, function (data) {
+                $("#item").empty();
+
+                $("#item").append("<option value='0'>اختر منتج</option>")
+
+
+                $.each(data, function (index, row) {
+                    $("#item").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
+                });
+            });
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('#requestDateTimePicker').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
+                $('#requestDateTimePicker2').datetimepicker({
+                    // time: "far fa-clock",
+                    format: 'DD-MM-YYYY',
+                    defaultDate: new Date()
+
+                });
             });
         });
-    })
-</script>
-
-<script>
-    $("#item").select2({
-        placeholder: "اختر منتج",
-        allowClear: true
-    });
-
-</script>
-
-<script>
-    $("#subcategory").select2({
-        placeholder: "اختر صنف جزئي",
-        allowClear: true
-    });
-    $('#subcategory').on('select2:select', function (e) {
-        $.get("/Items/GetSubCategories", { id: $("#subcategory").val() }, function (data) {
-            $("#item").empty();
-
-            $("#item").append("<option value='0'>اختر منتج</option>")
-
-
-            $.each(data, function (index, row) {
-                $("#item").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
-            });
-        });
-    })
-</script>
+    </script>
+}
 
 

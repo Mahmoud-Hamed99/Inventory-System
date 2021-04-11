@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-
+using helper.Classes;
 
 namespace Inventory_System.Models
 {
-    public class Item
+    public class Item: TableWithDate
     {
         public int ItemId { set; get; }
 
@@ -19,6 +19,9 @@ namespace Inventory_System.Models
 
         [Required(ErrorMessage ="من فضلك ادخل الكميه")]
         public double ItemQuantity { get; set; }
+
+        [Display(Name ="بن كود")]
+        public string BinCode { get; set; }
 
         public double ItemQuantityAdded { get; set; } //new
 
