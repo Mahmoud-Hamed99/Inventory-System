@@ -24,6 +24,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
+                    <li>@Html.ActionLink("حسابي", "Prof", "Login")</li>
                     @if (ViewBag.mainUser != null)
                     {
                         if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouseaudit")
@@ -36,7 +37,7 @@
                     {
                         <li>@Html.ActionLink("أذون الإرتجاع", "Index", "ItemReturns")</li>
                     }
-                    <li>@Html.ActionLink(mainrole=="cost"?"تكاليف المشاريع":"أذون الصرف", "Index", "ItemOutputs")</li>
+                    <li>@Html.ActionLink(mainrole == "cost" ? "تكاليف المشاريع" : "أذون الصرف", "Index", "ItemOutputs")</li>
                     @if (mainrole != "cost")
                     {
                         <li>@Html.ActionLink("أذون الإضافة", "Index", "ItemInputs")</li>
