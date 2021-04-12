@@ -12,7 +12,7 @@ using Inventory_System.Models;
 
 namespace Inventory_System.Controllers
 {
-    [VerifyUser(Roles = "generalaccountant")]
+    [VerifyUser(Roles = "generalaccountant,safe")]
     public class SafeCategoriesController : Controller
     {
         private InventoryDB db = new InventoryDB();

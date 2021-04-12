@@ -179,6 +179,8 @@ namespace Inventory_System.Controllers
             var itemOutputs = db.ItemOutputs
                 .Include(a => a.Item.ItemInputs)
                 .Include(i => i.Item)
+                .Include(a => a.Item.ItemReturns)
+                .Include(i=>i.Item.ItemOutputs)
                 .Include(i => i.Project)
                 .Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
@@ -188,6 +190,7 @@ namespace Inventory_System.Controllers
                 Include(a => a.Project).
                 Include(a => a.TechnicalDepartment)
                 .Include(a => a.Item.ItemInputs)
+                .Include(a=>a.Item.ItemReturns)
                 .Include(a => a.Item.ItemOutputs)
                 .Include(a => a.Item).ToList();
             if (TechnicalDepartmentId != null)

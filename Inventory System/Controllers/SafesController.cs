@@ -14,7 +14,7 @@ using PagedList;
 
 namespace Inventory_System.Controllers
 {
-    [VerifyUser(Roles = "generalaccountant")]
+    [VerifyUser(Roles = "generalaccountant,safe")]
     public class SafesController : Controller
     {
         private InventoryDB db = new InventoryDB();

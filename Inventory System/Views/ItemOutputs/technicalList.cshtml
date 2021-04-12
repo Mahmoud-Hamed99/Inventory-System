@@ -52,8 +52,12 @@
         <th class="text-center">
             @Html.DisplayName("إسم الخامة")
         </th>
+
         <th class="text-center">
-            @Html.DisplayName("الكميه")
+            @Html.DisplayName("الكميه المطلوبة")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("الكميه الموجودة بالمخزن")
         </th>
         <th class="text-right">
             @Html.DisplayName("الناقص من المخزن")
@@ -88,6 +92,12 @@
             </td>
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+            </td>
+            <td class="text-right">
+                @(item.Item.ItemInputs.Sum(a=>a.ItemQuantity) +
+            item.Item.ItemReturns.Where(a=>a.projectId!=null).Sum(a=>a.ItemQuantity) -
+            item.Item.ItemOutputs.Where(a=>a.ItemOutputApproved).Sum(a=>a.ItemOutputQuantity) -
+            item.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity))
             </td>
             <td class="text-right">
                 @{

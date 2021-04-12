@@ -58,7 +58,15 @@ namespace helper.Classes
             double currentBalance = 0.0;
             double deposits = 0.0;
             double withdraws = 0.0;
-            currentBalance = data.Sum(a => a.Deposit) - data.Sum(a => a.Withdraw);
+            try
+            {
+                currentBalance = data.Sum(a => a.Deposit) - data.Sum(a => a.Withdraw);
+            }
+            catch
+            {
+                currentBalance = 0;
+            }
+            
             if (fromDateString != null && toDateString != null)
             {
                 DateTime fromDT = DateTime.ParseExact(fromDateString,
