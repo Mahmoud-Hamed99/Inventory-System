@@ -25,18 +25,9 @@ namespace Inventory_System.Controllers
         {
             ViewBag.categoryv = category;
             ViewBag.subcategoryv = subcategory;
-            //foreach(var v in db.Items.Include(a=>a.ItemInputs))
-            //{
-            //    v.ItemAvgPrice = v.ItemInputs.OrderByDescending(a => a.DateCreated).First().ItemPrice;
-            //}
-            //db.SaveChanges();
+            
             int pageNumber = (Page ?? 1);
-            //if (startDate != null && endDate != null)
-            //{
-
-            //    res = helper.Classes.Helper.FilterByDate<ItemOutput>(startDate, endDate,
-            //        res.AsQueryable());
-            //}
+            
             if (year.HasValue == false)
             {
                 year = DateTime.Now.Year;
@@ -76,24 +67,28 @@ namespace Inventory_System.Controllers
                 baseitems = baseitems.Where(a => a.ItemSubCategory.ItemCategoryId == category.Value);
                 
             }
+            //DateTime dt = DateTime.Now;
+            var itms = db.ItemInputs.Where(aa => aa.DateCreated < fromCompare).ToList();
+            var itreturns = db.ItemReturns
+                    .Where(aa =>
+                    aa.DateCreated <= toCompare &&
+                    aa.DateCreated >= fromCompare
+                    ).ToList();
+            var itins = db.ItemInputs.
+                    Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare).ToList();
+            var itouts = db.ItemOutputs
+                    .Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare && aa.ItemOutputApproved).ToList();
             var items = baseitems
                 .OrderBy(a=>a.ItemId)
                 .ToList()
                 .Select(
                 a =>
                 {
-                    var itms = db.ItemInputs.Where(aa => aa.DateCreated < fromCompare).ToList();
+                    
                     a.ItemQuantity = itms.Count()==0?0:itms.Where(aa=>aa.ItemId == a.ItemId).Sum(aa=>aa.ItemQuantity);
-                    a.ItemReturns = db.ItemReturns
-                    .Where(aa => 
-                    aa.DateCreated <= toCompare &&
-                    aa.DateCreated >= fromCompare &&
-                    aa.ItemId == a.ItemId).ToList();
-                    a.ItemInputs =
-                    db.ItemInputs.
-                    Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare && aa.ItemId == a.ItemId).ToList();
-                    a.ItemOutputs = db.ItemOutputs
-                    .Where(aa => aa.DateCreated <= toCompare && aa.DateCreated >= fromCompare && aa.ItemId == a.ItemId && aa.ItemOutputApproved).ToList();
+                    a.ItemReturns = itreturns.Where(aa=>aa.ItemId == a.ItemId).ToList();
+                    a.ItemInputs = itins.Where(aa=>aa.ItemId == a.ItemId).ToList();
+                    a.ItemOutputs = itouts.Where(aa => aa.ItemId == a.ItemId).ToList();
                     var a1 = (a.ItemInputs.Sum(aa => aa.ItemQuantity));
                     var a2 = (a.ItemOutputs.Where(aa => aa.ItemOutputApproved).Sum(aa => aa.ItemOutputQuantity));
                     var a3 = (a.ItemReturns.Where(aa => aa.projectId == null).Sum(aa => aa.ItemQuantity));
@@ -105,8 +100,9 @@ namespace Inventory_System.Controllers
                     a4;
                     return a;
                 });
-
-
+            
+            //var lll = items.ToList();
+            //var mil = DateTime.Now.Subtract(dt).TotalMilliseconds;
             return View(items.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
             
 

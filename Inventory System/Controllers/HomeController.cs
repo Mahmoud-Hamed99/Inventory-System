@@ -15,6 +15,13 @@ namespace Inventory_System.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            ////////////InventoryDB db = new InventoryDB();
+            ////////////foreach (var v in db.Items)
+            ////////////{
+            ////////////    v.ItemAvgPrice = v.ItemQuantity;
+            ////////////    v.ItemQuantity = 0;
+            ////////////}
+            ////////////db.SaveChanges();
             //AddSafe();
             ////////AddItems();
             //Models.User mainUser = new Models.User()
