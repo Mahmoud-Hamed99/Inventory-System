@@ -93,6 +93,7 @@
                 @if (currentRoleNow != "cost")
                 {
                     @Html.DisplayFor(modelItem => item.ItemQuantity)
+                    @Html.DisplayFor(modelItem=>item.Item.ItemUnit)
                 }
                 else
                 {

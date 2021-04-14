@@ -266,6 +266,7 @@ namespace Inventory_System.Controllers
         public ActionResult Create(int? prid)
         {
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
+            ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(db.Items.ToList());
             if (prid != null)
             {
                 ViewBag.prid = prid;
@@ -279,6 +280,7 @@ namespace Inventory_System.Controllers
                         itms.Add(v.Item);
                 }
                 ViewBag.ItemId = new SelectList(itms, "ItemId", "ItemName");
+                ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(itms);
             }
             
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
@@ -336,8 +338,12 @@ namespace Inventory_System.Controllers
                 return RedirectToAction("technicallist", "itemoutputs");
             }
 
-  
-            return View(itemOutput);
+
+            if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+            {
+                return RedirectToAction("warehouse", "itemoutputs");
+            }
+            return RedirectToAction("technicallist", "itemoutputs");
         }
         [VerifyUser(Roles = "superadmin,warehouse,projectplanning,warehouseaudit")]
         // GET: ItemOutputs/Edit/5

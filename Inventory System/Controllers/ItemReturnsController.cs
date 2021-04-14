@@ -65,6 +65,7 @@ namespace Inventory_System.Controllers
             ViewBag.projectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.depId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
+            ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(db.Items.ToList());
             return View();
         }
 
@@ -110,6 +111,7 @@ namespace Inventory_System.Controllers
             }
 
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemReturn.ItemId);
+            ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(db.Items.ToList());
             ViewBag.projectId = new SelectList(db.Projects, "ProjectId", "ProjectName", itemReturn.projectId);
             return View(itemReturn);
         }

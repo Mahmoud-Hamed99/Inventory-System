@@ -52,7 +52,9 @@
         <th class="text-center">
             @Html.DisplayName("إسم الخامة")
         </th>
-
+        <th class="text-center">
+            @Html.DisplayName("الوحدة")
+        </th>
         <th class="text-center">
             @Html.DisplayName("الكميه المطلوبة")
         </th>
@@ -75,65 +77,68 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectCode)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectCode)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Item.ItemName)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
-            </td>
-            <td class="text-right">
-                @(item.Item.ItemInputs.Sum(a=>a.ItemQuantity) +
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+    </td>
+    <td class="text-right">
+        @(item.Item.ItemInputs.Sum(a=>a.ItemQuantity) +
             item.Item.ItemReturns.Where(a=>a.projectId!=null).Sum(a=>a.ItemQuantity) -
             item.Item.ItemOutputs.Where(a=>a.ItemOutputApproved).Sum(a=>a.ItemOutputQuantity) -
             item.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity))
-            </td>
-            <td class="text-right">
-                @{
-                    var v = db.DemandItems.Where(a => a.ItemOutputId == item.ItemOutputId);
-                }
-                @if (v.Count() > 0)
-                {
-                    @(v.First().DemandItemQuantity)
+    </td>
+    <td class="text-right">
+        @{
+            var v = db.DemandItems.Where(a => a.ItemOutputId == item.ItemOutputId);
+        }
+        @if (v.Count() > 0)
+        {
+            @(v.First().DemandItemQuantity)
 
-                    
-                }
-                else
-                {
-                    @("0")
-                }
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutputApproved)
-            </td>
+        }
+        else
+        {
+            @("0")
+        }
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
 
-            <td class="text-center">
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutputApproved)
+    </td>
 
-                @if (item.ItemOutputApproved == false)
-                {
-                    @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })
+    <td class="text-center">
 
-                }
-                |
-                @*@Html.ActionLink("Details", "Details", new { id = item.ItemOutputId }) |*@
-                @Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId })
-            </td>
-        </tr>
+        @if (item.ItemOutputApproved == false)
+        {
+            @Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })
+
+        }
+        |
+        @*@Html.ActionLink("Details", "Details", new { id = item.ItemOutputId }) |*@
+        @Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId })
+    </td>
+</tr>
     }
 
 </table>
