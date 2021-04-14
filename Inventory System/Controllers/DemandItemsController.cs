@@ -166,6 +166,13 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
+                if(demandItem.DemandItemApproval)
+                {
+                    Helper.AddNotification(db,
+                                "يوجد طلب خامة جديد",
+                                "يوجد طلب خامة جديد",
+                                db.Users.Where(a => a.Roles == "purchasing").ToList());
+                }
                 Helper.AddLog(db, "Edited Demanded Item", demandItem.DemandItemId, "DemandItem", this);
                 return RedirectToAction("Index");
             }
@@ -208,6 +215,13 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
+                if (demandItem.PurchasingApproval)
+                {
+                    Helper.AddNotification(db,
+                                "تم الموافقة على شراء خامة",
+                                "تم الموافقة على شراء خامة",
+                                db.Users.Where(a => a.Roles == "demandplanning").ToList());
+                }
                 Helper.AddLog(db, "Edited Purchasing Item", demandItem.DemandItemId, "DemandItem", this);
                 return RedirectToAction("PurchasingApproval");
             }

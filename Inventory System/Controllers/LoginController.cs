@@ -61,6 +61,7 @@ namespace Inventory_System.Controllers
             }
             return View();
         }
+        [VerifyUser]
         public ActionResult Logout(string username, string password)
         {
             Helper.AddLog(db, "Logged out", 0, null, this);
@@ -118,6 +119,11 @@ namespace Inventory_System.Controllers
             }
             
             return View();
+        }
+
+        public int GetNot(int id)
+        {
+            return db.Notifications.Where(a => a.UserId == id).ToList().Count;
         }
     }
 }

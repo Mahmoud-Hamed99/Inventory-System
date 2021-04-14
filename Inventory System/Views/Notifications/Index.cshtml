@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Inventory_System.Models.Notification>
+
+@{
+    ViewBag.Title = "Index";
+    string role = (((Inventory_System.Models.User)ViewBag.mainUser)).Roles;
+    Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+    switch (role)
+    {
+        case "warehouse":
+            Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+            break;
+        case "warehouseaudit":
+            Layout = "~/Views/Shared/_LayoutWarhouseAudit.cshtml";
+            break;
+        case "cost":
+            Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+            break;
+        case "projectplanning":
+            Layout = "~/Views/Shared/_LayoutPlanning.cshtml";
+            break;
+        case "demandplanning":
+            Layout = "~/Views/Shared/_LayoutDemand.cshtml";
+            break;
+        case "safe":
+            Layout = "~/Views/Shared/_LayoutSafe.cshtml";
+            break;
+        case "purchasing":
+            Layout = "~/Views/Shared/_LayoutPurchasing.cshtml";
+            break;
+        case "generalaccountant":
+            Layout = "~/Views/Shared/_LayoutGeneral.cshtml";
+            break;
+
+    }
+}
+
+<h2>التنبيهات</h2>
+
+
+<table class="table">
+    <tr>
+
+        <th class="text-right">
+            @Html.DisplayNameFor(model => model.NotificationName)
+        </th>
+        <th class="text-right">
+            @Html.DisplayNameFor(model => model.NotificationText)
+        </th>
+        <th class="text-right">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.NotificationName)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.NotificationText)
+            </td>
+            <td class="text-right">
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td class="text-right">
+
+                @Html.ActionLink("Delete", "Delete", new { id = item.NotificationId })
+            </td>
+        </tr>
+    }
+
+</table>

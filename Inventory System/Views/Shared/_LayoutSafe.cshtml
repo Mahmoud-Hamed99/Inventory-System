@@ -25,6 +25,11 @@
                 @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a href="@Url.Action("Index","Notifications")"><span id="notificationsBadge" class="badge " style="margin-left:5px;display:none;">3</span><span class="glyphicon glyphicon-bell" style="color:white;"></span></a>
+                    </li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("خروج", "Logout", "Login")</li>
                     <li>@Html.ActionLink("حسابي", "Prof", "Login")</li>
@@ -48,5 +53,17 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+<script>
+        setInterval(function () {
+            $.ajax({
+                url: "@Url.Action("GetNot","Login")?id=@(((Inventory_System.Models.User)ViewBag.mainUser).Id)"
+            }).done(function (data) {
+
+                    $("#notificationsBadge").css("display", "inline-block");
+                    $("#notificationsBadge").html(data);
+
+            });
+        }, 2000);
+</script>
 </body>
 </html>

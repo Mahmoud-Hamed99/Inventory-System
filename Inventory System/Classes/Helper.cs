@@ -182,8 +182,12 @@ namespace helper.Classes
             res = resAll.Count > 0;
             if (res)
             {
-                if(controller!=null)
+                if (controller != null)
+                {
                     controller.ViewBag.mainUser = resAll.First();
+                    var u = resAll.First();
+                    controller.ViewBag.notifications = dbcontext.Notifications.Where(a => a.UserId == u.Id).ToList();
+                }
                 var c1 = new HttpCookie("username", username);
                 c1.Expires = DateTime.Now.AddYears(1);
                 context.Response.Cookies.Add(c1);
@@ -204,6 +208,11 @@ namespace helper.Classes
             User user;
             var found = Helper.CheckUser(filterContext.HttpContext, out user);
             filterContext.Controller.ViewBag.mainUser = user;
+            if (user != null)
+            {
+                var db = new InventoryDB();
+                filterContext.Controller.ViewBag.notifications = db.Notifications.Where(a => a.UserId == user.Id).ToList();
+            }
             if (!found)
             {
                 filterContext.Result = new RedirectResult("~/Login?targetUrl=" + filterContext.HttpContext.Request.Url.AbsolutePath);

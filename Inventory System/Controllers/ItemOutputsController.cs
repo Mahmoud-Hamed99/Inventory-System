@@ -169,6 +169,10 @@ namespace Inventory_System.Controllers
                             ItemOutputId = outputIdToAdd
                         });
                         db.SaveChanges();
+                        Helper.AddNotification(db,
+                                "يوجد خامة غير متوفرة",
+                                "يوجد خامة غير متوفرة",
+                                db.Users.Where(a => a.Roles == "demandplanning").ToList());
                     }
                 }
 
@@ -318,6 +322,10 @@ namespace Inventory_System.Controllers
                         demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
 
                         db.DemandItems.Add(demandItem);
+                    Helper.AddNotification(db,
+                                "يوجد خامة غير متوفرة",
+                                "يوجد خامة غير متوفرة",
+                                db.Users.Where(a => a.Roles == "demandplanning").ToList());
                     Helper.AddLog(db, "ItemOutput Not sufficient, requested from demand", demandItem.DemandItemId, "DemandItem", this);
                 }
                 db.SaveChanges();

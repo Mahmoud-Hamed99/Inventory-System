@@ -118,15 +118,20 @@ namespace Inventory_System.Controllers
                         {
                             v.PurchasedItemQuantity -= itemQ;
                             itemQ = 0;
-
-
+                            
                         }
                         else
                         {
                             itemQ -= v.PurchasedItemQuantity;
                             v.PurchasedItemQuantity = 0;
                         }
-
+                        if (v.PurchasedItemQuantity == 0)
+                        {
+                            Helper.AddNotification(db,
+                                "الخامة متوفرة",
+                                "الخامة "+x.ItemName+" اصبحت متوفرة",
+                                db.Users.Where(a=>a.Roles == "projectplanning").ToList());
+                        }
                     }
 
                 }

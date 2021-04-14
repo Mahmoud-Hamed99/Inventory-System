@@ -1,0 +1,51 @@
+﻿@model Inventory_System.Models.Notification
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Notification</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.username)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.username)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NotificationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NotificationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NotificationText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NotificationText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.NotificationId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -196,6 +196,7 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\ItemSubCategoriesController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\SafeCategoriesController.cs" />
     <Compile Include="Controllers\SafesController.cs" />
@@ -617,6 +618,11 @@
     <Content Include="Views\UserLogs\Details.cshtml" />
     <Content Include="Views\UserLogs\Edit.cshtml" />
     <Content Include="Views\UserLogs\Index.cshtml" />
+    <Content Include="Views\Notifications\Create.cshtml" />
+    <Content Include="Views\Notifications\Delete.cshtml" />
+    <Content Include="Views\Notifications\Details.cshtml" />
+    <Content Include="Views\Notifications\Edit.cshtml" />
+    <Content Include="Views\Notifications\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
