@@ -21,11 +21,19 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: Items
         [VerifyUser(Roles ="superadmin,warehouse,warehouseaudit,cost")]
-        public ActionResult Index(int? year ,int? Page , int? category, int? subcategory, string startDate, string endDate)
+        public ActionResult Index(int? year ,int? Page , int? category, int? subcategory,int? item, string startDate, string endDate)
         {
+            
+            double totalAVG = 0;
+            double totalAdded = 0;
+            double totalOut = 0;
+            double totalRemainder = 0;
+
+           
+
             ViewBag.categoryv = category;
             ViewBag.subcategoryv = subcategory;
-            
+            ViewBag.item = item;
             int pageNumber = (Page ?? 1);
             
             if (year.HasValue == false)
@@ -52,7 +60,29 @@ namespace Inventory_System.Controllers
                .Include(a => a.ItemInputs)
                .Include(a => a.ItemOutputs)
                .Include(a=>a.ItemReturns);
-            if (subcategory.HasValue)
+            if(item.HasValue)
+            {
+                if(item.Value!=0)
+                {
+                    baseitems = baseitems.Where(a => a.ItemId == item.Value);
+                }
+                else if (subcategory.HasValue)
+                {
+                    if (subcategory.Value != 0)
+                        baseitems = baseitems.Where(a => a.ItemSubCategoryId == subcategory.Value);
+                    else if (category.HasValue)
+                    {
+                        baseitems = baseitems.Where(a => a.ItemSubCategory.ItemCategoryId == category.Value);
+
+                    }
+                }
+                else if (category.HasValue)
+                {
+                    baseitems = baseitems.Where(a => a.ItemSubCategory.ItemCategoryId == category.Value);
+
+                }
+            }
+            else if (subcategory.HasValue)
             {
                 if(subcategory.Value != 0)
                     baseitems = baseitems.Where(a=>a.ItemSubCategoryId == subcategory.Value);
@@ -98,9 +128,18 @@ namespace Inventory_System.Controllers
                     a2 - 
                     a3 + 
                     a4;
+
+                    totalAVG += a.ItemAvgPrice * a.ItemQuantity;
+                    totalAdded += (a.ItemInputs.Sum(aa => aa.ItemTotalCost) + (a.ItemReturns.Where(aa => aa.projectId != null).Sum(aa => aa.ItemQuantity) * a.ItemAvgPrice));
+                    totalOut += ((a.ItemOutputs.Sum(aa => aa.ItemOutputQuantity) + a.ItemReturns.Where(aa => aa.projectId == null).Sum(aa => aa.ItemQuantity)) * a.ItemAvgPrice);
+                    totalRemainder += (a.ItemReminder * a.ItemAvgPrice);
+
                     return a;
                 });
-            
+            ViewBag.totalAVG = totalAVG;
+            ViewBag.totalAdded = totalAdded;
+            ViewBag.totalOut = totalOut;
+            ViewBag.totalRemainder = totalRemainder;
             //var lll = items.ToList();
             //var mil = DateTime.Now.Subtract(dt).TotalMilliseconds;
             return View(items.OrderBy(a => a.ItemId).ToPagedList(pageNumber, pageSize));
@@ -199,6 +238,7 @@ namespace Inventory_System.Controllers
       
                 db.Items.Add(item);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Item ", item.ItemId, "Items", this);
                 //var newItemInput = new ItemInput()
                 //{
                 //    ItemId = item.ItemId,
@@ -245,6 +285,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Item ", item.ItemId, "Items", this);
                 return RedirectToAction("Index");
             }
             ViewBag.ItemSubCategoryId = new SelectList(db.ItemSubCategories, "ItemSubCategoryId", "ItemSubCategoryName", item.ItemSubCategoryId);
@@ -276,6 +317,7 @@ namespace Inventory_System.Controllers
             Item item = db.Items.Find(id);
             db.Items.Remove(item);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Item ", item.ItemId, "Items", this);
             return RedirectToAction("Index");
         }
 

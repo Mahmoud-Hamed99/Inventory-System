@@ -6,12 +6,14 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using helper.Classes;
 using Inventory_System;
 using Inventory_System.Models;
 using PagedList;
 
 namespace Inventory_System.Controllers
 {
+    [VerifyUser(Roles = "warehouseaudit")]
     public class VendorsController : Controller
     {
         private InventoryDB db = new InventoryDB();
@@ -52,12 +54,14 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        
         public ActionResult Create([Bind(Include = "VendorId,VendorName,VendorPhone,DateCreated")] Vendor vendor)
         {
             if (ModelState.IsValid)
             {
                 db.Vendors.Add(vendor);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Vendor", vendor.VendorId, "Vendor", this);
                 return RedirectToAction("Index");
             }
             ViewBag.VendorName = new SelectList(db.Vendors, "VendorId", "VendorName", vendor.VendorId);
@@ -91,6 +95,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(vendor).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Vendor", vendor.VendorId, "Vendor", this);
                 return RedirectToAction("Index");
             }
             return View(vendor);
@@ -119,6 +124,7 @@ namespace Inventory_System.Controllers
             Vendor vendor = db.Vendors.Find(id);
             db.Vendors.Remove(vendor);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Vendor", vendor.VendorId, "Vendor", this);
             return RedirectToAction("Index");
         }
 

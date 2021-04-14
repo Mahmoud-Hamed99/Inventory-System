@@ -331,6 +331,14 @@
     <Compile Include="Migrations\202104110452517_added bincode to item.Designer.cs">
       <DependentUpon>202104110452517_added bincode to item.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104131116556_added exchangetime.cs" />
+    <Compile Include="Migrations\202104131116556_added exchangetime.Designer.cs">
+      <DependentUpon>202104131116556_added exchangetime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104132317080_added_Log_Table.cs" />
+    <Compile Include="Migrations\202104132317080_added_Log_Table.Designer.cs">
+      <DependentUpon>202104132317080_added_Log_Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -345,6 +353,7 @@
     <Compile Include="Models\Safe.cs" />
     <Compile Include="Models\TechnicalDepartment.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserLog.cs" />
     <Compile Include="Models\Vendor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -704,6 +713,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104110452517_added bincode to item.resx">
       <DependentUpon>202104110452517_added bincode to item.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104131116556_added exchangetime.resx">
+      <DependentUpon>202104131116556_added exchangetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104132317080_added_Log_Table.resx">
+      <DependentUpon>202104132317080_added_Log_Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

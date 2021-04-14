@@ -55,6 +55,7 @@ namespace Inventory_System.Controllers
             {
                 db.SafeCategories.Add(safeCategory);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Safe Cat", safeCategory.SafeCategoryId, "Safe Categories", this);
                 return RedirectToAction("Index");
             }
 
@@ -87,6 +88,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(safeCategory).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Safe Cat", safeCategory.SafeCategoryId, "Safe Categories", this);
                 return RedirectToAction("Index");
             }
             return View(safeCategory);
@@ -115,6 +117,7 @@ namespace Inventory_System.Controllers
             SafeCategory safeCategory = db.SafeCategories.Find(id);
             db.SafeCategories.Remove(safeCategory);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Safe Cat", safeCategory.SafeCategoryId, "Safe Categories", this);
             return RedirectToAction("Index");
         }
 

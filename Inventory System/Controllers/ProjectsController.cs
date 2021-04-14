@@ -51,7 +51,8 @@ namespace Inventory_System.Controllers
                         {
                             res.ProjectFinished = true;
                             
-                        }   
+                        }
+                    Helper.AddLog(db, "Set project finished", v, "Projects", this);
                 }
                 db.SaveChanges();
             }
@@ -90,6 +91,7 @@ namespace Inventory_System.Controllers
             {
                 db.Projects.Add(project);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Project", project.ProjectId, "Projects", this);
                 return RedirectToAction("Index");
             }
 
@@ -125,6 +127,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Project", project.ProjectId, "Projects", this);
                 return RedirectToAction("Index");
             }
             return View(project);
@@ -153,6 +156,7 @@ namespace Inventory_System.Controllers
             Project project = db.Projects.Find(id);
             db.Projects.Remove(project);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Project", project.ProjectId, "Projects", this);
             return RedirectToAction("Index");
         }
 

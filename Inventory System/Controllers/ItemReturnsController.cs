@@ -105,7 +105,7 @@ namespace Inventory_System.Controllers
                 x.ItemQuantityAdded += itemReturn.ItemQuantity;
                 
                 db.SaveChanges();
-
+                Helper.AddLog(db, "Created ItemReturn ", itemReturn.ItemReturnId, "ItemReturn", this);
                 return RedirectToAction("Index");
             }
 
@@ -142,7 +142,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(itemReturn).State = EntityState.Modified;
                 db.SaveChanges();
-
+                Helper.AddLog(db, "Edited ItemReturn ", itemReturn.ItemReturnId, "ItemReturn", this);
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemReturn.ItemId);
@@ -173,6 +173,7 @@ namespace Inventory_System.Controllers
             ItemReturn itemReturn = db.ItemReturns.Find(id);
             db.ItemReturns.Remove(itemReturn);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted ItemReturn ", itemReturn.ItemReturnId, "ItemReturn", this);
             return RedirectToAction("Index");
         }
 

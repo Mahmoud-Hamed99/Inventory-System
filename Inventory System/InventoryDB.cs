@@ -11,7 +11,7 @@ namespace Inventory_System
     {
         public InventoryDB():base("name=InventoryDB")
         {
-
+            Database.Initialize(false);
         }
 
         public DbSet<Models.Item> Items { set; get; }
@@ -30,5 +30,6 @@ namespace Inventory_System
         public DbSet<Models.SafeCategory> SafeCategories { get; set; }
         public DbSet<Models.SafeSubCategory> safeSubCategories { get; set; }
         public DbSet<Models.User> Users { get; set; }
+        public DbSet<Models.UserLog> UserLogs { get; set; }
     }
 }

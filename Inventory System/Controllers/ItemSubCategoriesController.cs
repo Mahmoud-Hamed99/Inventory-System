@@ -61,6 +61,7 @@ namespace Inventory_System.Controllers
             {
                 db.ItemSubCategories.Add(itemSubCategory);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Item Sub ", itemSubCategory.ItemSubCategoryId, "ItemSubCategories", this);
                 return RedirectToAction("Index");
             }
 
@@ -95,6 +96,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(itemSubCategory).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Item Sub ", itemSubCategory.ItemSubCategoryId, "ItemSubCategories", this);
                 return RedirectToAction("Index");
             }
             ViewBag.ItemCategoryId = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName", itemSubCategory.ItemCategoryId);
@@ -124,6 +126,7 @@ namespace Inventory_System.Controllers
             ItemSubCategory itemSubCategory = db.ItemSubCategories.Find(id);
             db.ItemSubCategories.Remove(itemSubCategory);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Item Sub ", id, "ItemSubCategories", this);
             return RedirectToAction("Index");
         }
 

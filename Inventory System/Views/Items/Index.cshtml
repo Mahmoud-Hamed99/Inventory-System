@@ -6,10 +6,11 @@
     ViewBag.Title = "قائمه المنتجات بالمخزن";
     Layout = "~/Views/Shared/_LayoutWarhouse.cshtml";
     var mainrole = ((Inventory_System.Models.User)ViewBag.mainUser).Roles;
-    double totalAVG = 0;
-    double totalAdded = 0;
-    double totalOut = 0;
-    double totalRemainder = 0;
+    double totalAVG = ViewBag.totalAVG;
+    double totalAdded = ViewBag.totalAdded;
+    double totalOut = ViewBag.totalOut;
+    double totalRemainder = ViewBag.totalRemainder;
+    
 }
 
 <h2>@(mainrole=="cost"?"تكاليف المخزون":"كروت الصنف")</h2>
@@ -133,7 +134,7 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    @(totalAVG+= (item.ItemQuantity * item.ItemAvgPrice))
+                    @*@(totalAVG+= (item.ItemQuantity * item.ItemAvgPrice))*@
                     @((item.ItemQuantity * item.ItemAvgPrice) + " $")
                 }
                 else
@@ -145,9 +146,9 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    {
-                        totalAdded += (item.ItemInputs.Sum(a => a.ItemTotalCost) + (item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) * item.ItemAvgPrice));
-                    }
+                    //{
+                    //    totalAdded += (item.ItemInputs.Sum(a => a.ItemTotalCost) + (item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) * item.ItemAvgPrice));
+                    //}
                     @((item.ItemInputs.Sum(a => a.ItemTotalCost) + (item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) * item.ItemAvgPrice)) + " $")
                 }
                 else
@@ -159,9 +160,9 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    {
-                        totalOut += ((item.ItemOutputs.Sum(a => a.ItemOutputQuantity) + item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity)) * item.ItemAvgPrice);
-                    }
+                    //{
+                    //    totalOut += ((item.ItemOutputs.Sum(a => a.ItemOutputQuantity) + item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity)) * item.ItemAvgPrice);
+                    //}
                     @(((item.ItemOutputs.Sum(a => a.ItemOutputQuantity) + item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity)) *item.ItemAvgPrice)+" $")
                 }
                 else
@@ -176,9 +177,9 @@
             <td class="text-center">
                 @if (mainrole == "cost")
                 {
-                    {
-                        totalRemainder += (item.ItemReminder * item.ItemAvgPrice);
-                    }
+                    //{
+                    //    totalRemainder += (item.ItemReminder * item.ItemAvgPrice);
+                    //}
                     @(((item.ItemReminder * item.ItemAvgPrice))+" $")
                 }
                 else
@@ -242,7 +243,7 @@
 <br />
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, subcategory = ViewBag.subcategoryv, category = ViewBag.categoryv }))
+    new { page, subcategory = ViewBag.subcategoryv, category = ViewBag.categoryv,item=ViewBag.item }))
 
 
 

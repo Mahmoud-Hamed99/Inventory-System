@@ -74,10 +74,10 @@ namespace Inventory_System.Controllers
                                         db.Items.Add(new Item()
                                         {
                                             DateCreated = DateTime.Now.AddDays(-3),
-                                            ItemAvgPrice = 0,
+                                            ItemQuantity = 0,
                                             ItemMinQuantity = 0,
                                             ItemName = line[0] + line[1],
-                                            ItemQuantity = line.Length < 3 ? 0 : double.Parse(String.IsNullOrEmpty(line[3]) ? "0" : line[3]),
+                                            ItemAvgPrice = line.Length < 3 ? 0 : double.Parse(String.IsNullOrEmpty(line[3]) ? "0" : line[3]),
                                             ItemSubCategoryId = sub.ItemSubCategoryId,
                                             ItemUnit = line[2]
                                         });
@@ -87,10 +87,10 @@ namespace Inventory_System.Controllers
                                         db.Items.Add(new Item()
                                         {
                                             DateCreated = DateTime.Now.AddDays(-3),
-                                            ItemAvgPrice = 0,
+                                            ItemQuantity = 0,
                                             ItemMinQuantity = 0,
                                             ItemName = line[0],
-                                            ItemQuantity = line.Length < 3 ? 0 : double.Parse(String.IsNullOrEmpty(line[2]) ? "0" : line[2]),
+                                            ItemAvgPrice = line.Length < 3 ? 0 : double.Parse(String.IsNullOrEmpty(line[2]) ? "0" : line[2]),
                                             ItemSubCategoryId = sub.ItemSubCategoryId,
                                             ItemUnit = line[1]
                                         });

@@ -12,6 +12,9 @@ namespace Inventory_System
     {
         protected void Application_Start()
         {
+            
+            System.Data.Entity.Database.SetInitializer<InventoryDB>(
+    new System.Data.Entity.MigrateDatabaseToLatestVersion<InventoryDB,Migrations.Configuration>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

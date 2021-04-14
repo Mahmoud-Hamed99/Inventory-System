@@ -32,6 +32,9 @@ namespace Inventory_System.Models
         public string Notes { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? ExchangeDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
     }

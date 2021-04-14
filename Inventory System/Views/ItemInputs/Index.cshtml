@@ -33,12 +33,23 @@
 }
 
 <h2>أذون إضافة</h2>
+
 <p>
 
     @using (Html.BeginForm())
     {
         @*@Html.HiddenFor(mod)*@
         <table>
+            <tr>
+                <th class="col-md-1 text-right">
+                    @if (ViewBag.IsAccountant == false && currentRoleNow != "cost")
+                    {
+
+                        @Html.ActionLink("اضافه جديد", "Create")
+
+                    }
+                </th>
+            </tr>
             <tr>
                 <th class="col-md-1 text-right">
                     @Html.Label("من تاريخ", new { @class = "text-right" })
@@ -63,7 +74,7 @@
                         </div>
                     </div>
                 </th>
-                
+
                 <th class="col-md-1"><input type="submit" class="goRight" value="بحث" /></th>
                 <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
@@ -74,11 +85,7 @@
 
 </p>
 <br />
-@if (ViewBag.IsAccountant == false && currentRoleNow != "cost")
-{<p>
-        @Html.ActionLink("اضافه جديد", "Create")
-    </p>
-}
+
 <br />
 
 <table class="table">

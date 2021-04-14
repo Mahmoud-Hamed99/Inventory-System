@@ -73,7 +73,7 @@ namespace Inventory_System.Controllers
             {
                 db.Safe.Add(safe);
                 db.SaveChanges();
-
+                Helper.AddLog(db, "Created Safe Transaction", safe.SafeId, "Safe", this);
                 return RedirectToAction("Index");
             }
             ViewBag.SafeSubCategoryId = new SelectList(db.safeSubCategories, "SafeSubCategoryId", "Name");
@@ -107,6 +107,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(safe).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Safe Transaction", safe.SafeId, "Safe", this);
                 return RedirectToAction("Index");
             }
             return View(safe);
@@ -126,6 +127,7 @@ namespace Inventory_System.Controllers
             }
             db.Safe.Remove(safe);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Safe Transaction", id.Value, "Safe", this);
             return RedirectToAction("Index");
         }
 

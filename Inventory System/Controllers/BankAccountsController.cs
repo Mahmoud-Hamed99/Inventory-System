@@ -217,7 +217,7 @@ namespace Inventory_System.Controllers
 
                     db.BankAccountants.Add(bankAccount);
                     db.SaveChanges();
-                
+                Helper.AddLog(db, "Created Bank Transaction", bankAccount.BankAccountId, "BankAccount", this);
                 return RedirectToAction("Index");
             }
 
@@ -333,6 +333,7 @@ namespace Inventory_System.Controllers
                 }
 
                 //db.Entry(bankAccount).State = EntityState.Modified;
+                Helper.AddLog(db, "Edited Bank Transaction", bankAccount.BankAccountId, "BankAccount", this);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -396,6 +397,7 @@ namespace Inventory_System.Controllers
                      x.Balance += bankAccount.Withdraw; // back balance before old withdraw .
                 }
             }
+            Helper.AddLog(db, "Deleted Bank Transaction", bankAccount.BankAccountId, "BankAccount", this);
             db.BankAccountants.Remove(bankAccount);
             db.SaveChanges();
 

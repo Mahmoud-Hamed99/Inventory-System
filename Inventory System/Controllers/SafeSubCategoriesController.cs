@@ -76,6 +76,7 @@ namespace Inventory_System.Controllers
             {
                 db.safeSubCategories.Add(safeSubCategory);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Safe Sub", safeSubCategory.SafeSubCategoryId, "Safe Sub", this);
                 return RedirectToAction("Index");
             }
 
@@ -110,6 +111,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(safeSubCategory).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Safe Sub", safeSubCategory.SafeSubCategoryId, "Safe Sub", this);
                 return RedirectToAction("Index");
             }
             ViewBag.SafeCategoryId = new SelectList(db.SafeCategories, "SafeCategoryId", "Name", safeSubCategory.SafeCategoryId);
@@ -139,6 +141,7 @@ namespace Inventory_System.Controllers
             SafeSubCategory safeSubCategory = db.safeSubCategories.Find(id);
             db.safeSubCategories.Remove(safeSubCategory);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Safe Sub", safeSubCategory.SafeSubCategoryId, "Safe Sub", this);
             return RedirectToAction("Index");
         }
 

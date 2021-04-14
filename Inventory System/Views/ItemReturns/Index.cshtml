@@ -27,6 +27,14 @@
         @*@Html.HiddenFor(mod)*@
         <table>
             <tr>
+                <th class="col-md-2 text-right">
+                    @if (currentRoleNow != "cost")
+                    {
+                        @Html.ActionLink("اضافه مرتجع", "Create")
+                    }
+                </th>
+            </tr>
+            <tr>
                 <th class="col-md-2">
                     @Html.DropDownList("year", new SelectList(year), "السنة", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
                 </th>
@@ -42,12 +50,7 @@
 
 
 </p>
-<p>
-    @if (currentRoleNow != "cost")
-    {
-        @Html.ActionLink("اضافه مرتجع", "Create")
-    }
-</p>
+
 <table class="table">
     <tr>
         <th class="text-center">

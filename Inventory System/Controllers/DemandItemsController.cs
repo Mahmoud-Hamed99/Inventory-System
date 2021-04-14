@@ -166,6 +166,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Demanded Item", demandItem.DemandItemId, "DemandItem", this);
                 return RedirectToAction("Index");
             }
             
@@ -207,6 +208,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Purchasing Item", demandItem.DemandItemId, "DemandItem", this);
                 return RedirectToAction("PurchasingApproval");
             }
             //ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", demandItem.ItemId);
@@ -238,6 +240,7 @@ namespace Inventory_System.Controllers
             DemandItem demandItem = db.DemandItems.Find(id);
             db.DemandItems.Remove(demandItem);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Demanded/Purchasing Item", id, "DemandItem", this);
             return RedirectToAction("Index");
         }
 

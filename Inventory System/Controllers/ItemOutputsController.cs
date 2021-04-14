@@ -113,6 +113,8 @@ namespace Inventory_System.Controllers
             {
                 double qToAdd = 0;
                 int outputIdToAdd = 0;
+                List<int> itemsOut = new List<int>();
+                List<int> itemsOutNo = new List<int>();
                 using (var scope = new TransactionScope(TransactionScopeOption.Required,
         new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted }))
                 {
@@ -135,9 +137,11 @@ namespace Inventory_System.Controllers
                             if (res != null)
                             {
                                 res.ItemOutputApproved = true;
+                                res.ExchangeDate = DateTime.Now;
                                 db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
 
                             }
+                            itemsOut.Add(v);
                         }
                         else
                         {
@@ -167,9 +171,17 @@ namespace Inventory_System.Controllers
                         db.SaveChanges();
                     }
                 }
-                
-                
+
+                foreach (var v in itemsOut)
+                {
+                    Helper.AddLog(db, "ItemOut Approved ", v, "ItemOutput", this);
+                }
+                foreach(var v in itemsOutNo)
+                {
+                    Helper.AddLog(db, "ItemOut NOT Approved No Quantity", v, "ItemOutput", this);
+                }
             }
+            
             return RedirectToAction("Index");
         }
 
@@ -282,7 +294,7 @@ namespace Inventory_System.Controllers
             if (ModelState.IsValid)
             {
                 db.ItemOutputs.Add(itemOutput);
-
+                Helper.AddLog(db, "Created ItemOut ", itemOutput.ItemId, "ItemOutput", this);
                 DemandItem demandItem = new DemandItem();
                 var selInputs = db.ItemInputs.Where(a => a.ItemId == itemOutput.ItemId);
                 var selOutputs = db.ItemOutputs.Where(aa => aa.ItemOutputApproved && aa.ItemId == itemOutput.ItemId);
@@ -290,6 +302,7 @@ namespace Inventory_System.Controllers
                     (selInputs.Count()==0?0:selInputs.Sum(aa => aa.ItemQuantity)) - (selOutputs.Count()==0?0:selOutputs.Sum(aa => aa.ItemOutputQuantity));
 
                 db.SaveChanges();
+                
                 double RequiredQnt = itemOutput.ItemOutputQuantity;
 
                 
@@ -305,6 +318,7 @@ namespace Inventory_System.Controllers
                         demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
 
                         db.DemandItems.Add(demandItem);
+                    Helper.AddLog(db, "ItemOutput Not sufficient, requested from demand", demandItem.DemandItemId, "DemandItem", this);
                 }
                 db.SaveChanges();
                 if(((Inventory_System.Models.User)ViewBag.mainUser).Roles=="warehouse")
@@ -343,12 +357,18 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
-        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId")] ItemOutput itemOutput)
+        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId",Exclude =("ExchangeDate"))] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
             {
+                var original_data = db.ItemOutputs.AsNoTracking().Where(P => P.ItemOutputId == itemOutput.ItemOutputId).FirstOrDefault();
+                if (original_data.ItemOutputApproved && itemOutput.ItemOutputApproved == false)
+                    itemOutput.ExchangeDate = null;
+                else if (!original_data.ItemOutputApproved && itemOutput.ItemOutputApproved)
+                    itemOutput.ExchangeDate = DateTime.Now;
                 db.Entry(itemOutput).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited ItemOutput ", itemOutput.ItemId, "ItemOutput", this);
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
@@ -383,6 +403,7 @@ namespace Inventory_System.Controllers
             ItemOutput itemOutput = db.ItemOutputs.Find(id);
             db.ItemOutputs.Remove(itemOutput);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted ItemOutput ", id, "ItemOutput", this);
             return RedirectToAction("Index");
         }
 

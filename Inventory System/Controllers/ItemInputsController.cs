@@ -131,6 +131,7 @@ namespace Inventory_System.Controllers
 
                 }
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Item Input", itemInput.ItemInputId, "ItemInput", this);
                 return RedirectToAction("Index");
             }
 
@@ -207,6 +208,7 @@ namespace Inventory_System.Controllers
                 }
                 x.ItemQuantityAdded += itemInput.ItemQuantity;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Item Input", itemInput.ItemInputId, "ItemInput", this);
                 return RedirectToAction("Index");
             }
             return View(itemInput);
@@ -285,8 +287,11 @@ namespace Inventory_System.Controllers
                     x.ItemQuantityWithdraw += itemInput.ItemReturn;
                     
                     db.ItemReturns.Add(itemReturn);
+                    
                     db.SaveChanges();
+                    Helper.AddLog(db, "Edited Item Input Which Added ItemReturn", itemReturn.ItemReturnId, "ItemReturn", this);
                 }
+                Helper.AddLog(db, "Edited Item Input", itemInput.ItemInputId, "ItemInput", this);
                 return RedirectToAction("Index",new {acc=true });
             }
             return View(itemInput);
@@ -318,6 +323,7 @@ namespace Inventory_System.Controllers
             ItemInput itemInput = db.ItemInputs.Find(id);
             db.ItemInputs.Remove(itemInput);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Item Input ", id, "ItemInput", this);
             return RedirectToAction("Index");
         }
 

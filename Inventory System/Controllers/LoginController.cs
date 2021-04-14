@@ -22,6 +22,7 @@ namespace Inventory_System.Controllers
             ViewBag.targetUrl = targetUrl;
             if (Helper.Login(HttpContext, db, username, password,this))
             {
+                Helper.AddLog(db, "Logged in", 0, null, this);
                 //if (String.IsNullOrEmpty(targetUrl))
                 //{ 
                     switch (((Models.User)ViewBag.mainUser).Roles)
@@ -60,6 +61,7 @@ namespace Inventory_System.Controllers
         }
         public ActionResult Logout(string username, string password)
         {
+            Helper.AddLog(db, "Logged out", 0, null, this);
             Helper.Logout(HttpContext);
 
             return View("Index");

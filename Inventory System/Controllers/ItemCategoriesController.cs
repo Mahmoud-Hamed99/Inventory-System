@@ -59,6 +59,7 @@ namespace Inventory_System.Controllers
             {
                 db.ItemCategories.Add(itemCategory);
                 db.SaveChanges();
+                Helper.AddLog(db, "Created Item Category", itemCategory.ItemCategoryId, "ItemCategory", this);
                 return RedirectToAction("Index");
             }
 
@@ -91,6 +92,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(itemCategory).State = EntityState.Modified;
                 db.SaveChanges();
+                Helper.AddLog(db, "Edited Item Category", itemCategory.ItemCategoryId, "ItemCategory", this);
                 return RedirectToAction("Index");
             }
             return View(itemCategory);
@@ -119,6 +121,7 @@ namespace Inventory_System.Controllers
             ItemCategory itemCategory = db.ItemCategories.Find(id);
             db.ItemCategories.Remove(itemCategory);
             db.SaveChanges();
+            Helper.AddLog(db, "Deleted Item Category", id, "ItemCategory", this);
             return RedirectToAction("Index");
         }
 
