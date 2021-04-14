@@ -14,7 +14,15 @@ namespace Inventory_System.Models
 
         public ItemOutput ItemOutput  { get; set; }
 
-        public double DemandItemQuantity { get; set; }
+        private double _demanditemquantity;
+        public double DemandItemQuantity { get=>_demanditemquantity;
+            set {
+                _demanditemquantity = value;
+                PurchasedItemQuantity = value;
+            }
+        }
+
+        public double PurchasedItemQuantity { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode =true,DataFormatString = "{0:dd/MM/yyyy}")]

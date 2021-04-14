@@ -110,21 +110,21 @@ namespace Inventory_System.Controllers
                 }
                 x.ItemQuantityAdded += itemInput.ItemQuantity;
                 double itemQ = itemInput.ItemQuantity;
-                foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.DemandItemQuantity > 0))
+                foreach (var v in db.DemandItems.Where(a => a.DemandItemApproval && a.PurchasingApproval && a.PurchasedItemQuantity > 0))
                 {
                     if (itemQ > 0)
                     {
-                        if (v.DemandItemQuantity >= itemQ)
+                        if (v.PurchasedItemQuantity >= itemQ)
                         {
-                            v.DemandItemQuantity -= itemQ;
+                            v.PurchasedItemQuantity -= itemQ;
                             itemQ = 0;
 
 
                         }
                         else
                         {
-                            itemQ -= v.DemandItemQuantity;
-                            v.DemandItemQuantity = 0;
+                            itemQ -= v.PurchasedItemQuantity;
+                            v.PurchasedItemQuantity = 0;
                         }
 
                     }

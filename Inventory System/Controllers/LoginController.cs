@@ -48,6 +48,8 @@ namespace Inventory_System.Controllers
                             return RedirectToAction("Index", "Items");
                         case "safe":
                              return RedirectToAction("Index", "Safes");
+                        case "superadmin":
+                            return RedirectToAction("Index", "UserLogs");
                         //break;
                         default:
                             return RedirectToAction("Index", "Items");

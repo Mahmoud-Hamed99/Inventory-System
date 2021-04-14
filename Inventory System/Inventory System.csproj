@@ -201,6 +201,7 @@
     <Compile Include="Controllers\SafesController.cs" />
     <Compile Include="Controllers\SafeSubCategoriesController.cs" />
     <Compile Include="Controllers\TechnicalDepartmentsController.cs" />
+    <Compile Include="Controllers\UserLogsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\VendorsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -338,6 +339,14 @@
     <Compile Include="Migrations\202104132317080_added_Log_Table.cs" />
     <Compile Include="Migrations\202104132317080_added_Log_Table.Designer.cs">
       <DependentUpon>202104132317080_added_Log_Table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104140922353_dontremember.cs" />
+    <Compile Include="Migrations\202104140922353_dontremember.Designer.cs">
+      <DependentUpon>202104140922353_dontremember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104141100097_addedpurchasequanity.cs" />
+    <Compile Include="Migrations\202104141100097_addedpurchasequanity.Designer.cs">
+      <DependentUpon>202104141100097_addedpurchasequanity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
@@ -603,6 +612,11 @@
     <Content Include="Views\SafeSubCategories\Edit.cshtml" />
     <Content Include="Views\SafeSubCategories\Index.cshtml" />
     <Content Include="Views\Login\Prof.cshtml" />
+    <Content Include="Views\UserLogs\Create.cshtml" />
+    <Content Include="Views\UserLogs\Delete.cshtml" />
+    <Content Include="Views\UserLogs\Details.cshtml" />
+    <Content Include="Views\UserLogs\Edit.cshtml" />
+    <Content Include="Views\UserLogs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -719,6 +733,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104132317080_added_Log_Table.resx">
       <DependentUpon>202104132317080_added_Log_Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104140922353_dontremember.resx">
+      <DependentUpon>202104140922353_dontremember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104141100097_addedpurchasequanity.resx">
+      <DependentUpon>202104141100097_addedpurchasequanity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
