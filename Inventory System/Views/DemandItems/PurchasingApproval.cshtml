@@ -42,6 +42,9 @@
                 @Html.DisplayName("اسم الخامة ")
             </th>
             <th class="text-center">
+                @Html.DisplayName("أصل الطلب")
+            </th>
+            <th class="text-center">
                 @Html.DisplayName("الكميه المطلوبه")
             </th>
             <th class="text-center">
@@ -64,6 +67,9 @@
             <tr>
                 <td class="text-center">
                     @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem => item.ItemOutput.ItemOutputQuantity)
                 </td>
                 <td class="text-center">
                     @Html.DisplayFor(modelItem => item.DemandItemQuantity)

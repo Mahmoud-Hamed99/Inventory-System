@@ -418,7 +418,7 @@ namespace Inventory_System.Controllers
             db.ItemOutputs.Remove(itemOutput);
             db.SaveChanges();
             Helper.AddLog(db, "Deleted ItemOutput ", id, "ItemOutput", this);
-            return RedirectToAction("Index");
+            return RedirectToAction("technicalList");
         }
 
         protected override void Dispose(bool disposing)

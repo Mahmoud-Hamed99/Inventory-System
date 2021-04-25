@@ -22,7 +22,7 @@ namespace Inventory_System.Models
         public Project Project { set; get; }
 
         //Add department link
-        public int TechnicalDepartmentId { get; set; }
+        public int? TechnicalDepartmentId { get; set; }
 
         public TechnicalDepartment TechnicalDepartment { set; get; }
 

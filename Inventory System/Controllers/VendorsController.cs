@@ -121,10 +121,18 @@ namespace Inventory_System.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Vendor vendor = db.Vendors.Find(id);
-            db.Vendors.Remove(vendor);
-            db.SaveChanges();
-            Helper.AddLog(db, "Deleted Vendor", vendor.VendorId, "Vendor", this);
+            try
+            {
+                Vendor vendor = db.Vendors.Find(id);
+                db.Vendors.Remove(vendor);
+                db.SaveChanges();
+                Helper.AddLog(db, "Deleted Vendor", vendor.VendorId, "Vendor", this);
+            }
+            catch
+            {
+
+            }
+            
             return RedirectToAction("Index");
         }
 

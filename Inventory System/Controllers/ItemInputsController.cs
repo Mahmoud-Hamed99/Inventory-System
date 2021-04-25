@@ -219,7 +219,7 @@ namespace Inventory_System.Controllers
             return View(itemInput);
         }
 
-
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult WarhouseManager(int? id)
         {
             if (id == null)
@@ -245,6 +245,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated")] ItemInput itemInput,int minimumAllowed)
         {
             if (ModelState.IsValid)

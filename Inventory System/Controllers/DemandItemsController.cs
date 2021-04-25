@@ -33,6 +33,7 @@ namespace Inventory_System.Controllers
             return View(demandItems.OrderBy(a=>a.DemandItemPriority).ToPagedList(1, 1000000000));
         }
         [HttpPost]
+        [VerifyUser(Roles = "demandplanning")]
         public ActionResult Index(int ProjectId)
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
@@ -66,6 +67,7 @@ namespace Inventory_System.Controllers
             return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(1, 1000000000));
         }
         [HttpPost]
+        [VerifyUser(Roles = "purchasing")]
         public ActionResult PurchasingApproval(int? page, int ProjectId)
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
@@ -160,6 +162,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "demandplanning")]
         public ActionResult Edit([Bind(Include = "DemandItemId,ItemOutputId,DemandItemQuantity,DemandItemPriority,DemandItemApproval")] DemandItem demandItem)
         {
             if (ModelState.IsValid)

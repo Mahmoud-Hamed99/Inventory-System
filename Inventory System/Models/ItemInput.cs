@@ -23,7 +23,7 @@ namespace Inventory_System.Models
 
         public double ItemTotalCost { set; get; }
 
-        public int VendorId { set; get; }
+        public int? VendorId { set; get; }
 
         public Vendor Vendor { get; set; }
 

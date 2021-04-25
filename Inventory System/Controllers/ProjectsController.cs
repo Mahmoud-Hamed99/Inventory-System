@@ -85,7 +85,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProjectId,ProjectName,DateCreated")] Project project)
+        public ActionResult Create([Bind(Include = "ProjectId,ProjectName,ProjectCode,DateCreated")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -106,9 +106,7 @@ namespace Inventory_System.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Project project = db.Projects.Find(id);
-           
             //ViewBag.itemOutputs = db.ItemOutputs.Include(a => a.ProjectId == id).ToList();
-           
             if (project == null)
             {
                 return HttpNotFound();
@@ -121,7 +119,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectId,ProjectName,DateCreated")] Project project)
+        public ActionResult Edit([Bind(Include = "ProjectId,ProjectName,ProjectCode,DateCreated")] Project project)
         {
             if (ModelState.IsValid)
             {

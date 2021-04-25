@@ -349,6 +349,14 @@
     <Compile Include="Migrations\202104141100097_addedpurchasequanity.Designer.cs">
       <DependentUpon>202104141100097_addedpurchasequanity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104191148381_optionalvendoridininputs.cs" />
+    <Compile Include="Migrations\202104191148381_optionalvendoridininputs.Designer.cs">
+      <DependentUpon>202104191148381_optionalvendoridininputs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104191200324_techdepnotman.cs" />
+    <Compile Include="Migrations\202104191200324_techdepnotman.Designer.cs">
+      <DependentUpon>202104191200324_techdepnotman.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -745,6 +753,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104141100097_addedpurchasequanity.resx">
       <DependentUpon>202104141100097_addedpurchasequanity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104191148381_optionalvendoridininputs.resx">
+      <DependentUpon>202104191148381_optionalvendoridininputs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104191200324_techdepnotman.resx">
+      <DependentUpon>202104191200324_techdepnotman.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -136,6 +136,7 @@ namespace Inventory_System.Controllers
 
                     return a;
                 });
+            items.ToList();
             ViewBag.totalAVG = totalAVG;
             ViewBag.totalAdded = totalAdded;
             ViewBag.totalOut = totalOut;
