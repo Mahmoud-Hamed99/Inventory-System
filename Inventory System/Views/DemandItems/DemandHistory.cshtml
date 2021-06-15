@@ -17,6 +17,12 @@
 <table class="table">
     <tr>
         <th class="text-center">
+            @Html.DisplayName("كود المشروع")
+        </th>
+        <th class="text-center">
+            @Html.DisplayName("اسم المشروع")
+        </th>
+        <th class="text-center">
             @Html.DisplayName("اسم الخامة ")
         </th>
         <th class="text-center">
@@ -33,21 +39,27 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
-            </td>
-            <td class="text-center">
-                @(item.PurchasedItemQuantity)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DemandItemPriority)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DemandItemApproval)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
+    </td>
+    <td class="text-center">
+        @(item.PurchasedItemQuantity)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DemandItemPriority)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DemandItemApproval)
+    </td>
 
-        </tr>
+</tr>
     }
 
 </table>

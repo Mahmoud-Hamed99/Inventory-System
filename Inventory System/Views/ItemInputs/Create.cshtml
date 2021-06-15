@@ -25,8 +25,7 @@
         </div>
 
         <div class="col-md-4 text-right">
-            @Html.DropDownListFor(model => model.Item.ItemSubCategory.ItemCategoryId, ViewBag.ItemCategory as SelectList, "اختار الصنف", htmlAttributes: new { @class = "form-control", @id = "ItemCategoryId" })
-            @Html.ValidationMessageFor(model => model.Item.ItemSubCategory.ItemCategory.ItemCategoryName, "", new { @class = "text-danger" })
+            @Html.Label("_", htmlAttributes: new { @Id="CatName"})
         </div>
         @Html.Label("إسم الصنف", htmlAttributes: new { @class = "control-label col-md-2" })
 
@@ -40,8 +39,7 @@
         </div>
 
         <div class="col-md-4 text-right">
-            @Html.DropDownListFor(model => model.Item.ItemSubCategoryId, new SelectList(""), htmlAttributes: new { @class = "form-control", @id = "ItemSubCategoryId" })
-            @Html.ValidationMessageFor(model => model.Item.ItemSubCategory.ItemSubCategoryName, "", new { @class = "text-danger" })
+            @Html.Label("_", htmlAttributes: new { @Id = "SubCatName" })
         </div>
 
 
@@ -57,7 +55,7 @@
         </div>
 
         <div class="col-md-4 text-right">
-            @Html.DropDownListFor(model => model.ItemId, new SelectList(""), htmlAttributes: new { @id = "ItemId", @class = "form-control" })
+            @Html.DropDownListFor(model => model.ItemId, ViewBag.ItemId as SelectList, htmlAttributes: new { @id = "ItemId", @class = "form-control" })
             @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
         </div>
         @Html.Label("إسم الخامة", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -139,61 +137,53 @@
 <link href="~/Content/css/select2.css" rel="stylesheet" />
 <script src="~/Scripts/select2.min.js"></script>
 <script>
-    $("#ItemCategoryId").select2({
-        placeholder: "ابحث بنوع الصنف",
-        allowClear: true
-    });
-    $('#ItemCategoryId').on('select2:select', function (e) {
-        $.get("/ItemInputs/GetMembers", { id: $("#ItemCategoryId").val() }, function (data) {
-            $("#ItemSubCategoryId").empty();
-            $("#ItemSubCategoryId").append("<option value='0'>ابحث بنوع الصنف الجزئي</option>")
-
-            $("#ItemId").empty();
-            $("#ItemUnit").val("");
-
-            $.each(data, function (index, row) {
-                $("#ItemSubCategoryId").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
-            });
-        });
-    });
-</script>
-
-<script>
-    $("#ItemSubCategoryId").select2({
-        placeholder: "ابحث بنوع الصنف الجزئي",
-        allowClear: true
-    });
-    $('#ItemCategoryId').on('select2:select', function (e) {
-            $.get("/ItemInputs/GetMembers", { id: $("#ItemCategoryId").val() }, function (data) {
-                $("#ItemSubCategoryId").empty();
-                $("#ItemSubCategoryId").append("<option value='0'>ابحث بنوع الصنف الجزئي</option>")
-
-                $("#ItemId").empty();
-                $("#ItemUnit").val("");
-
-                $.each(data, function (index, row) {
-                    $("#ItemSubCategoryId").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
-                });
-            });
-    });
-</script>
-
-<script>
+    //$("#ItemCategoryId").select2({
+    //    placeholder: "ابحث بنوع الصنف",
+    //    allowClear: true
+    //});
+    
+    //$("#ItemSubCategoryId").select2({
+    //    placeholder: "ابحث بنوع الصنف الجزئي",
+    //    allowClear: true
+    //});
     $("#ItemId").select2({
         placeholder: "ابحث عن المنتج",
         allowClear: true
     });
-    $('#ItemSubCategoryId').on('select2:select', function (e) {
-          $.get("/ItemInputs/GetItems", { itemSubCategoryId: $("#ItemSubCategoryId").val() }, function (data) {
-                $("#ItemId").empty();
+    //$('#ItemCategoryId').on('select2:select', function (e) {
+    //        $.get("/ItemInputs/GetMembers", { id: $("#ItemCategoryId").val() }, function (data) {
+    //            $("#ItemSubCategoryId").empty();
+    //            $("#ItemSubCategoryId").append("<option value='0'>ابحث بنوع الصنف الجزئي</option>")
 
-                $("#ItemUnit").empty();
+    //            $("#ItemId").empty();
+    //            $("#ItemUnit").val("");
 
-                console.log(data);
-                jQuery("#ItemUnit").val(data[0].ItemUnit);
-                $.each(data, function (index, row) {
-                    $("#ItemId").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
-                });
-            });
+    //            $.each(data, function (index, row) {
+    //                $("#ItemSubCategoryId").append("<option value='" + row.ItemSubCategoryId + "'>" + row.ItemSubCategoryName + "</option>")
+    //            });
+    //        });
+    //});
+    //$('#ItemSubCategoryId').on('select2:select', function (e) {
+    //    $.get("/ItemInputs/GetItems", { itemSubCategoryId: $("#ItemSubCategoryId").val() }, function (data) {
+    //        $("#ItemId").empty();
+
+    //        $("#ItemUnit").empty();
+
+    //        console.log(data);
+    //        jQuery("#ItemUnit").val(data[0].ItemUnit);
+    //        $.each(data, function (index, row) {
+    //            $("#ItemId").append("<option value='" + row.ItemId + "'>" + row.ItemName + "</option>")
+    //        });
+    //    });
+    //});
+    $('#ItemId').on('select2:select', function (e) {
+        $.get("/ItemInputs/GetParents?id=" + $("#ItemId").val(), null, function (data) {
+            console.log(data);
+            $("#ItemUnit").val(data[2]);
+            $("#CatName").text(data[1]);
+            $("#SubCatName").text(data[0]);
+        });
     });
 </script>
+
+

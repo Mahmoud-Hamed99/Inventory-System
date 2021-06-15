@@ -47,7 +47,7 @@ namespace Inventory_System.Controllers
                     res.AsQueryable());
             }
             
-            return View(res.OrderBy(a => a.DateCreated).ToPagedList(pageNumber, 1000000));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 1000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -102,7 +102,7 @@ namespace Inventory_System.Controllers
                 itemOutputs = itemOutputs.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
             if (ProjectId != null)
                 itemOutputs = itemOutputs.Where(a => a.ProjectId == ProjectId);
-            return View("warehouse",itemOutputs.ToList());
+            return View("warehouse",itemOutputs.OrderByDescending(a => a.DocCode).ToList());
         }
 
         [HttpPost]
@@ -227,7 +227,7 @@ namespace Inventory_System.Controllers
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            return View(res.OrderBy(a => a.DateCreated).ToPagedList(1, 10000000));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 10000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)

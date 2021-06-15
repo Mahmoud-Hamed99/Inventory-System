@@ -33,7 +33,7 @@ namespace Inventory_System.Controllers
             ViewBag.IsAccountant = acc;
             var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
             int pageNumber = (page ?? 1);
-            return View(itemInputs.OrderBy(a=>a.ItemInputId).ToPagedList(pageNumber,pageSize));
+            return View(itemInputs.OrderByDescending(a=>a.DocCode).ToPagedList(pageNumber,pageSize));
         }
         [HttpPost]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
@@ -52,7 +52,7 @@ namespace Inventory_System.Controllers
             }
 
             var itemInputs = helper.Classes.Helper.FilterByDate<ItemInput>(startDate, endDate,
-                    db.ItemInputs.OrderBy(a => a.ItemInputId).Include(i => i.Item).Include(a => a.Vendor));
+                    db.ItemInputs.OrderByDescending(a => a.DocCode).Include(i => i.Item).Include(a => a.Vendor));
             
             
             return View(itemInputs.ToPagedList(1,1000000000));
@@ -154,7 +154,15 @@ namespace Inventory_System.Controllers
             return Json(itemSubCategoriesList, JsonRequestBehavior.AllowGet);
         }
 
-
+        public JsonResult GetParents(int id)
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            var it = db.Items.Where(a => a.ItemId == id).Include(a=>a.ItemSubCategory).Include(a=>a.ItemSubCategory.ItemCategory).First();
+            var ret = Json(new string[] { it.ItemSubCategory.ItemSubCategoryName,
+                it.ItemSubCategory.ItemCategory.ItemCategoryName ,
+            it.ItemUnit}, JsonRequestBehavior.AllowGet);
+            return ret;
+        }
 
         public JsonResult GetItems(int itemSubCategoryId)
         {

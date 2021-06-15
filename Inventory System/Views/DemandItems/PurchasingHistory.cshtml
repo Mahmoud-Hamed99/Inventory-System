@@ -16,6 +16,9 @@
             @Html.DisplayName("كود المشروع")
         </th>
         <th class="text-center">
+            @Html.DisplayName("اسم المشروع")
+        </th>
+        <th class="text-center">
             @Html.DisplayName("اسم الخامة")
         </th>
         <th class="text-center">
@@ -35,30 +38,33 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DemandItemQuantity)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.PurchaseApprovalDate)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.PurchaseApprovalDate)
+    </td>
 
-            <!--<td class="text-center">
-                @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })-->
-            <!--@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })-->
-            <!--</td>-->
-        </tr>
+    <!--<td class="text-center">
+        @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })-->
+    <!--@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
+        @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })-->
+    <!--</td>-->
+</tr>
     }
 
 </table>
