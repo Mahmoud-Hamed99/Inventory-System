@@ -36,6 +36,7 @@
 {
     <h4>@grp.First().ItemOutput.Item.ItemName</h4>
     <h4>مطلوب : @grp.Sum(a => a.DemandItemQuantity)</h4>
+    <h4>المتاح : @grp.Sum(a => a.ItemOutput.ItemOutputQuantity)</h4>
     <table class="table">
         <tr>
             <th class="text-center">

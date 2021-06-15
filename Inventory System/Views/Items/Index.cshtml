@@ -191,11 +191,13 @@
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
-            @*<td class="text-center">*@
-            @*@Html.ActionLink("تعديل", "Edit", new { id = item.ItemId }) |*@
-            @*@Html.ActionLink("Details", "Details", new { id=item.ItemId }) |*@
-            @*@Html.ActionLink("حذف", "Delete", new { id = item.ItemId })*@
-            @*</td>*@
+            <td class="text-center">
+                @if (mainrole != "cost")
+                {
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.ItemId })
+                }
+
+            </td>
         </tr>
     }
     @if (mainrole == "cost")

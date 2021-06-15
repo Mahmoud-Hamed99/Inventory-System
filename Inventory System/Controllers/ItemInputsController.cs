@@ -87,7 +87,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,cost")]
-        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
+        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated,DocCode")] ItemInput itemInput)
         {
             //  List<Item> itemList = db.Items.ToList();
 
@@ -136,6 +136,7 @@ namespace Inventory_System.Controllers
 
                 }
                 db.SaveChanges();
+
                 Helper.AddLog(db, "Created Item Input", itemInput.ItemInputId, "ItemInput", this);
                 return RedirectToAction("Index");
             }
@@ -195,7 +196,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated")] ItemInput itemInput)
+        public ActionResult Edit([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated,DocCode")] ItemInput itemInput)
         {
             if (ModelState.IsValid)
             {
@@ -246,7 +247,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated")] ItemInput itemInput,int minimumAllowed)
+        public ActionResult WarhouseManager([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,ItemReturn,Notes,DateCreated,DocCode")] ItemInput itemInput,int minimumAllowed)
         {
             if (ModelState.IsValid)
             {

@@ -33,31 +33,47 @@ namespace helper.Classes
     {
         static public void AddLog(InventoryDB db,string action,int rowId,string tableName, ControllerBase controller)
         {
-            db.UserLogs.Add(new UserLog()
+            try
             {
-                Action = action,
-                DateCreated = DateTime.Now,
-                RowId = rowId,
-                TableName = tableName,
-                UserId = (controller.ViewBag.mainUser as User).Id,
-                Username = (controller.ViewBag.mainUser as User).username
-            });
-            db.SaveChanges();
+                db.UserLogs.Add(new UserLog()
+                {
+                    Action = action,
+                    DateCreated = DateTime.Now,
+                    RowId = rowId,
+                    TableName = tableName,
+                    UserId = (controller.ViewBag.mainUser as User).Id,
+                    Username = (controller.ViewBag.mainUser as User).username
+                });
+                db.SaveChanges();
+            }
+            catch
+            {
+
+            }
+            
         }
 
         static public void AddNotification(InventoryDB db, string NotificationName, string NotificationText, List<User> users)
         {
-            foreach(var v in users)
+            try
             {
-                db.Notifications.Add(new Notification()
+                foreach (var v in users)
                 {
-                    DateCreated = DateTime.Now,
-                    NotificationName = NotificationName,
-                    NotificationText = NotificationText,
-                    UserId = v.Id
-                });
+                    db.Notifications.Add(new Notification()
+                    {
+                        DateCreated = DateTime.Now,
+                        NotificationName = NotificationName,
+                        NotificationText = NotificationText,
+                        UserId = v.Id
+                    });
+                }
+                db.SaveChanges();
             }
-            db.SaveChanges();
+            catch
+            {
+
+            }
+            
             
         }
         static public List<T> FilterByDate<T>(string fromDateString,string toDateString, 

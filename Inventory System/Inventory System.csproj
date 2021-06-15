@@ -357,6 +357,14 @@
     <Compile Include="Migrations\202104191200324_techdepnotman.Designer.cs">
       <DependentUpon>202104191200324_techdepnotman.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202105060040235_addedpurchase_approval_date.cs" />
+    <Compile Include="Migrations\202105060040235_addedpurchase_approval_date.Designer.cs">
+      <DependentUpon>202105060040235_addedpurchase_approval_date.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202105311416567_added doc.cs" />
+    <Compile Include="Migrations\202105311416567_added doc.Designer.cs">
+      <DependentUpon>202105311416567_added doc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -759,6 +767,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104191200324_techdepnotman.resx">
       <DependentUpon>202104191200324_techdepnotman.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105060040235_addedpurchase_approval_date.resx">
+      <DependentUpon>202105060040235_addedpurchase_approval_date.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202105311416567_added doc.resx">
+      <DependentUpon>202105311416567_added doc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

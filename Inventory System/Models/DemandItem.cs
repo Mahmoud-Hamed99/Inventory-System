@@ -30,8 +30,17 @@ namespace Inventory_System.Models
 
         public bool DemandItemApproval { get; set; } = false;
 
-        public bool PurchasingApproval { get; set; } = false;
+        private bool _purchasingapproval = false;
+        public bool PurchasingApproval { get=>_purchasingapproval; 
+            set {
+                _purchasingapproval = value;
+                PurchaseApprovalDate = DateTime.Now;
+            } 
+        }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public DateTime? PurchaseApprovalDate { get; set; }
     }
 }

@@ -21,15 +21,15 @@
         <th class="text-center">
             @Html.DisplayName("الكميه")
         </th>
+
         <th class="text-center">
-            @Html.DisplayName("الأولويه")
+            @Html.DisplayName("تاريخ الطلب")
         </th>
+
         <th class="text-center">
-            @Html.DisplayName("موافقه ال demand")
+            @Html.DisplayName("تاريخ الموافقة")
         </th>
-        <th class="text-center">
-            @Html.DisplayName("موافقه ال purchasing")
-        </th>
+
         <th class="text-center"></th>
     </tr>
 
@@ -37,28 +37,30 @@
     {
         <tr>
             <td class="text-center">
+                @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
+            </td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
             </td>
+
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.PurchasedItemQuantity)
+                @Html.DisplayFor(modelItem => item.DemandItemQuantity)
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DemandItemPriority)
+                @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DemandItemApproval)
+                @Html.DisplayFor(modelItem => item.PurchaseApprovalDate)
             </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.PurchasingApproval)
-            </td>
+
             <!--<td class="text-center">
                 @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })-->
-                <!--@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })-->
+            <!--@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })-->
             <!--</td>-->
         </tr>
     }
 
 </table>
 <br />
-@Html.PagedListPager(Model,page=>Url.Action("PurchasingHistory",new { page}))
+@Html.PagedListPager(Model, page => Url.Action("PurchasingHistory", new { page }))

@@ -68,7 +68,7 @@ namespace Inventory_System.Controllers
         }
         [HttpPost]
         [VerifyUser(Roles = "purchasing")]
-        public ActionResult PurchasingApproval(int? page, int ProjectId)
+        public ActionResult PurchasingApproval(int? page, int? ProjectId)
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             var demandItems = db.DemandItems.Include(d => d.ItemOutput)

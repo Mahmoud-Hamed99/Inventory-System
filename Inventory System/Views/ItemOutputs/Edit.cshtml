@@ -21,62 +21,69 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        @*<h4>ItemOutput</h4>*@
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ItemOutputId)
-        @Html.HiddenFor(model => model.Item.ItemName)
-        @Html.HiddenFor(model => model.Project.ProjectName)
+<div class="form-horizontal">
+    @*<h4>ItemOutput</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ItemOutputId)
+    @Html.HiddenFor(model => model.Item.ItemName)
+    @Html.HiddenFor(model => model.Project.ProjectName)
 
-        <div class="form-group">
-            <div class="col-md-10 text-right">
-                @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
-                @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("كود المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
-
-
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
+            @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
         </div>
-
-        <div class="form-group">
-            <div class="col-md-10 text-right">
-                @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control", @id = "DepartmentId" })
-                @Html.ValidationMessageFor(model => model.TechnicalDepartmentId, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("القسم", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("كود المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
 
 
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control", @id = "DepartmentId" })
+            @Html.ValidationMessageFor(model => model.TechnicalDepartmentId, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("القسم", htmlAttributes: new { @class = "control-label col-md-2" })
 
 
-        <div class="form-group">
-            <div class="col-md-10 text-right">
-                @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("إسم الخامة", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.DropDownList("ItemId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("إسم الخامة", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-10 text-right">
-                @Html.EditorFor(model => model.ItemOutputQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ItemOutputQuantity, "", new { @class = "text-danger" })
-            </div>
-            @Html.Label("الكميه", htmlAttributes: new { @class = "control-label col-md-2" })
-
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.EditorFor(model => model.ItemOutputQuantity, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ItemOutputQuantity, "", new { @class = "text-danger" })
         </div>
+        @Html.Label("الكميه", htmlAttributes: new { @class = "control-label col-md-2" })
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-9 text-right">
+            @Html.EditorFor(model => model.DocCode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DocCode, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("رقم المستند", htmlAttributes: new { @class = "control -label col-md-2" })
+
+    </div>
 
 
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="حفظ" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="حفظ" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 @*<div>

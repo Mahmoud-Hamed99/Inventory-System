@@ -30,6 +30,7 @@ namespace Inventory_System.Models
         public bool ItemOutputApproved { get; set; } = false;
 
         public string Notes { get; set; }
+        public int DocCode { set; get; } //رقم المستند
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime? ExchangeDate { get; set; }

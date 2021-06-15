@@ -37,15 +37,15 @@
         <table>
             <tr class="text-right">
                 @*<th class="col-md-2 text-right">
-                    @if (ViewBag.mainUser != null)
-                    {
-                        if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+                        @if (ViewBag.mainUser != null)
                         {
-                            @Html.ActionLink("طلب جديد", "Create")
+                            if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+                            {
+                                @Html.ActionLink("طلب جديد", "Create")
+                            }
                         }
-                    }
 
-                </th>*@
+                    </th>*@
                 <th class="col-md-2 text-right">
                     @if (currentRoleNow != "cost")
                     {
@@ -131,6 +131,9 @@
         <th class="text-center">
             @Html.DisplayName("صرف؟")
         </th>
+        <th>
+            @Html.DisplayName("رقم المستند")
+        </th>
 
     </tr>
 
@@ -155,7 +158,7 @@
                 @if (currentRoleNow != "cost")
                 {
                     @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
-                    @Html.DisplayFor(modelItem=>item.Item.ItemUnit)
+                    @Html.DisplayFor(modelItem => item.Item.ItemUnit)
                 }
                 else
                 {
@@ -170,7 +173,9 @@
             <td class="text-center">
                 @Html.DisplayFor(modelItem => item.ItemOutputApproved)
             </td>
-
+            <td class="text-center">
+                @Html.DisplayFor(modelItem => item.DocCode)
+            </td>
             <td class="text-center">
                 @if (currentRoleNow != "cost")
                 {

@@ -112,7 +112,11 @@
                 </td>
 
                 <td class="text-center">
-                    <input type="checkbox" name="ItemApproved" value="@item.ItemOutputId" />
+                    <input type="checkbox" name="ItemApproved" value="@item.ItemOutputId" onchange="checkIt(this)" />
+                    <br /> الكميه<br />
+                    <input type="number" name="" value="@item.ItemOutputQuantity" max="@item.ItemOutputQuantity" min="0" step="any" />
+                    <br /> رقم المستند<br />
+                    <input type="number" name="" value="@item.DocCode"  />
                     @*@Html.DisplayFor(modelItem => item.ItemOutputApproved)*@
                 </td>
 
@@ -154,7 +158,19 @@
         </script>
     }
     <script>
-
+        function checkIt(me) {
+            
+            if (me.checked) {
+                $(me).next().next().next().attr('name', 'ItemQ');
+            } else {
+                $(me).next().next().next().attr('name', '');
+            }
+            if (me.checked) {
+                $(me).next().next().next().next().next().next().attr('name', 'ItemDoc');
+            } else {
+                $(me).next().next().next().next().next().next().attr('name', '');
+            }
+        }
         $("#ProjectId").change(function () {
 
             $("#CreateLink").attr("href", '@Url.Action("Create")?prid=' + $("#ProjectId").val());

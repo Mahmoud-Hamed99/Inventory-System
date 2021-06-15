@@ -107,7 +107,7 @@ namespace Inventory_System.Controllers
 
         [HttpPost]
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Approve(int[] ItemApproved)
+        public ActionResult Approve(int[] ItemApproved,double[] ItemQ, int[] ItemDoc)
         {
             if (ItemApproved != null)
             {
@@ -118,7 +118,7 @@ namespace Inventory_System.Controllers
                 using (var scope = new TransactionScope(TransactionScopeOption.Required,
         new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted }))
                 {
-
+                    int inddd = 0;
                     foreach (var v in ItemApproved)
                     {
                         var res = db.ItemOutputs.Include(a => a.Item)
@@ -132,24 +132,37 @@ namespace Inventory_System.Controllers
                             res.Item.ItemOutputs.Where(a => a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity))
                             + res.Item.ItemReturns.Where(a=>a.projectId!=null).Sum(a => a.ItemQuantity)
                             - res.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity);
-                        if (res.ItemOutputQuantity <= AvailableQnt)
+                        if (ItemQ[inddd] <= AvailableQnt)
                         {
                             if (res != null)
                             {
                                 res.ItemOutputApproved = true;
                                 res.ExchangeDate = DateTime.Now;
-                                db.Items.Find(res.ItemId).ItemQuantityWithdraw += res.ItemOutputQuantity;
-
+                                res.DocCode = ItemDoc[inddd];
+                                db.Items.Find(res.ItemId).ItemQuantityWithdraw += ItemQ[inddd];//res.ItemOutputQuantity;
+                                if(ItemQ[inddd]!=res.ItemOutputQuantity)
+                                {
+                                    var diff = res.ItemOutputQuantity - ItemQ[inddd];
+                                    res.ItemOutputQuantity = ItemQ[inddd];
+                                    db.ItemOutputs.Add(new ItemOutput()
+                                    {
+                                        ItemId = res.ItemId,
+                                        ItemOutputQuantity = diff,
+                                        ProjectId = res.ProjectId,
+                                        TechnicalDepartmentId = res.TechnicalDepartmentId
+                                    });
+                                }
                             }
                             itemsOut.Add(v);
                         }
                         else
                         {
                             outputIdToAdd = v;
-                            qToAdd = res.ItemOutputQuantity - AvailableQnt;
+                            qToAdd = ItemQ[inddd] - AvailableQnt;
                             ViewBag.msg = " هذه الكميه غير متاحه";
                             break;
                         }
+                        inddd++;
                     }
                     if (qToAdd == 0)
                     {
@@ -265,19 +278,54 @@ namespace Inventory_System.Controllers
         // GET: ItemOutputs/Create
         public ActionResult Create(int? prid)
         {
+            
+            ViewBag.ItemCategory = new SelectList(db.ItemCategories, "ItemCategoryId", "ItemCategoryName");
+            List<Item> itms = new List<Item>();
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName");
-            ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(db.Items.ToList());
+            foreach(var v in db.Items
+                    .Include(a => a.ItemOutputs)
+                    .Include(a => a.ItemReturns)
+                    .Include(a => a.ItemInputs).ToList())
+                    
+            {
+                
+                v.ItemReminder = v.ItemInputs.Sum(a => a.ItemQuantity) -
+                            v.ItemOutputs.Where(a=>a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity) -
+                            v.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity) +
+                            v.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity);
+                itms.Add(new Item()
+                {
+                    ItemId = v.ItemId,
+                    ItemUnit = v.ItemUnit,
+                    ItemReminder = v.ItemReminder
+                });
+            }
+            ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(itms);
             if (prid != null)
             {
+                itms = new List<Item>();
                 ViewBag.prid = prid;
-                List<Item> itms = new List<Item>();
+                
                 foreach(var v in db.Projects
                     .Include(a=>a.ItemOutputs)
+                    .Include(a=>a.ItemReturns)
+                    .Include(a=>a.ItemOutputs.Select(aa=>aa.Item.ItemInputs))
                     .Include(a=>a.ItemOutputs.Select(aa=>aa.Item))
                     .Single(a => a.ProjectId == prid.Value).ItemOutputs)
                 {
-                    if(itms.Where(a=>a.ItemId==v.ItemId).Count()==0)
-                        itms.Add(v.Item);
+                    if (itms.Where(a => a.ItemId == v.ItemId).Count() == 0)
+                    {
+                        v.Item.ItemReminder = v.Item.ItemInputs.Sum(a => a.ItemQuantity) -
+                            v.Item.ItemOutputs.Sum(a => a.ItemOutputQuantity) -
+                            v.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity) +
+                            v.Item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity);
+                        itms.Add(new Item()
+                        {
+                            ItemId = v.Item.ItemId,
+                            ItemUnit = v.Item.ItemUnit,
+                            ItemReminder = v.Item.ItemReminder
+                        });
+                    }
                 }
                 ViewBag.ItemId = new SelectList(itms, "ItemId", "ItemName");
                 ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(itms);
@@ -291,51 +339,120 @@ namespace Inventory_System.Controllers
         // POST: ItemOutputs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[VerifyUser(Roles = "warehouse,projectplanning")]
+        //public ActionResult Create([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,TechnicalDepartmentId,ItemOutputApproved,DateCreated")] ItemOutput itemOutput)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.ItemOutputs.Add(itemOutput);
+        //        Helper.AddLog(db, "Created ItemOut ", itemOutput.ItemId, "ItemOutput", this);
+        //        DemandItem demandItem = new DemandItem();
+        //        var selInputs = db.ItemInputs.Where(a => a.ItemId == itemOutput.ItemId);
+        //        var selOutputs = db.ItemOutputs.Where(aa => aa.ItemOutputApproved && aa.ItemId == itemOutput.ItemId);
+        //        var AvailableQntInStore = 
+        //            (selInputs.Count()==0?0:selInputs.Sum(aa => aa.ItemQuantity)) - (selOutputs.Count()==0?0:selOutputs.Sum(aa => aa.ItemOutputQuantity));
+
+        //        db.SaveChanges();
+
+        //        double RequiredQnt = itemOutput.ItemOutputQuantity;
+
+
+
+        //        if (RequiredQnt > AvailableQntInStore)
+        //        {
+        //            //check if item available in demand table 
+
+
+
+        //                demandItem.ItemOutputId = itemOutput.ItemOutputId;
+
+        //                demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
+
+        //                db.DemandItems.Add(demandItem);
+        //            Helper.AddNotification(db,
+        //                        "يوجد خامة غير متوفرة",
+        //                        "يوجد خامة غير متوفرة",
+        //                        db.Users.Where(a => a.Roles == "demandplanning").ToList());
+        //            Helper.AddLog(db, "ItemOutput Not sufficient, requested from demand", demandItem.DemandItemId, "DemandItem", this);
+        //        }
+        //        db.SaveChanges();
+        //        if(((Inventory_System.Models.User)ViewBag.mainUser).Roles=="warehouse")
+        //        {
+        //            return RedirectToAction("warehouse", "itemoutputs");
+        //        }
+        //        return RedirectToAction("technicallist", "itemoutputs");
+        //    }
+
+
+        //    if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
+        //    {
+        //        return RedirectToAction("warehouse", "itemoutputs");
+        //    }
+        //    return RedirectToAction("technicallist", "itemoutputs");
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "warehouse,projectplanning")]
-        public ActionResult Create([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,TechnicalDepartmentId,ItemOutputApproved,DateCreated")] ItemOutput itemOutput)
+        public ActionResult Create(int[] ItemId, int[] ProjectId, double[] ItemOutputQuantity, int[] TechnicalDepartmentId)
         {
-           
+            List<ItemOutput> itemOutputs = new List<ItemOutput>();
+            for(int i =0;i<ItemId.Length;i++)
+            {
+                itemOutputs.Add(new ItemOutput()
+                {
+                    ItemId = ItemId[i],
+                    ProjectId = ProjectId[i],
+                    ItemOutputQuantity = ItemOutputQuantity[i]
+                });
+            }
             if (ModelState.IsValid)
             {
-                db.ItemOutputs.Add(itemOutput);
-                Helper.AddLog(db, "Created ItemOut ", itemOutput.ItemId, "ItemOutput", this);
-                DemandItem demandItem = new DemandItem();
-                var selInputs = db.ItemInputs.Where(a => a.ItemId == itemOutput.ItemId);
-                var selOutputs = db.ItemOutputs.Where(aa => aa.ItemOutputApproved && aa.ItemId == itemOutput.ItemId);
-                var AvailableQntInStore = 
-                    (selInputs.Count()==0?0:selInputs.Sum(aa => aa.ItemQuantity)) - (selOutputs.Count()==0?0:selOutputs.Sum(aa => aa.ItemOutputQuantity));
-
-                db.SaveChanges();
-                
-                double RequiredQnt = itemOutput.ItemOutputQuantity;
-
-                
-
-                if (RequiredQnt > AvailableQntInStore)
+                foreach (var itemOutput in itemOutputs)
                 {
-                    //check if item available in demand table 
+                    db.ItemOutputs.Add(itemOutput);
+                    Helper.AddLog(db, "Created ItemOut ", itemOutput.ItemId, "ItemOutput", this);
+                    DemandItem demandItem = new DemandItem();
+                    var selInputs = db.ItemInputs.Where(a => a.ItemId == itemOutput.ItemId);
+                    var selOutputs = db.ItemOutputs.Where(aa => aa.ItemOutputApproved && aa.ItemId == itemOutput.ItemId);
+                    var AvailableQntInStore =
+                        (selInputs.Count() == 0 ? 0 : selInputs.Sum(aa => aa.ItemQuantity)) - (selOutputs.Count() == 0 ? 0 : selOutputs.Sum(aa => aa.ItemOutputQuantity));
+
+                    db.SaveChanges();
+
+                    double RequiredQnt = itemOutput.ItemOutputQuantity;
 
 
-                    
+
+                    if (RequiredQnt > AvailableQntInStore)
+                    {
+                        //check if item available in demand table 
+
+
+
                         demandItem.ItemOutputId = itemOutput.ItemOutputId;
 
-                        demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;   
+                        demandItem.DemandItemQuantity = RequiredQnt - AvailableQntInStore;
 
                         db.DemandItems.Add(demandItem);
-                    Helper.AddNotification(db,
-                                "يوجد خامة غير متوفرة",
-                                "يوجد خامة غير متوفرة",
-                                db.Users.Where(a => a.Roles == "demandplanning").ToList());
-                    Helper.AddLog(db, "ItemOutput Not sufficient, requested from demand", demandItem.DemandItemId, "DemandItem", this);
+                        Helper.AddNotification(db,
+                                    "يوجد خامة غير متوفرة",
+                                    "يوجد خامة غير متوفرة",
+                                    db.Users.Where(a => a.Roles == "demandplanning").ToList());
+                        Helper.AddLog(db, "ItemOutput Not sufficient, requested from demand", demandItem.DemandItemId, "DemandItem", this);
+                    }
+                    db.SaveChanges();
+
                 }
-                db.SaveChanges();
-                if(((Inventory_System.Models.User)ViewBag.mainUser).Roles=="warehouse")
+                if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
                 {
                     return RedirectToAction("warehouse", "itemoutputs");
                 }
                 return RedirectToAction("technicallist", "itemoutputs");
+
             }
 
 
@@ -371,7 +488,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
-        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId",Exclude =("ExchangeDate"))] ItemOutput itemOutput)
+        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId,DocCode", Exclude =("ExchangeDate"))] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
             {

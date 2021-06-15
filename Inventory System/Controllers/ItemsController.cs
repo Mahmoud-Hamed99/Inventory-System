@@ -98,7 +98,7 @@ namespace Inventory_System.Controllers
                 
             }
             //DateTime dt = DateTime.Now;
-            var itms = db.ItemInputs.Where(aa => aa.DateCreated < fromCompare).ToList();
+            var itms = db.ItemInputs.Where(aa => aa.DateCreated >= fromCompare).ToList();
             var itreturns = db.ItemReturns
                     .Where(aa =>
                     aa.DateCreated <= toCompare &&
@@ -257,7 +257,7 @@ namespace Inventory_System.Controllers
             return View(item);
         }
 
-        [VerifyUser(Roles = "superadmin")]
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
         // GET: Items/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -279,12 +279,17 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin")]
-        public ActionResult Edit([Bind(Include = "ItemId,ItemName,ItemUnit,ItemQuantity,ItemAvgPrice,ItemSubCategoryId,DateCreated,BinCode")] Item item)
+        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit")]
+        public ActionResult Edit([Bind(Include = "ItemId,ItemName,ItemUnit,BinCode,ItemMinQuantity,ItemSubCategoryId",Exclude ="ItemQuantity,ItemQuantityAdded,ItemQuantityWithdraw,ItemReturn,ItemReminder,ItemAvgPrice,DateCreated")] Item item)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(item).State = EntityState.Modified;
+                var itm = db.Items.Find(item.ItemId);
+                itm.ItemName = itm.ItemName;
+                itm.ItemUnit = itm.ItemUnit;
+                itm.BinCode = itm.BinCode;
+                itm.ItemMinQuantity = itm.ItemMinQuantity;
+                //db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
                 Helper.AddLog(db, "Edited Item ", item.ItemId, "Items", this);
                 return RedirectToAction("Index");
