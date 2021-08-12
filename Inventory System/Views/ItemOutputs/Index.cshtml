@@ -22,7 +22,7 @@
     {
         month.Add(i);
     }
-    double totalPrices = 0;
+    double totalPrices = ViewBag.totalPrices;
 }
 
 <h2>@(currentRoleNow=="cost"?"تكاليف المشاريع": "أذون الصرف")</h2>
@@ -163,7 +163,7 @@
                 else
                 {
                     @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
-                    totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
+                    //totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
                 }
             </td>
             <td class="text-center">

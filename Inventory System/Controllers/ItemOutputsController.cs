@@ -21,7 +21,7 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Index(int? TechnicalDepartmentId, int? ProjectId,string startDate,string endDate)
+        public ActionResult Index(int? page, int? TechnicalDepartmentId, int? ProjectId,string startDate,string endDate)
         {
             
 
@@ -29,7 +29,10 @@ namespace Inventory_System.Controllers
             Helper.CheckUser(HttpContext, db, out user);
             ViewBag.MainRole = user.Roles;
             int pageNumber =1;
-
+            if(page.HasValue)
+            {
+                pageNumber = page.Value;
+            }
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
@@ -46,8 +49,13 @@ namespace Inventory_System.Controllers
                 res = helper.Classes.Helper.FilterByDate<ItemOutput>(startDate, endDate,
                     res.AsQueryable());
             }
-            
-            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 1000000));
+            double totalPrices = 0;
+            foreach(var item in res.ToList())
+            {
+                totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
+            }
+            ViewBag.totalPrices = totalPrices;
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 20));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -227,7 +235,7 @@ namespace Inventory_System.Controllers
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 10000000));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 20));
             //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
