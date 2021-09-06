@@ -17,7 +17,7 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: ItemInputs
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
-        public ActionResult Index( int? page , bool acc = false)
+        public ActionResult Index( int? page, int? docNumber, bool acc = false)
         {
             User user;
             Helper.CheckUser(HttpContext, db, out user);
@@ -33,11 +33,15 @@ namespace Inventory_System.Controllers
             ViewBag.IsAccountant = acc;
             var itemInputs = db.ItemInputs.Include(i => i.Item).Include(a => a.Vendor).ToList();
             int pageNumber = (page ?? 1);
+            if(docNumber.HasValue)
+            {
+                itemInputs = itemInputs.Where(a => a.DocCode == docNumber.Value).ToList();
+            }
             return View(itemInputs.OrderByDescending(a=>a.DocCode).ToPagedList(pageNumber,pageSize));
         }
         [HttpPost]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,cost")]
-        public ActionResult Index(string startDate, string endDate)
+        public ActionResult Index(int? docNumber, string startDate, string endDate)
         {
             User user;
             Helper.CheckUser(HttpContext, db, out user);
@@ -53,8 +57,11 @@ namespace Inventory_System.Controllers
 
             var itemInputs = helper.Classes.Helper.FilterByDate<ItemInput>(startDate, endDate,
                     db.ItemInputs.OrderByDescending(a => a.DocCode).Include(i => i.Item).Include(a => a.Vendor));
-            
-            
+
+            if (docNumber.HasValue)
+            {
+                itemInputs = itemInputs.Where(a => a.DocCode == docNumber.Value).ToList();
+            }
             return View(itemInputs.ToPagedList(1,1000000000));
         }
 

@@ -21,7 +21,7 @@ namespace Inventory_System.Controllers
         int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Index(int? page, int? TechnicalDepartmentId, int? ProjectId,string startDate,string endDate)
+        public ActionResult Index(int? page, int? TechnicalDepartmentId, int? ProjectId, int? docNumber, string startDate,string endDate)
         {
             
 
@@ -55,6 +55,10 @@ namespace Inventory_System.Controllers
                 totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
             }
             ViewBag.totalPrices = totalPrices;
+            if(docNumber.HasValue)
+            {
+                res = res.Where(a => a.DocCode == docNumber.Value).ToList();
+            }
             return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 20));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{

@@ -87,7 +87,13 @@
                         </div>
                     </div>
                 </th>
+                <th class="col-md-1 text-right">
+                    @Html.Label("رقم المستند", new { @class = "text-right" })
+                </th>
+                <th class="col-md-2">
+                    <input type="number" name="docNumber" />
 
+                </th>
                 <th class="col-md-1 text-right"><input type="submit" value="بحث" /></th>
                 <th class="col-md-1 text-right"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
