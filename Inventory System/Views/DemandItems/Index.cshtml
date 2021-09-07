@@ -76,7 +76,14 @@
                         @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
                     </td>
                     <td class="text-center">
-                        @Html.DisplayFor(modelItem => item.DemandItemApproval)
+                        @if (item.DemandItemApproval.HasValue)
+                        {
+                            @Html.DisplayFor(modelItem => item.DemandItemApproval)
+                        }
+                        else
+                        {
+                            @Html.Raw("لم يحدد بعد")
+                        }
                     </td>
                     <td class="text-center">
                         @Html.ActionLink("تعديل", "Edit", new { id = item.DemandItemId })

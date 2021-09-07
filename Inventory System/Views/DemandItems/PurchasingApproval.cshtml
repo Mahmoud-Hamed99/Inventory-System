@@ -65,34 +65,50 @@
 
         @foreach (var item in grp)
         {
-            <tr>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.ItemOutput.ItemOutputQuantity)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemQuantity)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemPriority)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.DemandItemApproval)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.PurchasingApproval)
-                </td>
-                <td class="text-center">
-                    @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })
-                    @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
-                </td>
-            </tr>
+    <tr>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.ItemOutput.Item.ItemName)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.ItemOutput.ItemOutputQuantity)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DemandItemQuantity)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.DemandItemPriority)
+        </td>
+        <td class="text-center">
+            @Html.DisplayFor(modelItem => item.ItemOutput.Project.ProjectCode)
+        </td>
+
+        <td class="text-center">
+            @if (item.DemandItemApproval.HasValue)
+            {
+                @Html.DisplayFor(modelItem => item.DemandItemApproval)
+            }
+            else
+            {
+                @Html.Raw("لم يحدد بعد")
+            }
+        </td>
+        
+        <td class="text-center">
+            @if (item.PurchasingApproval.HasValue)
+            {
+                @Html.DisplayFor(modelItem => item.PurchasingApproval)
+            }
+            else
+            {
+                @Html.Raw("لم يحدد بعد")
+            }
+        </td>
+        <td class="text-center">
+            @Html.ActionLink("تعديل", "PurchasingEdit", new { id = item.DemandItemId })
+            @*@Html.ActionLink("Details", "Details", new { id=item.DemandItemId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.DemandItemId })*@
+        </td>
+    </tr>
         }
 
     </table>

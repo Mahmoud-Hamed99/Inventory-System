@@ -365,6 +365,10 @@
     <Compile Include="Migrations\202105311416567_added doc.Designer.cs">
       <DependentUpon>202105311416567_added doc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202109071240218_made-purchase approval and demand approval nullable.cs" />
+    <Compile Include="Migrations\202109071240218_made-purchase approval and demand approval nullable.Designer.cs">
+      <DependentUpon>202109071240218_made-purchase approval and demand approval nullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -773,6 +777,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202105311416567_added doc.resx">
       <DependentUpon>202105311416567_added doc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109071240218_made-purchase approval and demand approval nullable.resx">
+      <DependentUpon>202109071240218_made-purchase approval and demand approval nullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

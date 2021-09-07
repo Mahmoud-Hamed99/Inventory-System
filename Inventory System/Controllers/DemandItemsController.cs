@@ -27,7 +27,7 @@ namespace Inventory_System.Controllers
                 .Include(d => d.ItemOutput)
                 .Include(a=>a.ItemOutput.Item)
                 .Include(a=>a.ItemOutput.Project)
-                .Where(a => a.DemandItemApproval == false);
+                .Where(a => a.DemandItemApproval.HasValue == false);
             int pageNumber = (page ?? 1);
             ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
             return View(demandItems.OrderBy(a=>a.DemandItemPriority).ToPagedList(1, 1000000000));
@@ -41,7 +41,7 @@ namespace Inventory_System.Controllers
                 .Include(d => d.ItemOutput)
                 .Include(a => a.ItemOutput.Item)
                 .Include(a => a.ItemOutput.Project)
-                .Where(a => a.DemandItemApproval == false && a.ItemOutput.ProjectId == ProjectId);
+                .Where(a => a.DemandItemApproval.HasValue == false && a.ItemOutput.ProjectId == ProjectId);
 
             return View(demandItems.OrderBy(a => a.DemandItemPriority).ToPagedList(1, 1000000000));
         }
@@ -62,7 +62,7 @@ namespace Inventory_System.Controllers
             var demandItems = db.DemandItems.Include(d => d.ItemOutput)
                 .Include(a => a.ItemOutput.Item)
                 .Include(a => a.ItemOutput.Project)
-                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval==false);
+                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval.HasValue ==false);
             int pageNumber = (page ?? 1);
             return View(demandItems.OrderBy(a=>a.DemandItemId).ToPagedList(1, 1000000000));
         }
@@ -74,7 +74,7 @@ namespace Inventory_System.Controllers
             var demandItems = db.DemandItems.Include(d => d.ItemOutput)
                 .Include(a => a.ItemOutput.Item)
                 .Include(a => a.ItemOutput.Project)
-                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval == false && a.ItemOutput.ProjectId == ProjectId);
+                .Where(a => a.DemandItemApproval == true && a.PurchasingApproval.HasValue == false && a.ItemOutput.ProjectId == ProjectId);
             int pageNumber = (page ?? 1);
             return View(demandItems.OrderBy(a => a.DemandItemId).ToPagedList(1, 1000000000));
         }
@@ -169,7 +169,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
-                if(demandItem.DemandItemApproval)
+                if(demandItem.DemandItemApproval == true)
                 {
                     Helper.AddNotification(db,
                                 "يوجد طلب خامة جديد",
@@ -218,7 +218,7 @@ namespace Inventory_System.Controllers
             {
                 db.Entry(demandItem).State = EntityState.Modified;
                 db.SaveChanges();
-                if (demandItem.PurchasingApproval)
+                if (demandItem.PurchasingApproval == true)
                 {
                     Helper.AddNotification(db,
                                 "تم الموافقة على شراء خامة",

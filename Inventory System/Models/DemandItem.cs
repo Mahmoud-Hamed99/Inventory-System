@@ -28,10 +28,10 @@ namespace Inventory_System.Models
         [DisplayFormat(ApplyFormatInEditMode =true,DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DemandItemPriority { get; set; } = DateTime.Now;
 
-        public bool DemandItemApproval { get; set; } = false;
+        public bool? DemandItemApproval { get; set; }
 
-        private bool _purchasingapproval = false;
-        public bool PurchasingApproval { get=>_purchasingapproval; 
+        private bool? _purchasingapproval;
+        public bool? PurchasingApproval { get=>_purchasingapproval; 
             set {
                 _purchasingapproval = value;
                 PurchaseApprovalDate = DateTime.Now;
