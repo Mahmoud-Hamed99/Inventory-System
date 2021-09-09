@@ -1,0 +1,82 @@
+﻿@model Inventory_System.Models.ItemInput
+
+@{
+    ViewBag.Title = "تعديل بيانات المنتج";
+    Layout = "~/Views/Shared/_LayoutWarhouseAudit.cshtml";
+    Inventory_System.Models.ItemInput item = ViewBag.Item as Inventory_System.Models.ItemInput;
+}
+
+<h2>تعديل بيانات المنتج</h2>
+<br />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.Label(Model.Item.ItemName, new { htmlAttributes = new { @id = "id", @class = "form-control" } })
+            @*@Html.ValidationMessageFor(model => model.Item.ItemName, "", new { @class = "text-danger" })*@
+        </div>
+        @Html.Label("إسم الخامة", htmlAttributes: new { @class = "control-label col-md-2" })
+        <input type="hidden" name="ItemId" value="@Model.ItemInputId" />
+        
+
+
+    </div>
+    @*@Html.HiddenFor(model => model.Item.ItemName, "ItemName", new { htmlAttributes = new { @id = "id", @class = "form-control" } })*@
+
+
+    @*<div class="form-group">
+        <div class="col-md-10 text-right">*@
+    @*@Html.ValidationMessageFor(model => model.Item.ItemUnit, "", new { @class = "text-danger" })*@
+    @*</div>
+            @Html.Label("الوحده", htmlAttributes: new { @class = "control-label col-md-2" })
+
+        </div>*@
+
+
+
+
+
+    
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            <input name="returnQuantity" type="number" min="1" max="@Model.ItemQuantity" required />
+
+        </div>
+        @Html.Label("الكميه", htmlAttributes: new { @class = "control -label col-md-2" })
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            <input name="DocNumber" type="number" required />
+
+        </div>
+        @Html.Label("رقم المستند", htmlAttributes: new { @class = "control -label col-md-2" })
+
+    </div>
+
+    
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="حفظ" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع لقائمه الأذونات", "Index",new { acc=true})
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

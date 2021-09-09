@@ -59,7 +59,7 @@ namespace Inventory_System.Controllers
             {
                 res = res.Where(a => a.DocCode == docNumber.Value).ToList();
             }
-            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 20));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 10000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -239,7 +239,7 @@ namespace Inventory_System.Controllers
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 20));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 10000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)

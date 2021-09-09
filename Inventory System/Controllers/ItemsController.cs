@@ -125,8 +125,9 @@ namespace Inventory_System.Controllers
                     var a4 = (a.ItemReturns.Where(aa => aa.projectId != null).Sum(aa => aa.ItemQuantity));
                     a.ItemReminder = 
                     a1 - 
-                    a2 - 
-                    a3 + 
+                    a2 //- 
+                    //a3
+                    + 
                     a4;
 
                     totalAVG += a.ItemAvgPrice * a.ItemQuantity;

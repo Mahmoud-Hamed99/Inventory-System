@@ -187,13 +187,20 @@
                 @if (ViewBag.IsAccountant && currentRoleNow != "cost")
                 {
                     @Html.ActionLink("تعديل", "WarhouseManager", new { id = item.ItemInputId })
+                <span>|</span>
                     @* @Html.ActionLink("Details", "Details", new { id=item.ItemInputId }) |*@
 
                 }
+                
                 @if (ViewBag.IsAccountant && currentRoleNow != "cost")
                 {
                     @Html.ActionLink(" حذف ", "Delete", new { id = item.ItemInputId })
+                    <span>|</span>
 
+                }
+                @if (ViewBag.MainRole == "warehouseaudit")
+                {
+                    @Html.ActionLink("رجوع إلى المورد", "WarhouseManagerReturn", new { id = item.ItemInputId })
                 }
 
             </td>

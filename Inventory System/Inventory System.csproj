@@ -369,6 +369,10 @@
     <Compile Include="Migrations\202109071240218_made-purchase approval and demand approval nullable.Designer.cs">
       <DependentUpon>202109071240218_made-purchase approval and demand approval nullable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202109081045353_added_doc_number_in_returns.cs" />
+    <Compile Include="Migrations\202109081045353_added_doc_number_in_returns.Designer.cs">
+      <DependentUpon>202109081045353_added_doc_number_in_returns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BankAccountant.cs" />
     <Compile Include="Models\DemandItem.cs" />
@@ -643,6 +647,7 @@
     <Content Include="Views\Notifications\Details.cshtml" />
     <Content Include="Views\Notifications\Edit.cshtml" />
     <Content Include="Views\Notifications\Index.cshtml" />
+    <Content Include="Views\ItemInputs\WarhouseManagerReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -780,6 +785,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202109071240218_made-purchase approval and demand approval nullable.resx">
       <DependentUpon>202109071240218_made-purchase approval and demand approval nullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109081045353_added_doc_number_in_returns.resx">
+      <DependentUpon>202109081045353_added_doc_number_in_returns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

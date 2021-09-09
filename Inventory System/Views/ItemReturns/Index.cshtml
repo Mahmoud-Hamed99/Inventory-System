@@ -41,6 +41,13 @@
                 <th class="col-md-2">
                     @Html.DropDownList("month", new SelectList(month), "الشهر", htmlAttributes: new { @class = "form-control col-md-3 goRight" })
                 </th>
+                <th class="col-md-2">
+                    <select name="returnType" class="form-control col-md-3 goRight">
+                        <option value="0">جميع</option>
+                        <option value="1">الموردين</option>
+                        <option value="2">المشاريع</option>
+                    </select>
+                </th>
                 <th class="col-md-1"><input type="submit" class="goRight" value="بحث" /></th>
                 <th class="col-md-1"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
             </tr>
@@ -79,47 +86,50 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Item.ItemName)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemInput.Vendor.VendorName)
-            </td>
-            <td class="text-center">
-                @if (currentRoleNow != "cost")
-                {
-                    @Html.DisplayFor(modelItem => item.ItemQuantity)
-                    @Html.DisplayFor(modelItem=>item.Item.ItemUnit)
-                }
-                else
-                {
-                    @(item.Item.ItemInputs.Last().ItemPrice*item.ItemQuantity)
-                }
-                
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectCode)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemInput.Vendor.VendorName)
+    </td>
+    <td class="text-center">
+        @if (currentRoleNow != "cost")
+        {
+            @Html.DisplayFor(modelItem => item.ItemQuantity)
+            @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+        }
+        else
+        {
+            @(item.Item.ItemInputs.Last().ItemPrice*item.ItemQuantity)
+        }
 
-            <td class="text-center">
-                @if (item.projectId != null && currentRoleNow!="cost")
-                {
-                    @Html.ActionLink("تعديل", "Edit", new { id = item.ItemReturnId })
-                }
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DocumentNumber)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
 
-                @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
-                |
-                @if (currentRoleNow != "cost")
-                {
-                    @Html.ActionLink("حذف", "Delete", new { id = item.ItemReturnId })
-                }
+    <td class="text-center">
+        @if (item.projectId != null && currentRoleNow != "cost")
+        {
+            @Html.ActionLink("تعديل", "Edit", new { id = item.ItemReturnId })
+        }
 
-            </td>
-        </tr>
+        @* @Html.ActionLink("Details", "Details", new { id=item.ItemReturnId }) |*@
+        |
+        @if (currentRoleNow != "cost")
+        {
+            @Html.ActionLink("حذف", "Delete", new { id = item.ItemReturnId })
+        }
+
+    </td>
+</tr>
     }
 
 </table>

@@ -14,6 +14,8 @@ namespace Inventory_System.Models
         
         public Item Item { set; get; }
 
+        public int DocumentNumber { get; set; }
+
         [Required(ErrorMessage = "من فضلك ادخل الكميه")]
         public double ItemQuantity { set; get; }
         

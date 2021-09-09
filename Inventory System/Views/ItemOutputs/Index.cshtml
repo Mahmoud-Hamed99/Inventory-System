@@ -133,7 +133,9 @@
         <th class="text-center">
             @Html.DisplayName("تاريخ الاصدار")
         </th>
-
+        <th class="text-center">
+            @Html.DisplayName("الملاحظات")
+        </th>
         <th class="text-center">
             @Html.DisplayName("صرف؟")
         </th>
@@ -145,55 +147,57 @@
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectCode)
-            </td>
+<tr>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectCode)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+    </td>
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.Item.ItemName)
-            </td>
-            <td class="text-center">
-                @if (currentRoleNow != "cost")
-                {
-                    @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
-                    @Html.DisplayFor(modelItem => item.Item.ItemUnit)
-                }
-                else
-                {
-                    @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
-                    //totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
-                }
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Item.ItemName)
+    </td>
+    <td class="text-center">
+        @if (currentRoleNow != "cost")
+        {
+            @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+            @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+        }
+        else
+        {
+            @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
+            //totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
+        }
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DateCreated)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.Notes)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.ItemOutputApproved)
+    </td>
+    <td class="text-center">
+        @Html.DisplayFor(modelItem => item.DocCode)
+    </td>
+    <td class="text-center">
+        @if (currentRoleNow != "cost")
+        {
+            <div>
+                @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
 
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.ItemOutputApproved)
-            </td>
-            <td class="text-center">
-                @Html.DisplayFor(modelItem => item.DocCode)
-            </td>
-            <td class="text-center">
-                @if (currentRoleNow != "cost")
-                {
-                    <div>
-                        @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
+                @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
+            </div>
 
-                        @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
-                    </div>
-
-                }
-            </td>
-        </tr>
+        }
+    </td>
+</tr>
     }
     @if (currentRoleNow == "cost")
     {

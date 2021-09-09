@@ -236,6 +236,94 @@ namespace Inventory_System.Controllers
         }
 
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
+        public ActionResult WarhouseManagerReturn(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ItemInput itemInput = db.ItemInputs.Find(id);
+            var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
+            ViewBag.lastPrice = itemsRes.Count() == 0 ? 0 : itemsRes.FirstOrDefault().ItemPrice;
+            if (itemInput == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemInput.ItemId);
+            ViewBag.VendorId = new SelectList(db.Vendors, "VendorId", "VendorName", itemInput.VendorId);
+            List<ItemInput> itemInputs = db.ItemInputs.Include(x => x.Item).Include(x => x.Vendor).ToList();
+            ViewBag.Item = itemInputs.Where(x => x.ItemInputId == id).FirstOrDefault();
+            return View(itemInput);
+        }
+
+        // POST: ItemInputs/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
+        public ActionResult WarhouseManagerReturn(int ItemId,double returnQuantity,int DocNumber)
+        {
+            var itemInput = db.ItemInputs.Single(a=>a.ItemInputId == ItemId);
+            if (ModelState.IsValid)
+            {
+
+
+                //if(itm.ItemInputs.Count == 1)
+                //{
+                //    itm.ItemQuantity = itemInput.ItemQuantity;
+                //}
+                
+                itemInput.ItemQuantity -= returnQuantity;
+                itemInput.ItemTotalCost = itemInput.ItemQuantity * itemInput.ItemPrice;
+                db.SaveChanges();
+
+                var itemsRes = db.ItemInputs.Where(a => a.ItemId == itemInput.ItemId && a.ItemPrice > 0).OrderByDescending(a => a.DateCreated).ToList();
+                ViewBag.lastPrice = itemsRes.Count() == 0 ? 0 : itemsRes.FirstOrDefault().ItemPrice;
+                var itm = db.Items.Single(a => a.ItemId == itemInput.ItemId);
+                
+                
+
+                var itmWithPrice = db.ItemInputs.Where(a => a.ItemId == itm.ItemId && a.ItemPrice > 0).ToList();
+                if (itmWithPrice.Count() > 0)
+                {
+                    itm.ItemAvgPrice = itmWithPrice.OrderByDescending(a => a.DateCreated).First().ItemPrice;
+                }
+                itm.ItemQuantityAdded -= returnQuantity;
+                db.SaveChanges();
+                itm = db.Items.Include(a => a.ItemInputs).Single(a => a.ItemId == itemInput.ItemId);
+                if (itm.ItemInputs.Count == 1)
+                {
+                    itm.ItemQuantity = itemInput.ItemQuantity;
+                }
+                
+                db.SaveChanges();
+                var xy = itemInput.Item.ItemMinQuantity;
+
+                
+                {
+                    ItemReturn itemReturn = new ItemReturn();
+                    itemReturn.ItemInput = itemInput;
+                    itemReturn.ItemId = itemInput.ItemId;
+                    itemReturn.ItemQuantity = returnQuantity;
+                    itemReturn.DocumentNumber = DocNumber;
+
+
+                    itm.ItemQuantityWithdraw += itemInput.ItemReturn;
+
+                    db.ItemReturns.Add(itemReturn);
+
+                    db.SaveChanges();
+                    Helper.AddLog(db, "Edited Item Input Which Added ItemReturn", itemReturn.ItemReturnId, "ItemReturn", this);
+                }
+                
+                return RedirectToAction("Index", new { acc = true });
+            }
+            return View(itemInput);
+        }
+
+
+        [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
         public ActionResult WarhouseManager(int? id)
         {
             if (id == null)
@@ -297,22 +385,7 @@ namespace Inventory_System.Controllers
                 db.SaveChanges();
                 var xy = itemInput.Item.ItemMinQuantity;
 
-                if(itemInput.ItemReturn != 0)
-                { 
-                    ItemReturn itemReturn = new ItemReturn();
-                    itemReturn.ItemInput = itemInput;
-                    itemReturn.ItemId = itemInput.ItemId;
-                    itemReturn.ItemQuantity = itemInput.ItemReturn;
-                    
-                   
-                    
-                    x.ItemQuantityWithdraw += itemInput.ItemReturn;
-                    
-                    db.ItemReturns.Add(itemReturn);
-                    
-                    db.SaveChanges();
-                    Helper.AddLog(db, "Edited Item Input Which Added ItemReturn", itemReturn.ItemReturnId, "ItemReturn", this);
-                }
+                
                 Helper.AddLog(db, "Edited Item Input", itemInput.ItemInputId, "ItemInput", this);
                 return RedirectToAction("Index",new {acc=true });
             }

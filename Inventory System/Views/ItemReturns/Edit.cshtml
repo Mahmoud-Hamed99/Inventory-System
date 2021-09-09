@@ -12,10 +12,10 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ItemReturnId)
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ItemReturnId)
 
     <div class="form-group">
         <div class="col-md-10 text-right">
@@ -23,7 +23,7 @@
             @Html.ValidationMessageFor(model => model.ItemId, "", new { @class = "text-danger" })
         </div>
         @Html.Label("المنتج", htmlAttributes: new { @class = "control-label col-md-2" })
-   </div>
+    </div>
 
     <div class="form-group">
         <div class="col-md-10 text-right">
@@ -32,21 +32,28 @@
         </div>
         @Html.Label("الكميه", htmlAttributes: new { @class = "control-label col-md-2" })
     </div>
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+        </div>
+        @Html.Label("رقم المستند", htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
 
     <div class="form-group">
         <div class="col-md-10 text-right">
             @Html.DropDownList("projectId", null, htmlAttributes: new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.projectId, "", new { @class = "text-danger" })
         </div>
-        @Html.Label( "المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("المشروع", htmlAttributes: new { @class = "control-label col-md-2" })
     </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="حفظ" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="حفظ" class="btn btn-default" />
         </div>
     </div>
+</div>
 }
 
 <div>

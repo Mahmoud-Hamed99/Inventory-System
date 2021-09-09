@@ -28,7 +28,7 @@ namespace Inventory_System.Controllers
         }
         [HttpPost]
         
-        public ActionResult Index(int? year, int? month)
+        public ActionResult Index(int? year, int? month,int? returnType)
         {
             
 
@@ -41,6 +41,14 @@ namespace Inventory_System.Controllers
             if (month != null)
             {
                 itemReturns = itemReturns.Where(a => a.DateCreated.Month == month);
+            }
+            if(returnType == 1)
+            {
+                itemReturns = itemReturns.Where(a => a.projectId == null);
+            }
+            else if(returnType == 2)
+            {
+                itemReturns = itemReturns.Where(a => a.projectId != null);
             }
             return View(itemReturns.OrderBy(a => a.DateCreated).ToPagedList(1, 1000000000));
         }
@@ -95,7 +103,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ItemReturnId,ItemId,ItemQuantity,projectId,DateCreated")] ItemReturn itemReturn)
+        public ActionResult Create([Bind(Include = "ItemReturnId,ItemId,ItemQuantity,projectId,DateCreated,DocumentNumber")] ItemReturn itemReturn)
         {
             if (ModelState.IsValid)
             {
@@ -138,7 +146,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ItemReturnId,ItemId,ItemQuantity,projectId,DateCreated")] ItemReturn itemReturn)
+        public ActionResult Edit([Bind(Include = "ItemReturnId,ItemId,ItemQuantity,projectId,DateCreated,DocumentNumber")] ItemReturn itemReturn)
         {
             if (ModelState.IsValid)
             {
@@ -173,6 +181,10 @@ namespace Inventory_System.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ItemReturn itemReturn = db.ItemReturns.Find(id);
+            var inpu = db.ItemInputs.Single(a => a.ItemInputId == itemReturn.ItemInputId);
+            inpu.ItemQuantity += itemReturn.ItemQuantity;
+            var itm = db.Items.Single(a=>a.ItemId == inpu.ItemId);
+            itm.ItemQuantityAdded += itemReturn.ItemQuantity;
             db.ItemReturns.Remove(itemReturn);
             db.SaveChanges();
             Helper.AddLog(db, "Deleted ItemReturn ", itemReturn.ItemReturnId, "ItemReturn", this);
