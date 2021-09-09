@@ -17,7 +17,11 @@ namespace Inventory_System.Controllers
     public class ItemOutputsController : Controller
     {
         private InventoryDB db = new InventoryDB();
-
+        class ProjectMix
+        {
+            public int ProjectId { get; set; }
+            public string ProjectCode { get; set; }
+        }
         int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
@@ -34,7 +38,16 @@ namespace Inventory_System.Controllers
                 pageNumber = page.Value;
             }
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach(var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
 
             //---------------------------------------------------
@@ -108,7 +121,16 @@ namespace Inventory_System.Controllers
                 ViewBag.prid = ProjectId;
             }
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i => i.Project).Include(i => i.TechnicalDepartment).Where(a => a.ItemOutputApproved == false);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach (var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             if (TechnicalDepartmentId != null)
                 itemOutputs = itemOutputs.Where(a => a.TechnicalDepartmentId == TechnicalDepartmentId);
@@ -225,7 +247,16 @@ namespace Inventory_System.Controllers
                 .Include(i => i.Project)
                 .Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach (var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             int pageNumber = (Page ?? 1);
             var res = db.ItemOutputs.
                 Include(a => a.Project).
@@ -342,8 +373,17 @@ namespace Inventory_System.Controllers
                 ViewBag.ItemId = new SelectList(itms, "ItemId", "ItemName");
                 ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(itms);
             }
-            
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode");
+
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach (var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
             return View();
         }
@@ -488,7 +528,16 @@ namespace Inventory_System.Controllers
                 return HttpNotFound();
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode", itemOutput.ProjectId);
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach (var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             ViewBag.DepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName",itemOutput.TechnicalDepartmentId);
 
             return View(itemOutput);
@@ -515,7 +564,16 @@ namespace Inventory_System.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "ProjectId", "ProjectCode", itemOutput.ProjectId);
+            List<ProjectMix> pmix = new List<ProjectMix>();
+            foreach (var v in db.Projects.ToList())
+            {
+                pmix.Add(new ProjectMix()
+                {
+                    ProjectId = v.ProjectId,
+                    ProjectCode = v.ProjectCode + "  -  " + v.ProjectName
+                });
+            }
+            ViewBag.ProjectId = new SelectList(pmix, "ProjectId", "ProjectCode");
             ViewBag.DepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName",itemOutput.TechnicalDepartmentId);
 
             return View(itemOutput);
