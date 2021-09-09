@@ -449,7 +449,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "warehouse,projectplanning")]
-        public ActionResult Create(int[] ItemId, int[] ProjectId, double[] ItemOutputQuantity, int[] TechnicalDepartmentId)
+        public ActionResult Create(int[] ItemId, int[] ProjectId, double[] ItemOutputQuantity, int[] TechnicalDepartmentId,string[] _Notes)
         {
             List<ItemOutput> itemOutputs = new List<ItemOutput>();
             for(int i =0;i<ItemId.Length;i++)
@@ -458,7 +458,8 @@ namespace Inventory_System.Controllers
                 {
                     ItemId = ItemId[i],
                     ProjectId = ProjectId[i],
-                    ItemOutputQuantity = ItemOutputQuantity[i]
+                    ItemOutputQuantity = ItemOutputQuantity[i],
+                    Notes = _Notes[i]
                 });
             }
             if (ModelState.IsValid)
@@ -549,7 +550,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
-        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId,DocCode", Exclude =("ExchangeDate"))] ItemOutput itemOutput)
+        public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId,DocCode,Notes", Exclude =("ExchangeDate"))] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)
             {

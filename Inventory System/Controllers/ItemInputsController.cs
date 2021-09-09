@@ -94,7 +94,7 @@ namespace Inventory_System.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [VerifyUser(Roles = "superadmin,warehouse,cost")]
-        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated,DocCode")] ItemInput itemInput)
+        public ActionResult Create([Bind(Include = "ItemInputId,ItemId,ItemPrice,ItemQuantity,ItemTotalCost,VendorId,DateCreated,DocCode,Notes")] ItemInput itemInput)
         {
             //  List<Item> itemList = db.Items.ToList();
 
@@ -103,7 +103,6 @@ namespace Inventory_System.Controllers
             {
                 db.ItemInputs.Add(itemInput);
                 db.SaveChanges();
-
 
                 var x = db.Items.Find(itemInput.ItemId);
                 if (x.ItemQuantity == 0)

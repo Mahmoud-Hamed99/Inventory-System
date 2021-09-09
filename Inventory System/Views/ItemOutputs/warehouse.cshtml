@@ -74,6 +74,9 @@
                 @Html.DisplayName("الكميه")
             </th>
             <th class="text-center">
+                @Html.DisplayName("ملاحظات")
+            </th>
+            <th class="text-center">
                 @Html.DisplayName("تاريخ الاصدار")
             </th>
 
@@ -106,6 +109,9 @@
                 <td class="text-center">
                     @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
                     @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+                </td>
+                <td class="text-center">
+                    @Html.DisplayFor(modelItem=>item.Notes)
                 </td>
                 <td class="text-center">
                     @Html.DisplayFor(modelItem => item.DateCreated)

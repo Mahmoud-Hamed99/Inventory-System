@@ -108,7 +108,7 @@
 
         </div>
         <div class="col-md-4 text-right">
-            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @id = "_ItemOutputQuantity" } })
+            @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control", @id = "Notes" } })
             @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
         </div>
         @Html.Label("الملاحظات", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -250,8 +250,10 @@
         var toAdd2 = "<input name='ItemId' value='" + $("#ItemId").val() + "' />" +
             "<input name='ProjectId' value='" + $("#ProjectId").val() + "' />" +
             "<input name='ItemOutputQuantity' value='" + $("#_ItemOutputQuantity").val() + "' />" +
+            "<input name='_Notes' value='" + $("#Notes").val() + "' />" +
             "<input name='TechnicalDepartmentId' value='' />";
         $(toAdd).insertAfter("#headerArea");
+        $("#Notes").val("");
         $("#finalDiv").append(toAdd2);
     }
 </script>
