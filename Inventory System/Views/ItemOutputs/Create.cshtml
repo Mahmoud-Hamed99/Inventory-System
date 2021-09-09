@@ -217,6 +217,10 @@
 </script>
 <script>
     function handleAddingItem() {
+        if ($("#ProjectId").val() == "null")
+            return;
+        if ($("#ProjectId").val() == "0")
+            return;
         if ($("#ItemId").val() == "null")
             return;
 

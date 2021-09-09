@@ -62,7 +62,7 @@
             @Html.DisplayName("الكميه الموجودة بالمخزن")
         </th>
         <th class="text-right">
-            @Html.DisplayName("الناقص من المخزن - جميع المشاريع")
+            @Html.DisplayName("الناقص من المخزن")
         </th>
 
         <th class="text-center">
@@ -101,23 +101,26 @@
         @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
     </td>
     <td class="text-right">
-        @(item.Item.ItemInputs.Sum(a=>a.ItemQuantity) +
+        @((item.Item.ItemInputs.Sum(a=>a.ItemQuantity) +
             item.Item.ItemReturns.Where(a=>a.projectId!=null).Sum(a=>a.ItemQuantity) -
-            item.Item.ItemReturns.Where(a => a.projectId == null).Sum(a => a.ItemQuantity))
+            item.Item.ItemOutputs.Where(a => a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity)))
     </td>
     <td class="text-right">
         @{
-            var v = db.DemandItems.Where(a => a.ItemOutputId == item.ItemOutputId);
+            var v = (item.Item.ItemInputs.Sum(a => a.ItemQuantity) +
+            item.Item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) -
+            item.Item.ItemOutputs.Where(a => a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity));
         }
-        @if (v.Count() > 0)
+        
+        @if (v-item.ItemOutputQuantity > 0)
         {
-            @(v.First().DemandItemQuantity)
+            @("0")
 
 
         }
         else
         {
-            @("0")
+            @(Math.Abs(v - item.ItemOutputQuantity))
         }
     </td>
     <td class="text-center">

@@ -38,8 +38,8 @@ namespace Inventory_System.Controllers
                 pageNumber = page.Value;
             }
             var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
-            List<ProjectMix> pmix = new List<ProjectMix>();
-            foreach(var v in db.Projects.ToList())
+            List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
+            foreach (var v in db.Projects.ToList())
             {
                 pmix.Add(new ProjectMix()
                 {
@@ -247,7 +247,7 @@ namespace Inventory_System.Controllers
                 .Include(i => i.Project)
                 .Include(i => i.TechnicalDepartment).Where(a => a.Project.ProjectFinished == false);
             ViewBag.TechnicalDepartmentId = new SelectList(db.TechnicalDepartments, "TechnicalDepartmentId", "TechnicalDepartmentName");
-            List<ProjectMix> pmix = new List<ProjectMix>();
+            List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
             foreach (var v in db.Projects.ToList())
             {
                 pmix.Add(new ProjectMix()
@@ -374,7 +374,7 @@ namespace Inventory_System.Controllers
                 ViewBag.allItems = Newtonsoft.Json.JsonConvert.SerializeObject(itms);
             }
 
-            List<ProjectMix> pmix = new List<ProjectMix>();
+            List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
             foreach (var v in db.Projects.ToList())
             {
                 pmix.Add(new ProjectMix()
@@ -528,7 +528,7 @@ namespace Inventory_System.Controllers
                 return HttpNotFound();
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            List<ProjectMix> pmix = new List<ProjectMix>();
+            List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
             foreach (var v in db.Projects.ToList())
             {
                 pmix.Add(new ProjectMix()
@@ -564,7 +564,7 @@ namespace Inventory_System.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ItemId = new SelectList(db.Items, "ItemId", "ItemName", itemOutput.ItemId);
-            List<ProjectMix> pmix = new List<ProjectMix>();
+            List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
             foreach (var v in db.Projects.ToList())
             {
                 pmix.Add(new ProjectMix()
