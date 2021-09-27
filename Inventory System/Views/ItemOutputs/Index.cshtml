@@ -34,70 +34,123 @@
 
     @using (Html.BeginForm())
     {
-        <table>
-            <tr class="text-right">
-                @*<th class="col-md-2 text-right">
-                        @if (ViewBag.mainUser != null)
-                        {
-                            if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
-                            {
-                                @Html.ActionLink("طلب جديد", "Create")
-                            }
-                        }
-
-                    </th>*@
-                <th class="col-md-2 text-right">
-                    @if (currentRoleNow != "cost")
+    <table>
+        <tr class="text-right">
+            @*<th class="col-md-2 text-right">
+                @if (ViewBag.mainUser != null)
+                {
+                    if (((Inventory_System.Models.User)ViewBag.mainUser).Roles == "warehouse")
                     {
-                        @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
+                        @Html.ActionLink("طلب جديد", "Create")
                     }
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-            <tr>
-                <th class="col-md-2 text-right">
-                    @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control", @id = "TechnicalDepartmentId" })
-                </th>
-                <th class="col-md-2 text-right">
-                    @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
-                </th>
+                }
 
-                <th class="col-md-1 text-right">
-                    @Html.Label("من تاريخ", new { @class = "text-right" })
-                </th>
-                <th class="col-md-2">
-                    <div class="input-group date text-right" id="requestDateTimePicker2" data-target-input="nearest">
-                        <div class="input-group-append text-right" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+            </th>*@
+            <th class="col-md-2 text-right">
+                @if (currentRoleNow != "cost")
+                {
+                    @Html.ActionLink("طلبات الأذونات المعلقه", "warehouse")
+                }
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
 
-                            @Html.TextBox("startDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker2", placeholder = "من تاريخ" })
-                        </div>
+        </tr>
+        <tr>
+            <th class="col-md-2 text-right">
+                <select name="showLack" class="form-control">
+                    <option value="-1" @(ViewBag.showLack == "-1" ? "selected" : "")>جميع الأذون</option>
+                    <option value="0" @(ViewBag.showLack == "0" ? "selected" : "")>الأذون الناقصة</option>
+                    <option value="1" @(ViewBag.showLack == "1" ? "selected" : "")>الأذون المتوفرة</option>
+                </select>
+
+            </th>
+            <th class="col-md-2 text-right">
+                @Html.DropDownList("TechnicalDepartmentId", ViewBag.TechnicalDepartmentId as SelectList, "اختر قسم", htmlAttributes: new { @class = "form-control", @id = "TechnicalDepartmentId" })
+            </th>
+            <th class="col-md-2 text-right">
+                @Html.DropDownList("ProjectId", ViewBag.ProjectId as SelectList, "اختر مشروغ", htmlAttributes: new { @class = "form-control", @id = "ProjectId" })
+            </th>
+
+            <th class="col-md-2 text-right">
+
+            </th>
+            <th class="col-md-2">
+
+            </th>
+
+        </tr>
+        <tr>
+            <th>
+                <div style="width:100px;height:15px;"></div>
+            </th>
+        </tr>
+        <tr>
+
+            <th class="col-md-2 text-right">
+                @Html.Label("من تاريخ", new { @class = "text-right" })
+            </th>
+            <th class="col-md-2">
+                <div class="input-group date text-right" id="requestDateTimePicker2" data-target-input="nearest">
+                    <div class="input-group-append text-right" data-target="#requestDateTimePicker2" data-toggle="datetimepicker">
+
+                        @Html.TextBox("startDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker2", placeholder = "من تاريخ" })
                     </div>
-                </th>
-                <th class="col-md-1 text-right">
-                    @Html.Label("إلى تاريخ", new { @class = "text-right" })
-                </th>
-                <th class="col-md-2">
-                    <div class="input-group date text-right" id="requestDateTimePicker" data-target-input="nearest">
-                        <div class="input-group-append text-right" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
+                </div>
+            </th>
+            <th class="col-md-2 text-right">
+                @Html.Label("إلى تاريخ", new { @class = "text-right" })
+            </th>
+            <th class="col-md-2">
+                <div class="input-group date text-right" id="requestDateTimePicker" data-target-input="nearest">
+                    <div class="input-group-append text-right" data-target="#requestDateTimePicker" data-toggle="datetimepicker">
 
-                            @Html.TextBox("endDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker", placeholder = "إلى تاريخ" })
-                        </div>
+                        @Html.TextBox("endDate", null, new { @class = "form-control datetimepicker-input text-right", data_target = "#requestDateTimePicker", placeholder = "إلى تاريخ" })
                     </div>
-                </th>
-                <th class="col-md-1 text-right">
-                    @Html.Label("رقم المستند", new { @class = "text-right" })
-                </th>
-                <th class="col-md-2">
-                    <input type="number" name="docNumber" />
+                </div>
+            </th>
 
-                </th>
-                <th class="col-md-1 text-right"><input type="submit" value="بحث" /></th>
-                <th class="col-md-1 text-right"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
-            </tr>
-        </table>
+        </tr>
+        
+        <tr>
+            <th>
+                <div style="width:100px;height:15px;"></div>
+            </th>
+        </tr>
+        <tr>
+
+            <th class="col-md-2 text-right">
+                @Html.Label("رقم المستند", new { @class = "text-right" })
+            </th>
+            <th class="col-md-2">
+                <input type="number" name="docNumber" />
+
+            </th>
+            <th class="col-md-2 text-right"></th>
+        </tr>
+        <tr>
+            <th>
+                <div style="width:100px;height:15px;"></div>
+            </th>
+        </tr>
+        <tr>
+
+            <th class="col-md-2">
+
+            </th>
+            <th class="col-md-2 text-right">
+
+            </th>
+            <th class="col-md-2">
+
+
+            </th>
+            <th class="col-md-2 text-right"><input type="submit" value="بحث" /></th>
+            <th class="col-md-2 text-right"><input type="button" class="goRight" value="إزالة البحث" onclick="window.location = '@(Url.Action("index"))';" /></th>
+        </tr>
+    </table>
     }
 
 
@@ -147,57 +200,91 @@
 
     @foreach (var item in Model)
     {
-<tr>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Project.ProjectCode)
-    </td>
-
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Project.ProjectName)
-    </td>
-
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Item.ItemName)
-    </td>
-    <td class="text-center">
-        @if (currentRoleNow != "cost")
         {
-            @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
-            @Html.DisplayFor(modelItem => item.Item.ItemUnit)
-        }
-        else
-        {
-            @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
-            //totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
-        }
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DateCreated)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.Notes)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.ItemOutputApproved)
-    </td>
-    <td class="text-center">
-        @Html.DisplayFor(modelItem => item.DocCode)
-    </td>
-    <td class="text-center">
-        @if (currentRoleNow != "cost" && currentRoleNow!="warehouse")
-        {
-            <div>
-                @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
+            var v = (item.Item.ItemInputs.Sum(a => a.ItemQuantity) +
+            item.Item.ItemReturns.Where(a => a.projectId != null).Sum(a => a.ItemQuantity) -
+            item.Item.ItemOutputs.Where(a => a.ItemOutputApproved).Sum(a => a.ItemOutputQuantity));
+            bool isLacking = !(v - item.ItemOutputQuantity > 0);
+            bool showIt = false;
 
-                @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
-            </div>
 
+
+            if (ViewBag.showLack != null)
+            {
+                if (ViewBag.showLack == "0" && isLacking)
+                {
+                    showIt = true;
+                }
+                else if (ViewBag.showLack == "1" && !isLacking)
+                {
+                    showIt = true;
+                }
+                else if(ViewBag.showLack == "-1")
+                {
+                    showIt = true;
+                }
+            }
+            else
+            {
+                showIt = true;
+            }
+
+            if (showIt)
+            {
+                <tr>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Project.ProjectCode)
+                    </td>
+
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                    </td>
+
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.TechnicalDepartment.TechnicalDepartmentName)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Item.ItemName)
+                    </td>
+                    <td class="text-center">
+                        @if (currentRoleNow != "cost")
+                        {
+                            @Html.DisplayFor(modelItem => item.ItemOutputQuantity)
+                            @Html.DisplayFor(modelItem => item.Item.ItemUnit)
+                        }
+                        else
+                        {
+                            @((item.Item.ItemAvgPrice * item.ItemOutputQuantity)+ " $")
+                            //totalPrices += (item.Item.ItemAvgPrice * item.ItemOutputQuantity);
+                        }
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.ItemOutputApproved)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.DocCode)
+                    </td>
+                    <td class="text-center">
+                        @if (currentRoleNow != "cost" && currentRoleNow != "warehouse")
+                        {
+                            <div>
+                                @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
+
+                                @(Html.ActionLink("حذف", "Delete", new { id = item.ItemOutputId }))
+                            </div>
+
+                        }
+                    </td>
+                </tr>
+            }
         }
-    </td>
-</tr>
+
     }
     @if (currentRoleNow == "cost")
     {

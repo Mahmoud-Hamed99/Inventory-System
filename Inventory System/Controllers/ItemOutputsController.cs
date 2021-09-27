@@ -22,13 +22,13 @@ namespace Inventory_System.Controllers
             public int ProjectId { get; set; }
             public string ProjectCode { get; set; }
         }
-        int pageSize = 20;
         // GET: ItemOutputs
         [VerifyUser(Roles = "superadmin,warehouse,cost,warehouseaudit")]
-        public ActionResult Index(int? page, int? TechnicalDepartmentId, int? ProjectId, int? docNumber, string startDate,string endDate)
+        public ActionResult Index(int? page, int? TechnicalDepartmentId, int? ProjectId, int? docNumber, string startDate,string endDate, string showLack = "0")
         {
-            
 
+
+            ViewBag.showLack = showLack;
             User user;
             Helper.CheckUser(HttpContext, db, out user);
             ViewBag.MainRole = user.Roles;
@@ -37,7 +37,14 @@ namespace Inventory_System.Controllers
             {
                 pageNumber = page.Value;
             }
-            var itemOutputs = db.ItemOutputs.Include(i => i.Item).Include(i=>i.Item.ItemInputs).Include(i => i.Project).Include(i => i.TechnicalDepartment);
+
+            var itemOutputs = db.ItemOutputs.
+                Include(a => a.Project).
+                Include(a => a.TechnicalDepartment)
+                .Include(a => a.Item.ItemInputs)
+                .Include(a => a.Item.ItemReturns)
+                .Include(a => a.Item.ItemOutputs)
+                .Include(a => a.Item);
             List<ProjectMix> pmix = new List<ProjectMix>(); pmix.Add(new ProjectMix() { });
             foreach (var v in db.Projects.ToList())
             {
@@ -72,6 +79,7 @@ namespace Inventory_System.Controllers
             {
                 res = res.Where(a => a.DocCode == docNumber.Value).ToList();
             }
+            
             return View(res.OrderByDescending(a => a.DocCode).ToPagedList(pageNumber, 10000000));
             //if (TechnicalDepartmentId != null && ProjectId != null) 
             //{
