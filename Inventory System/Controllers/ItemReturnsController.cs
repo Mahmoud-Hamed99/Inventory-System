@@ -181,10 +181,14 @@ namespace Inventory_System.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ItemReturn itemReturn = db.ItemReturns.Find(id);
-            var inpu = db.ItemInputs.Single(a => a.ItemInputId == itemReturn.ItemInputId);
-            inpu.ItemQuantity += itemReturn.ItemQuantity;
-            var itm = db.Items.Single(a=>a.ItemId == inpu.ItemId);
-            itm.ItemQuantityAdded += itemReturn.ItemQuantity;
+            if (itemReturn.ItemInputId.HasValue)
+            {
+                var inpu = db.ItemInputs.Single(a => a.ItemInputId == itemReturn.ItemInputId);
+                inpu.ItemQuantity += itemReturn.ItemQuantity;
+                var itm = db.Items.Single(a => a.ItemId == inpu.ItemId);
+                itm.ItemQuantityAdded += itemReturn.ItemQuantity;
+            }
+            
             db.ItemReturns.Remove(itemReturn);
             db.SaveChanges();
             Helper.AddLog(db, "Deleted ItemReturn ", itemReturn.ItemReturnId, "ItemReturn", this);

@@ -186,6 +186,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\Helper.cs" />
+    <Compile Include="Controllers\AuditUploadController.cs" />
     <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\DemandItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -648,6 +649,7 @@
     <Content Include="Views\Notifications\Edit.cshtml" />
     <Content Include="Views\Notifications\Index.cshtml" />
     <Content Include="Views\ItemInputs\WarhouseManagerReturn.cshtml" />
+    <Content Include="Views\AuditUpload\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

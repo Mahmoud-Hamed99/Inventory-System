@@ -270,7 +270,7 @@ namespace Inventory_System.Controllers
             if (ProjectId != null)
                 res = res.Where(a => a.ProjectId == ProjectId).ToList();
 
-            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 10000000));
+            return View(res.OrderByDescending(a => a.DocCode).ToPagedList(1, 100));
             //if (TechnicalDepartmentId != null && ProjectId != null) // this condition is wrong ... momkn ast8na 3no ... if i can set category drop down list any text after each search process.
             //{
             //    var items = db.ItemOutputs.Include(i => i.Project)
@@ -515,7 +515,7 @@ namespace Inventory_System.Controllers
             }
             return RedirectToAction("technicallist", "itemoutputs");
         }
-        [VerifyUser(Roles = "superadmin,warehouse,projectplanning,warehouseaudit")]
+        [VerifyUser(Roles = "superadmin,projectplanning,warehouseaudit")]
         // GET: ItemOutputs/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -549,7 +549,7 @@ namespace Inventory_System.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [VerifyUser(Roles = "superadmin,warehouse,warehouseaudit,projectplanning")]
+        [VerifyUser(Roles = "superadmin,warehouseaudit,projectplanning")]
         public ActionResult Edit([Bind(Include = "ItemOutputId,ItemOutputQuantity,ItemId,ProjectId,DateCreated,TechnicalDepartmentId,DocCode,Notes", Exclude =("ExchangeDate"))] ItemOutput itemOutput)
         {
             if (ModelState.IsValid)

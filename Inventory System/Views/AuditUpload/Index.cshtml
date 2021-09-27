@@ -1,0 +1,97 @@
+﻿@model Inventory_System.Controllers.AuditUploadController.submitModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutWarhouseAudit.cshtml";
+}
+
+<h2>انسخ السجلات</h2>
+@using (Html.BeginForm())
+{
+    <br />
+    <span>@ViewBag.Message</span>
+    <div>
+        @if(((List<string[]>)ViewBag.incorrectItems).Count() > 0)
+        {
+        <table class="table">
+            <tr>
+
+
+
+                <th class="text-center">
+                    @Html.DisplayName("إسم الخامة")
+                </th>
+
+
+                <th class="text-center">
+                    @Html.DisplayName("الرسالة")
+
+                </th>
+
+
+
+            </tr>
+            @foreach (var v in ((List<string[]>)ViewBag.incorrectItems))
+            {
+                <tr>
+
+
+
+                    <td class="text-center">
+                        @v[0]
+                    </td>
+
+
+                    <td class="text-center">
+
+                        @v[1]
+                    </td>
+
+
+
+                </tr>
+            }
+        </table>
+        }
+    </div>
+    
+    <br />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="اضافه" class="btn btn-default" />
+        </div>
+    </div>
+    <br />
+    <table class="table">
+        <tr>
+
+            <th class="text-center">
+                @Html.DisplayName("رقم المستند")
+            </th>
+
+            <th class="text-center">
+                @Html.DisplayName("إسم الخامة")
+            </th>
+
+
+            <th class="text-center">
+                @Html.DisplayName("الكميه")
+
+            </th>
+
+
+
+        </tr>
+        <tr>
+            <td>
+                @Html.TextAreaFor(model => model.DocNumber, new { @class = "form-control", @rows = 100 })
+            </td>
+            <td>
+                @Html.TextAreaFor(model => model.ItemName, new { @class = "form-control", @rows = 100 })
+            </td>
+            <td>
+                @Html.TextAreaFor(model => model.Quantities, new { @class = "form-control", @rows = 100 })
+            </td>
+        </tr>
+    </table>
+}
+

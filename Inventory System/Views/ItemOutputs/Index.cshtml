@@ -187,7 +187,7 @@
         @Html.DisplayFor(modelItem => item.DocCode)
     </td>
     <td class="text-center">
-        @if (currentRoleNow != "cost")
+        @if (currentRoleNow != "cost" && currentRoleNow!="warehouse")
         {
             <div>
                 @(Html.ActionLink("تعديل", "Edit", new { id = item.ItemOutputId })) |
